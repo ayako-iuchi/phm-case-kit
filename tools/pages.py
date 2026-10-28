@@ -34,7 +34,7 @@ def read_pages(path, header_lines=1, drop_line_regex=None):
 
     The header lines are dropped from every page, whatever they contain.
     """
-    with open(path, encoding="utf-8") as f:
+    with open(path, encoding="utf-8-sig") as f:
         raw = f.read()
     chunks = raw.split("\f")
     if chunks and chunks[-1].strip() == "":

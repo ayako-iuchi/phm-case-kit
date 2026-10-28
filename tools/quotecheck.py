@@ -12,7 +12,8 @@ QUOTES.tsv is tab-separated with a header row. Required columns: `id`,
 `page_from`, `page_to`, `quote`. Other columns are ignored. Fields are read
 as they are: a double quotation mark is an ordinary character, not CSV
 quoting, so a field cannot contain a tab or a line break. A byte-order mark
-is allowed.
+is allowed. A row with more or fewer fields than the header is rejected,
+since a tab inside a quotation would otherwise cut it short.
 
 What it checks: whether the quotation, with all whitespace removed, is a
 substring of the given page range, with all whitespace removed (see
@@ -44,7 +45,8 @@ page), so the counts describe one run, not a guarantee. Rows that are not OK
 and rows under 4 characters are left out and counted.
 
 --evidence OUT.tsv writes one row per quotation with its id, pages, length,
-verdict, flags and the pages where it occurs, and no quotation text, so the
+verdict, flags and where it occurs (comma-separated: a page "4", or a page
+break it runs across "1-2"), and no quotation text, so the
 result can be published without the source's words.
 
 Exit status: 0 if every row is OK, 1 if any is ELSEWHERE or MISSING, 2 on
@@ -65,12 +67,19 @@ NOTE_FOOTER = r"^https://note\.com/"
 
 def load_quotes(path):
     with open(path, encoding="utf-8-sig", newline="") as f:
-        reader = csv.DictReader(f, delimiter="\t", quoting=csv.QUOTE_NONE)
+        reader = csv.reader(f, delimiter="\t", quoting=csv.QUOTE_NONE)
+        header = next(reader, None)
         need = {"id", "page_from", "page_to", "quote"}
-        if reader.fieldnames is None or not need.issubset(reader.fieldnames):
+        if header is None or not need.issubset(header):
             raise ValueError(f"{path}: header must include {sorted(need)}")
         rows = []
-        for n, r in enumerate(reader, start=2):
+        for n, fields in enumerate(reader, start=2):
+            if not any(x.strip() for x in fields):
+                continue  # blank line
+            if len(fields) != len(header):
+                raise ValueError(f"{path}:{n}: {len(fields)} fields, header has {len(header)}"
+                                 " (a tab inside a field?)")
+            r = dict(zip(header, fields))
             try:
                 a, b = int(r["page_from"]), int(r["page_to"])
             except (TypeError, ValueError):
@@ -121,11 +130,13 @@ def check(texts, line_sets, rows, short=10):
 
 
 def find_pages(texts, q):
-    """Pages that contain q, as strings; if none, page pairs whose joined text does ("11-12")."""
+    """Where q occurs: single pages ("4"), and page breaks it runs across ("1-2").
+
+    A break counts only when q is on neither of the two pages alone.
+    """
     found = [str(i + 1) for i, t in enumerate(texts) if q in t]
-    if not found:
-        found = [f"{i + 1}-{i + 2}" for i in range(len(texts) - 1)
-                 if q in texts[i] + texts[i + 1]]
+    found += [f"{i + 1}-{i + 2}" for i in range(len(texts) - 1)
+              if q not in texts[i] and q not in texts[i + 1] and q in texts[i] + texts[i + 1]]
     return found
 
 

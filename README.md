@@ -26,7 +26,7 @@ Write your quotations as a tab-separated file with the columns `id`, `page_from`
     python3 -I tools/quotecheck.py source.txt quotes.tsv --note-footer --mutate --evidence results.tsv
     python3 -I tools/termcount.py source.txt "Predictive Management" "Predictive Maintenance" --pages 1-119 --note-footer
 
-`--note-footer` drops lines that start with a note.com URL (the footer of a page printed from note, and also a body line that is only such a link); `--header-lines` (default 1) drops that many lines from the top of every page, whatever they say. In the TSV, a double quotation mark is an ordinary character; a field cannot hold a tab or a line break. Exit status: 0 if every row is OK, 1 if any is not, 2 on bad input.
+`--note-footer` drops lines that start with a note.com URL (the footer of a page printed from note, and also any body line that starts with such a link); `--header-lines` (default 1) drops that many lines from the top of every page, whatever they say. In the TSV, a double quotation mark is an ordinary character; a field cannot hold a tab or a line break, and a row with the wrong number of fields is rejected. Exit status: 0 if every row is OK, 1 if any is not, 2 on bad input.
 
 **What quotecheck checks.** All whitespace is removed from the quotation and from the pages, and the quotation must be a substring of the given pages. A quotation that runs across a page break is found as such (reported as, say, `11-12`). Nothing else is normalized: 「」 and "", or full-width and half-width letters, stay different. A quotation is `OK`, `ELSEWHERE` (on other pages, which are listed) or `MISSING`. Flags say how much an OK is worth: `SHORT` (10 characters or fewer by default), `MULTI` (on more than one page), `DUP` (same text as an earlier row) and `LINE` (a whole line of the page, often a heading).
 
@@ -34,7 +34,9 @@ Write your quotations as a tab-separated file with the columns `id`, `page_from`
 
 **The self-test (`--mutate`).** For each quotation that is OK and has 4 characters or more, it makes four altered copies and counts how many the check would catch. Dropping the first or the last character is never caught, because a shortened quotation is still on the page: a quotation that was cut short passes this check. Whether a change in the middle is caught depends on the text, so the counts describe one run (on the inventory in `evidence/`, 349 of 349), not a guarantee.
 
-**The evidence files** (`--evidence`) hold ids, pages, lengths, verdicts and flags, and no quotation text. `evidence/` holds the runs cited by the posts.
+**The evidence files** (`--evidence`) hold ids, pages, lengths, verdicts, flags and where each quotation occurs (`4` for a page, `1-2` for a page break it runs across), and no quotation text.
+
+**termcount** removes whitespace before counting, so a term broken across lines is found; it counts overlapping occurrences, and not across a page break. A count of 0 means only that the term is not in the extracted text of those pages. `evidence/` holds the runs cited by the posts.
 
 ## Tests
 

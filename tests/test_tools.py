@@ -271,6 +271,47 @@ class ExitCodeTest(unittest.TestCase):
         self.assertEqual(self.run_main([self.src, self.q, "--evidence", bad]), 2)
 
 
+class RoundTwoTest(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+
+    def test_tab_inside_a_quotation_is_rejected(self):
+        src = write(self.tmp, "s.txt", "h\none two\n\f")
+        q = write(self.tmp, "t.tsv", "id\tpage_from\tpage_to\tquote\n1\t1\t1\tone two\tNOT THERE\n")
+        with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            self.assertEqual(quotecheck.main([src, q]), 2)
+
+    def test_blank_lines_are_skipped(self):
+        q = write(self.tmp, "b.tsv", "id\tpage_from\tpage_to\tquote\n1\t1\t1\tx\n\n")
+        self.assertEqual(len(quotecheck.load_quotes(q)), 1)
+
+    def test_page_break_found_beside_a_single_page(self):
+        p = write(self.tmp, "p.txt", "h\none two\n\fh\nthree\n\fh\nx\n\fh\ntwo three\n\f")
+        t = pages.page_texts(pages.read_pages(p))
+        rows = [{"id": "1", "a": 1, "b": 1, "quote": "two three"}]
+        res = quotecheck.check(t, [set() for _ in t], rows)
+        self.assertEqual(res[0]["verdict"], "ELSEWHERE")
+        self.assertEqual(res[0]["found"], ["4", "1-2"])
+        self.assertIn("MULTI", res[0]["flags"])
+
+    def test_note_footer_and_regex_through_main(self):
+        src = write(self.tmp, "f.txt", "h\nkeep this\nDROP me\nhttps://note.com/x/n/n1 1/1\n\f")
+        ok = write(self.tmp, "ok.tsv", "id\tpage_from\tpage_to\tquote\n1\t1\t1\tkeep this\n")
+        gone = write(self.tmp, "g.tsv", "id\tpage_from\tpage_to\tquote\n1\t1\t1\tDROP me\n2\t1\t1\tnote.com\n")
+        with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            self.assertEqual(quotecheck.main([src, ok, "--note-footer", "--drop-line-regex", "(?i)^drop"]), 0)
+        buf = io.StringIO()
+        with redirect_stdout(buf), redirect_stderr(io.StringIO()):
+            self.assertEqual(quotecheck.main([src, gone, "--note-footer", "--drop-line-regex", "(?i)^drop", "--quiet"]), 1)
+        self.assertIn("MISSING: 2", buf.getvalue())
+
+    def test_source_with_byte_order_mark(self):
+        p = os.path.join(self.tmp, "bom.txt")
+        with open(p, "w", encoding="utf-8-sig") as f:
+            f.write("header\nbody\n\f")
+        self.assertEqual(pages.read_pages(p), [["body"]])
+
+
 class PagesMoreTest(unittest.TestCase):
     def test_nbsp_and_en_dash_range(self):
         self.assertEqual(pages.norm("a\u00a0b"), "ab")

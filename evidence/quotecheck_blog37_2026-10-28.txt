@@ -1,0 +1,11 @@
+# quotecheck on the three quotations from the source that Hypothetical Technical Blog #37 uses, 2026-10-28
+#
+# Source: as in quotecheck_inventory_2026-10-28.txt. The quotations are the wording of Part 1 on p.7 and the titles of Part 1 (p.6) and Part 2 (p.11);
+# their text is not in this repository. Per-row results without text: quotecheck_blog37_2026-10-28.tsv
+#
+$ python3 -I tools/quotecheck.py SOURCE.txt QUOTES.tsv --note-footer --evidence quotecheck_blog37_2026-10-28.tsv
+source pages: 140
+rows: 3 (distinct after normalization: 3)
+OK: 3  ELSEWHERE: 0  MISSING: 0
+flags: SHORT(<=10) 0  MULTI 0  DUP 0  LINE 0
+median length: 31
