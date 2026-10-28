@@ -26,13 +26,13 @@ Write your quotations as a tab-separated file with the columns `id`, `page_from`
     python3 -I tools/quotecheck.py source.txt quotes.tsv --note-footer --mutate --evidence results.tsv
     python3 -I tools/termcount.py source.txt "Predictive Management" "Predictive Maintenance" --pages 1-119 --note-footer
 
-`--note-footer` drops lines that start with a note.com URL (the footer of a page printed from note); `--header-lines` (default 1) drops the printed header at the top of each page.
+`--note-footer` drops lines that start with a note.com URL (the footer of a page printed from note, and also a body line that is only such a link); `--header-lines` (default 1) drops that many lines from the top of every page, whatever they say. In the TSV, a double quotation mark is an ordinary character; a field cannot hold a tab or a line break. Exit status: 0 if every row is OK, 1 if any is not, 2 on bad input.
 
-**What quotecheck checks.** All whitespace is removed from the quotation and from the pages, and the quotation must be a substring of the given pages. Nothing else is normalized: 「」 and "", or full-width and half-width letters, stay different. A quotation is `OK`, `ELSEWHERE` (on other pages, which are listed) or `MISSING`. Flags say how much an OK is worth: `SHORT` (10 characters or fewer by default), `MULTI` (on more than one page), `DUP` (same text as an earlier row) and `LINE` (a whole line of the page, often a heading).
+**What quotecheck checks.** All whitespace is removed from the quotation and from the pages, and the quotation must be a substring of the given pages. A quotation that runs across a page break is found as such (reported as, say, `11-12`). Nothing else is normalized: 「」 and "", or full-width and half-width letters, stay different. A quotation is `OK`, `ELSEWHERE` (on other pages, which are listed) or `MISSING`. Flags say how much an OK is worth: `SHORT` (10 characters or fewer by default), `MULTI` (on more than one page), `DUP` (same text as an earlier row) and `LINE` (a whole line of the page, often a heading).
 
 **What it does not check.** Whether a quotation is in context, is attributed to the right person, or supports the claim it is used for. It cannot tell an extraction defect from an error in the source, and it checks the PDF you saved, not the page as it is now.
 
-**The self-test (`--mutate`).** For each quotation of 4 characters or more, it makes four altered copies and counts how many the check would catch. Replacing or deleting a character in the middle is caught. Dropping the first or the last character is never caught, because a shortened quotation is still on the page: a quotation that was cut short passes this check.
+**The self-test (`--mutate`).** For each quotation that is OK and has 4 characters or more, it makes four altered copies and counts how many the check would catch. Dropping the first or the last character is never caught, because a shortened quotation is still on the page: a quotation that was cut short passes this check. Whether a change in the middle is caught depends on the text, so the counts describe one run (on the inventory in `evidence/`, 349 of 349), not a guarantee.
 
 **The evidence files** (`--evidence`) hold ids, pages, lengths, verdicts and flags, and no quotation text. `evidence/` holds the runs cited by the posts.
 

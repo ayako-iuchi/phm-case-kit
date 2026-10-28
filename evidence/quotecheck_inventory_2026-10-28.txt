@@ -11,7 +11,7 @@ rows: 350 (distinct after normalization: 347)
 OK: 350  ELSEWHERE: 0  MISSING: 0
 flags: SHORT(<=10) 44  MULTI 15  DUP 3  LINE 48
 median length: 27
-self-test (quotations of 4+ characters; 1 skipped):
+self-test (OK quotations of 4+ characters; left out: 0 not OK, 1 under 4 characters):
   replace_middle: caught 349 of 349 (of the caught, 0 occur on other pages)
   delete_middle: caught 349 of 349 (of the caught, 4 occur on other pages)
   drop_first: caught 0 of 349 (of the caught, 0 occur on other pages)

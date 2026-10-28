@@ -105,7 +105,7 @@ class QuotecheckTest(unittest.TestCase):
     def test_verdicts(self):
         self.assertEqual(self.res["1"]["verdict"], "OK")
         self.assertEqual(self.res["3"]["verdict"], "ELSEWHERE")
-        self.assertEqual(self.res["3"]["found"], [2])
+        self.assertEqual(self.res["3"]["found"], ["2"])
         self.assertEqual(self.res["4"]["verdict"], "MISSING")
         self.assertEqual(self.res["7"]["verdict"], "OK")
 
@@ -113,7 +113,7 @@ class QuotecheckTest(unittest.TestCase):
         self.assertIn("SHORT", self.res["5"]["flags"])
         self.assertIn("MULTI", self.res["5"]["flags"])
         self.assertIn("LINE", self.res["5"]["flags"])
-        self.assertEqual(self.res["5"]["found"], [1, 2])
+        self.assertEqual(self.res["5"]["found"], ["1", "2"])
         self.assertIn("DUP", self.res["6"]["flags"])
         self.assertNotIn("DUP", self.res["1"]["flags"])
         self.assertNotIn("LINE", self.res["1"]["flags"])  # spans two lines
@@ -126,7 +126,7 @@ class QuotecheckTest(unittest.TestCase):
     def test_mutation_self_test(self):
         ok_rows = [r for r in self.rows if r["id"] in ("1", "2", "7")]
         stats, skipped = quotecheck.mutate(self.texts, ok_rows)
-        self.assertEqual(skipped, 0)
+        self.assertEqual(skipped, {"not_ok": 0, "short": 0})
         self.assertEqual(stats["replace_middle"]["caught"], 3)
         self.assertEqual(stats["delete_middle"]["caught"], 3)
         # a shortened quotation is still on the page: never caught
@@ -136,8 +136,91 @@ class QuotecheckTest(unittest.TestCase):
     def test_short_quotes_skipped_by_mutation(self):
         rows = [{"id": "x", "a": 2, "b": 2, "quote": "本文"}]
         stats, skipped = quotecheck.mutate(self.texts, rows)
-        self.assertEqual(skipped, 1)
+        self.assertEqual(skipped, {"not_ok": 0, "short": 1})
         self.assertEqual(stats["replace_middle"]["tried"], 0)
+
+    def test_mutation_leaves_out_rows_that_are_not_ok(self):
+        # all seven rows: 3 (ELSEWHERE) and 4 (MISSING) must not count as caught
+        stats, skipped = quotecheck.mutate(self.texts, self.rows)
+        self.assertEqual(skipped, {"not_ok": 2, "short": 0})
+        self.assertEqual(stats["drop_first"], {"tried": 5, "caught": 0, "elsewhere": 0})
+        self.assertEqual(stats["drop_last"]["caught"], 0)
+
+    def test_mutate_through_main_with_failing_rows(self):
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            quotecheck.main([self.src, self.q, "--note-footer", "--mutate", "--quiet"])
+        out = buf.getvalue()
+        self.assertIn("left out: 2 not OK, 0 under 4 characters", out)
+        self.assertIn("drop_first: caught 0 of 5", out)
+
+    def test_minimum_length_for_mutation_is_four(self):
+        rows = [{"id": "a", "a": 2, "b": 2, "quote": "本文で"}, {"id": "b", "a": 2, "b": 2, "quote": "本文です"}]
+        stats, skipped = quotecheck.mutate(self.texts, rows)
+        self.assertEqual(skipped["short"], 1)
+        self.assertEqual(stats["replace_middle"]["tried"], 1)
+
+    def test_middle_change_is_not_always_caught(self):
+        p = write(self.tmp, "a.txt", "h\naaaaa\n\f")
+        t = pages.page_texts(pages.read_pages(p))
+        stats, _ = quotecheck.mutate(t, [{"id": "x", "a": 1, "b": 1, "quote": "aaaa"}])
+        self.assertEqual(stats["delete_middle"]["caught"], 0)
+
+    def test_short_boundary_and_median(self):
+        rows = [{"id": "1", "a": 1, "b": 1, "quote": "あいうえおかきくけこ"},
+                {"id": "2", "a": 1, "b": 1, "quote": "あいうえおかきくけこさ"}]
+        p = write(self.tmp, "k.txt", "h\nあいうえおかきくけこさ\n\f")
+        ps = pages.read_pages(p)
+        res = quotecheck.check(pages.page_texts(ps), [set()], rows)
+        self.assertIn("SHORT", res[0]["flags"])      # 10 characters
+        self.assertNotIn("SHORT", res[1]["flags"])   # 11 characters
+        self.assertEqual(quotecheck.summarize(res)["median_len"], 10.5)
+
+    def test_quote_across_a_page_break(self):
+        p = write(self.tmp, "b.txt", "h\none two three\n\fh\nfour five\n\f")
+        ps = pages.read_pages(p)
+        t, ls = pages.page_texts(ps), [set() for _ in ps]
+        rows = [{"id": "1", "a": 1, "b": 1, "quote": "three four"},
+                {"id": "2", "a": 1, "b": 2, "quote": "three four"}]
+        res = quotecheck.check(t, ls, rows)
+        self.assertEqual((res[0]["verdict"], res[0]["found"]), ("ELSEWHERE", ["1-2"]))
+        self.assertEqual((res[1]["verdict"], res[1]["found"]), ("OK", ["1-2"]))
+
+    def test_double_quotes_are_ordinary_characters(self):
+        src = write(self.tmp, "dq.txt", 'h\ngamma "delta" eps\n\f')
+        q = write(self.tmp, "dq.tsv",
+                  'id\tpage_from\tpage_to\tquote\tnote\n'
+                  '1\t1\t1\t"delta" eps\t"see also\n'
+                  '2\t1\t1\tnot in the source\t\n'
+                  '3\t1\t1\talso absent\tx"\n')
+        rows = quotecheck.load_quotes(q)
+        self.assertEqual([r["quote"] for r in rows], ['"delta" eps', "not in the source", "also absent"])
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            self.assertEqual(quotecheck.main([src, q, "--quiet"]), 1)
+        self.assertIn("OK: 1  ELSEWHERE: 0  MISSING: 2", buf.getvalue())
+
+    def test_byte_order_mark(self):
+        q = os.path.join(self.tmp, "bom.tsv")
+        with open(q, "w", encoding="utf-8-sig") as f:
+            f.write("id\tpage_from\tpage_to\tquote\n1\t1\t1\t（第2回）\n")
+        self.assertEqual(len(quotecheck.load_quotes(q)), 1)
+
+    def test_footer_and_own_regex_together(self):
+        ps = pages.read_pages(self.src, drop_line_regex=["(?i)^最終回", quotecheck.NOTE_FOOTER])
+        flat = [ln for p in ps for ln in p]
+        self.assertFalse(any("note.com" in ln or ln.startswith("最終回") for ln in flat))
+
+    def test_evidence_columns(self):
+        out = os.path.join(self.tmp, "ev2.tsv")
+        with redirect_stdout(io.StringIO()):
+            quotecheck.main([self.src, self.q, "--note-footer", "--evidence", out])
+        with open(out, encoding="utf-8") as f:
+            rows = [ln.rstrip("\n").split("\t") for ln in f][1:]
+        by_id = {r[0]: r for r in rows}
+        self.assertEqual(by_id["3"][4:], ["ELSEWHERE", "SHORT,DUP", "2"])  # 9 characters, same as row 2
+        self.assertEqual(by_id["5"][5:], ["SHORT,MULTI,LINE", "1,2"])
+        self.assertEqual(by_id["4"][3], "14")
 
     def test_evidence_has_no_quotation_text(self):
         out = os.path.join(self.tmp, "ev.tsv")
@@ -160,10 +243,38 @@ class QuotecheckTest(unittest.TestCase):
                      "id\tpage_from\tpage_to\tquote\n1\t2\t1\tx\n",
                      "id\tpage_from\tpage_to\tquote\n1\ta\t1\tx\n",
                      "id\tpage_from\tpage_to\tquote\n1\t1\t1\t \n",
-                     "id\tpage_from\tpage_to\tquote\n1\t1\t9\tx\n"):
+                     "id\tpage_from\tpage_to\tquote\n1\t1\t9\tx\n",
+                     "id\tpage_from\tpage_to\tquote\n"):
             q = write(self.tmp, "bad.tsv", text)
             with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
                 self.assertEqual(quotecheck.main([self.src, q]), 2, text)
+
+
+class ExitCodeTest(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+        self.src = write(self.tmp, "src.txt", SOURCE)
+        self.q = write(self.tmp, "q.tsv", "id\tpage_from\tpage_to\tquote\n1\t1\t1\t（第2回）\n")
+
+    def run_main(self, args):
+        with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            return quotecheck.main(args)
+
+    def test_bad_regex_is_exit_2(self):
+        self.assertEqual(self.run_main([self.src, self.q, "--drop-line-regex", "("]), 2)
+
+    def test_inline_flag_with_note_footer(self):
+        self.assertEqual(self.run_main([self.src, self.q, "--drop-line-regex", "(?i)foot", "--note-footer"]), 0)
+
+    def test_unwritable_evidence_is_exit_2(self):
+        bad = os.path.join(self.tmp, "no", "such", "dir", "ev.tsv")
+        self.assertEqual(self.run_main([self.src, self.q, "--evidence", bad]), 2)
+
+
+class PagesMoreTest(unittest.TestCase):
+    def test_nbsp_and_en_dash_range(self):
+        self.assertEqual(pages.norm("a\u00a0b"), "ab")
+        self.assertEqual(pages.parse_range("2–4", 5), (2, 4))
 
 
 class TermcountTest(unittest.TestCase):

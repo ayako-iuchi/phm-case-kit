@@ -26,16 +26,29 @@ def read_pages(path, header_lines=1, drop_line_regex=None):
     header_lines: how many lines to drop from the top of every page (a printed
         header with the time and title, for example). Leading blank lines are
         not counted as header lines.
-    drop_line_regex: lines matching this regular expression (re.search on the
-        line with surrounding whitespace stripped) are dropped, e.g. a footer
-        URL. None drops nothing.
+    drop_line_regex: a regular expression, or a list of them; a line matching
+        any of them (re.search on the line with surrounding whitespace
+        stripped) is dropped, e.g. a footer URL. None drops nothing. Each
+        expression is compiled on its own, so inline flags such as (?i) work.
+        Raises ValueError for an invalid expression.
+
+    The header lines are dropped from every page, whatever they contain.
     """
     with open(path, encoding="utf-8") as f:
         raw = f.read()
     chunks = raw.split("\f")
     if chunks and chunks[-1].strip() == "":
         chunks = chunks[:-1]
-    pat = re.compile(drop_line_regex) if drop_line_regex else None
+    if drop_line_regex is None:
+        regexes = []
+    elif isinstance(drop_line_regex, str):
+        regexes = [drop_line_regex]
+    else:
+        regexes = list(drop_line_regex)
+    try:
+        pats = [re.compile(r) for r in regexes]
+    except re.error as e:
+        raise ValueError(f"bad --drop-line-regex: {e}")
     pages = []
     for chunk in chunks:
         lines = chunk.splitlines()
@@ -44,8 +57,8 @@ def read_pages(path, header_lines=1, drop_line_regex=None):
         while i < len(lines) and lines[i].strip() == "":
             i += 1
         lines = lines[i + header_lines:] if header_lines > 0 else lines[i:]
-        if pat is not None:
-            lines = [ln for ln in lines if not pat.search(ln.strip())]
+        if pats:
+            lines = [ln for ln in lines if not any(p.search(ln.strip()) for p in pats)]
         pages.append(lines)
     return pages
 

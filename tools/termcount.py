@@ -10,6 +10,9 @@ a term broken across two lines is still found ("Predictive" at the end of one
 line and "Maintenance" at the start of the next). The cost: a term can also
 match across a word boundary that whitespace used to mark.
 
+Overlapping occurrences are counted ("aa" occurs 3 times in "aaaa"). A
+term that runs across a page break is not counted.
+
 A count of 0 means only this: the term does not occur in the text extracted
 from these pages. It says nothing about images, about pages outside the
 range, about other documents, or about what the author of the source says
