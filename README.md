@@ -1,6 +1,6 @@
 # phm-case-kit
 
-Reproducible kit for the blog series **"From One Line to Every Site, in Japan and Overseas: Company-wide DX and Predictive Maintenance at a Hypothetical Large Japanese Manufacturer"** (Hypothetical Technical Blog, PdM #1 onward).
+Reproducible kit for the blog series **"From One Line to Every Site, in Japan and Overseas: Company-wide DX and Predictive Maintenance at a Hypothetical Large Japanese Manufacturer"** (Hypothetical Technical Blog, from Blog #37).
 
 The kit holds the tools used to check quotes, figures and dated facts in hypothetical case documents against **public sources only**.
 
@@ -8,7 +8,47 @@ The kit holds the tools used to check quotes, figures and dated facts in hypothe
 
 ## Status
 
-Empty so far. Tools are added together with the posts that use them, starting with PdM #1.
+Version 1.0 (unreleased on this branch). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
+
+| Tool | What it does | Post |
+| --- | --- | --- |
+| `tools/quotecheck.py` | Checks that each quotation is on the page given for it, flags how much an OK is worth, and runs a self-test that alters the quotations | Blog #37 |
+| `tools/termcount.py` | Counts where a term occurs, page by page; a count of 0 is reported only as "not in the extracted text of these pages" | Blog #37 |
+
+## Using the tools
+
+You supply the source. Extract it yourself, keeping the page breaks:
+
+    pdftotext -layout source.pdf source.txt
+
+Write your quotations as a tab-separated file with the columns `id`, `page_from`, `page_to`, `quote` (a header row is required; other columns are ignored). Then:
+
+    python3 -I tools/quotecheck.py source.txt quotes.tsv --note-footer --mutate --evidence results.tsv
+    python3 -I tools/termcount.py source.txt "Predictive Management" "Predictive Maintenance" --pages 1-119 --note-footer
+
+`--note-footer` drops lines that start with a note.com URL (the footer of a page printed from note); `--header-lines` (default 1) drops the printed header at the top of each page.
+
+**What quotecheck checks.** All whitespace is removed from the quotation and from the pages, and the quotation must be a substring of the given pages. Nothing else is normalized: 「」 and "", or full-width and half-width letters, stay different. A quotation is `OK`, `ELSEWHERE` (on other pages, which are listed) or `MISSING`. Flags say how much an OK is worth: `SHORT` (10 characters or fewer by default), `MULTI` (on more than one page), `DUP` (same text as an earlier row) and `LINE` (a whole line of the page, often a heading).
+
+**What it does not check.** Whether a quotation is in context, is attributed to the right person, or supports the claim it is used for. It cannot tell an extraction defect from an error in the source, and it checks the PDF you saved, not the page as it is now.
+
+**The self-test (`--mutate`).** For each quotation of 4 characters or more, it makes four altered copies and counts how many the check would catch. Replacing or deleting a character in the middle is caught. Dropping the first or the last character is never caught, because a shortened quotation is still on the page: a quotation that was cut short passes this check.
+
+**The evidence files** (`--evidence`) hold ids, pages, lengths, verdicts and flags, and no quotation text. `evidence/` holds the runs cited by the posts.
+
+## Tests
+
+    python3 -m unittest discover -s tests
+
+The tests use a synthetic source written for them.
+
+## Tags
+
+None yet.
+
+## Posts that use the kit
+
+- Hypothetical Technical Blog #37 (in preparation): `quotecheck.py`, `termcount.py`
 
 ## Ground rules
 

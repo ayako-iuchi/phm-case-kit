@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you cite this kit, please use this record. Code: MIT. Documents and data written for the kit: CC BY 4.0."
+title: "phm-case-kit: reproduction kit for Hypothetical Technical Blog, From One Line to Every Site, in Japan and Overseas"
+type: software
+authors:
+  - family-names: Iuchi
+    given-names: Ayako
+version: "1.0"
+license: MIT
+repository-code: "https://github.com/ayako-iuchi/phm-case-kit"

@@ -1,0 +1,29 @@
+# quotecheck and termcount on the inventory's quotations, 2026-10-28
+#
+# Source: the author's PDF print of Takeaki Ohi's note magazine on 予兆管理 (140 pages, printed 2026-10-28 09:29-09:33 JST),
+# extracted with: pdftotext version 24.02.0 -layout. The PDF and its text are not in this repository.
+# Quotations: 350 rows taken from an inventory written by a separate agent; their text is not in this repository.
+# Per-row results without text: quotecheck_inventory_2026-10-28.tsv
+#
+$ python3 -I tools/quotecheck.py SOURCE.txt QUOTES.tsv --note-footer --mutate --quiet
+source pages: 140
+rows: 350 (distinct after normalization: 347)
+OK: 350  ELSEWHERE: 0  MISSING: 0
+flags: SHORT(<=10) 44  MULTI 15  DUP 3  LINE 48
+median length: 27
+self-test (quotations of 4+ characters; 1 skipped):
+  replace_middle: caught 349 of 349 (of the caught, 0 occur on other pages)
+  delete_middle: caught 349 of 349 (of the caught, 4 occur on other pages)
+  drop_first: caught 0 of 349 (of the caught, 0 occur on other pages)
+  drop_last: caught 0 of 349 (of the caught, 0 occur on other pages)
+
+$ python3 -I tools/termcount.py SOURCE.txt 'Predictive Management' 'Predictive Maintenance' 'Prognostics and Health Management' --note-footer
+pages 1-140 of 140
+Predictive Management	0	not in the extracted text of these pages
+Predictive Maintenance	2	p.7, p.12
+Prognostics and Health Management	1	p.7
+
+$ python3 -I tools/termcount.py SOURCE.txt 'Predictive Management' 'Predictive Maintenance' --pages 1-119 --note-footer --ignore-case
+pages 1-119 of 140 (case ignored)
+Predictive Management	0	not in the extracted text of these pages
+Predictive Maintenance	2	p.7, p.12
