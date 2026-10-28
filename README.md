@@ -8,7 +8,7 @@ The kit holds the tools used to check quotes, figures and dated facts in hypothe
 
 ## Status
 
-Version 1.0 (unreleased on this branch). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
+Version 1.0, released on 28 October 2026. Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
 
 | Tool | What it does | Post |
 | --- | --- | --- |
@@ -46,16 +46,16 @@ The tests use a synthetic source written for them.
 
 ## Tags
 
-None yet.
+None yet. The tag `v1.0` is made by the author on GitHub after the release commit; until it exists, this list does not include it.
 
 ## Posts that use the kit
 
-- Hypothetical Technical Blog #37 (in preparation): `quotecheck.py`, `termcount.py`
+- Hypothetical Technical Blog #37, *What This Zero Checked* (published after this release): `quotecheck.py`, `termcount.py`
 
 ## Ground rules
 
 - **All cases are fictional.** The companies, people and figures in the case documents (Hypothetical Case Study #17 and its derivatives) were created by the author with generative AI. They are not records of any real company.
-- **Public sources only.** The method behind the series is Takeaki Ohi's (CEO, Kompas Co., Ltd.) public note magazine on 予兆管理, which renders the term in English as "Predictive Maintenance / Prognostics and Health Management - PHM". Only what can be checked in that public source is attributed to him.
+- **Public sources only.** The method behind the series is Takeaki Ohi's (CEO, Kompas Co.Ltd.) public note magazine on 予兆管理, which renders the term in English as "Predictive Maintenance / Prognostics and Health Management - PHM". Only what can be checked in that public source is attributed to him.
 - **No third-party text in this repository.** Source PDFs and their text extracts are never committed. The tools read files you supply yourself.
 - Not affiliated with or endorsed by any company mentioned.
 

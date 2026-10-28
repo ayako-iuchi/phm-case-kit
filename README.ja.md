@@ -8,7 +8,7 @@ English: [README.md](README.md)
 
 ## 状態
 
-版 1.0（このブランチでは未リリース）。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
+版 1.0。2026年10月28日にリリース。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
 
 | 道具 | すること | 記事 |
 | --- | --- | --- |
@@ -46,16 +46,16 @@ English: [README.md](README.md)
 
 ## タグ
 
-まだありません。
+まだありません。タグ `v1.0` は、リリースのコミットの後に筆者が GitHub で作ります。できるまでは、この一覧に載せません。
 
 ## キットを使う記事
 
-- Hypothetical Technical Blog #37（準備中）：`quotecheck.py`、`termcount.py`
+- Hypothetical Technical Blog #37「不一致0件は何を確かめたか」（このリリースの後に公開）：`quotecheck.py`、`termcount.py`
 
 ## 決まり
 
 - **事例はすべて架空です。** 事例の文書（Hypothetical Case Study #17 とその派生文書）に出てくる企業・人物・数値は、筆者が生成AIを使って作ったもので、実在の企業の記録ではありません。
-- **公開資料だけを使います。** 連載の手法の出典は、株式会社KOMPAS CEO 大井竹昭氏の公開 note マガジン「予兆管理」です。氏の考えとして書くのは、この公開出典で確かめられるものだけです。英語の表記も、氏の第1回の表記「Predictive Maintenance / Prognostics and Health Management - PHM」に従います。
+- **公開資料だけを使います。** 連載の手法の出典は、株式会社KOMPAS（Kompas Co.Ltd.）CEO 大井竹昭氏の公開 note マガジン「予兆管理」です。氏の考えとして書くのは、この公開出典で確かめられるものだけです。英語の表記も、氏の第1回の表記「Predictive Maintenance / Prognostics and Health Management - PHM」に従います。
 - **第三者の文章はこのリポジトリに入れません。** 出典のPDFやそのテキストはコミットしません。道具は、利用者が自分で用意したファイルを読みます。
 - 記載の企業とは関係がなく、その承認を受けたものでもありません。
 
