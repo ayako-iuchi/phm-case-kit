@@ -2,6 +2,13 @@
 
 Revisions are dated and kept visible. Nothing is changed silently.
 
+## Kit v1.3 — in preparation
+
+- Added `tools/datecheck.py`, `tests/test_datecheck.py` (8 tests; 69 in all), `register/dated_hcs17.tsv` and `evidence/datecheck_hcs17_2026-10-29.txt`, for Hypothetical Technical Blog #40 (*True as of When?*). Standard library only.
+- `datecheck.py` checks a register of dated facts. Each row keeps three dates apart (the document's date, the date of the event that decides the fact, the date the source was opened), records whether the fact held then and holds now, and gives a date by which to check it again. It reports, among other things, a fact called wrong because of an event after the document's date (hindsight), and rows that are due to be checked again.
+- `register/dated_hcs17.tsv` records 12 dated facts in Hypothetical Case Study #17 and the documents derived from it, all fictional and written by the author with generative AI, from an inventory made on 29 October 2026 by a separate agent that had written none of the documents and checked against primary sources on that day. Run on 29 October 2026: CURRENT 4, STALE 2, WRONG-THEN 1, UNDATED 5; no issues; next recheck 2027-03-31. Two rows continue rows of `register/sources_hcs17.tsv` whose notes said they would be dealt with in a later post: hcs17-08 (the DX investment tax measure) becomes hcs17-d01, and hcs17-13 (TCFD) becomes hcs17-d08. `register/sources_hcs17.tsv` itself is unchanged.
+- Both READMEs describe `datecheck.py`, list the tag `v1.2` (c5c6ac3, made on 29 October 2026 at 10:49 JST, immutable) and name Blog #40. `CITATION.cff` names version 1.3.
+
 ## Kit v1.2 — 2026-10-29
 
 - **Released on 29 October 2026,** before Hypothetical Technical Blog #39 (*What Does That 82% Measure?*), which cites it, is published. `main` was fast-forwarded to the branch `kit-v1.2`. The entries below were written while the release was in preparation; the account of how the register was completed was corrected before release, as the entry "How the register was completed" says. The tag `v1.2` is made by the author on GitHub after this commit. `CITATION.cff` gives the release date, and both READMEs say the version was released.

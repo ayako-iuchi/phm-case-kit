@@ -1,0 +1,7 @@
+# python3 -I tools/datecheck.py register/dated_hcs17.tsv --as-of 2026-10-29
+# run on 2026-10-29; the register records sources opened on 2026-10-29
+rows: 12
+class: CURRENT 4  STALE 2  WRONG-THEN 1  UNDATED 5  CANNOT 0
+next recheck: 2027-03-31
+issues: 0
+# exit 0

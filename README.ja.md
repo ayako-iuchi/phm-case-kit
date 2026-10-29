@@ -8,7 +8,7 @@ English: [README.md](README.md)
 
 ## 状態
 
-版 1.2。2026年10月29日にリリース（版 1.1 は同じ日、版 1.0 は2026年10月28日）。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
+版 1.3（準備中。版 1.2 と版 1.1 は2026年10月29日、版 1.0 は2026年10月28日にリリース）。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
 
 | 道具 | すること | 記事 |
 | --- | --- | --- |
@@ -16,6 +16,7 @@ English: [README.md](README.md)
 | `tools/termcount.py` | 語がどの頁に何回出てくるかを数える。0回のときは「この頁範囲の抽出テキストにない」とだけ出す | Blog #37 |
 | `tools/sourcecheck.py` | 文書の中の実在の事実を、一次資料・二次資料・どこにもない、のどこまでたどれたかを記録した台帳を点検し、判定ごとに数える | Blog #38 |
 | `tools/numcheck.py` | 関連する文書群で、1つの値が別々の定義で使われていないか、台帳が出現を取りこぼしていないかを点検する | Blog #39 |
+| `tools/datecheck.py` | 時点のある事実の台帳を点検する。文書の日付で成り立っていたか、今も成り立つか、後の出来事を誤りと呼んでいないか、再確認の時期が来た行はどれか | Blog #40 |
 
 ## 使い方
 
@@ -52,6 +53,12 @@ English: [README.md](README.md)
 
 `DRIFT`（1つの値に定義が2つ以上。`measures`、`unit`、`base` のどれかが違う）と `CONFLICT`（1つの定義に値が2つ以上）を出します。これは人が判断する所見で、誤りではありません。`--strict` を付けると終了コード 1 にします。`--text DOC=PATH`（繰り返し可。1つのファイルにまとめた複数の文書は同じファイルを指せます）を渡すと、抜き書きがその頁にあり、その値を含むか（`QUOTE`）と、各頁に出てくる回数が台帳の行数と合うか（多ければ `MISSED`、少なければ `EXTRA`）も確かめます。台帳のすべての値を、渡したすべてのテキストで探します。全角の数字と記号は半角として読み、括弧と空白（`[82] %`）と、範囲の記号（`~`、`〜`、`～`、ハイフンやダッシュ）の違いを許します（`[8-12]回` は `8~12回` に一致）。直前の数字・カンマ・小数点・範囲の記号（`60-82%` は `82%` ではない）と、直後の数字（接尾辞のない値では直後の `%` と小数・桁区切りも）は別の数とみなします。空白を残したテキストで数えるので、2行に分かれた数字はつなげません。全部を棚卸ししたつもりの文書だけを渡してください。`--header-lines`（既定 0）と `--note-footer` は quotecheck と同じく行を除き、`--quiet` は集計だけを出します。終了コードは、指摘がなければ 0、`QUOTE`、`MISSED`、`EXTRA` があれば 1（`--strict` では `DRIFT`・`CONFLICT` も 1）、入力の誤りは 2 です。`register/numbers_hcs17.tsv` は、Hypothetical Case Study #17 と派生文書（すべて筆者が生成AIで作った架空の文書）に出てくる6つの値（80%、82%、1.5年、3週間、85%、8~12回）の75か所を記録した台帳です。うち72か所が HCS #17 と派生文書、3か所が大井氏の公開出典です。大井氏の公開出典の行と、#17 の前書きに埋め込まれたそのカードの行は、頁と何を測るかだけで、氏の文章は入れていません。実行結果は `evidence/` に置きます。
 
+**datecheck** は、日付によって真偽が変わる事実の台帳を点検します。3つの日付を分けて記録します。文書の日付（`doc_date`。上限しか分からなければ `<=DATE`）、事実を決める出来事の日付（`event_date`。年、年月、年月日）、資料を開いた日（`accessed`）です。加えて、再確認の期限（`recheck_by`）を持ちます。ほかの列は `id`、`document`、`page`、`statement`、`event`、`status_then` と `status_now`（`true`、`false`、`unknown`）、`source_title`、`url`、`class`、`note` です。
+
+    python3 -I tools/datecheck.py register/dated_hcs17.tsv --as-of 2026-10-29
+
+判定は、`CURRENT` 文書の日付でも今も成り立つ、`STALE` 当時は成り立ち今は成り立たない、`WRONG-THEN` 当時も成り立たない、`UNDATED` 日付で真偽が変わるのに日付がない、`CANNOT` 確かめられない、です。点検は、必須の欄と CURRENT 以外の注記（T1）、許される値と日付の形（T2）、判定と status の一致（T3）、後知恵（T4。文書より後の出来事で WRONG-THEN にしている行と、文書より前の出来事で STALE にしている行。年や年月の出来事はその期間全体で比べる）、URL には `--as-of` 以前の確認日（T5）、id の重複（T6）、`recheck_by` が `--as-of` 以前で再確認の時期が来た行（T7）です。終了コードは、指摘がなければ 0、あれば 1、入力の誤りは 2 です。`register/dated_hcs17.tsv` は、Hypothetical Case Study #17 と派生文書（すべて筆者が生成AIで作った架空の文書）の、時点のある事実12件の台帳で、実行結果を `evidence/` に置きます。
+
 ## テスト
 
     python3 -m unittest discover -s tests
@@ -64,13 +71,16 @@ English: [README.md](README.md)
 
 - `v1.1` → 299422f。2026年10月29日（09:57 JST）に筆者が GitHub で作成。改変禁止（immutable）。
 
-タグ `v1.2` は、リリースのコミットの後に筆者が GitHub で作ります。できるまでは、この一覧に載せません。
+- `v1.2` → c5c6ac3。2026年10月29日（10:49 JST）に筆者が GitHub で作成。改変禁止（immutable）。
+
+タグ `v1.3` は、リリースのコミットの後に筆者が GitHub で作ります。できるまでは、この一覧に載せません。
 
 ## キットを使う記事
 
 - Hypothetical Technical Blog #37「不一致0件は何を確かめたか」（2026年10月28日）：`quotecheck.py`、`termcount.py`。https://note.com/ayako_iuchi/n/n280b77ac18ec
 - Hypothetical Technical Blog #38「その数字はどこから来たか」（2026年10月29日）：`sourcecheck.py`、`register/sources_hcs17.tsv`。https://note.com/ayako_iuchi/n/n7016091e1000
-- Hypothetical Technical Blog #39「その82%は何を測っているか」（このリリースの後に公開）：`numcheck.py`、`register/numbers_hcs17.tsv`
+- Hypothetical Technical Blog #39「その82%は何を測っているか」：`numcheck.py`、`register/numbers_hcs17.tsv`
+- Hypothetical Technical Blog #40「その事実はいつの事実か」（このリリースの後に公開）：`datecheck.py`、`register/dated_hcs17.tsv`
 
 ## 決まり
 

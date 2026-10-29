@@ -8,7 +8,7 @@ The kit holds the tools used to check quotes, figures and dated facts in hypothe
 
 ## Status
 
-Version 1.2, released on 29 October 2026 (version 1.1 earlier the same day, version 1.0 on 28 October 2026). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
+Version 1.3, in preparation (version 1.2 and version 1.1 released on 29 October 2026, version 1.0 on 28 October 2026). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
 
 | Tool | What it does | Post |
 | --- | --- | --- |
@@ -16,6 +16,7 @@ Version 1.2, released on 29 October 2026 (version 1.1 earlier the same day, vers
 | `tools/termcount.py` | Counts where a term occurs, page by page; a count of 0 is reported only as "not in the extracted text of these pages" | Blog #37 |
 | `tools/sourcecheck.py` | Checks a source register, which traces each real-world fact in a document to a primary source, a secondary source or nowhere, and counts the rows by class | Blog #38 |
 | `tools/numcheck.py` | Checks a number register: where one value carries more than one definition across related documents, and whether the register missed an occurrence | Blog #39 |
+| `tools/datecheck.py` | Checks a register of dated facts: whether each was true on the document's date and is true now, whether a later event is being called an error, and which rows are due to be checked again | Blog #40 |
 
 ## Using the tools
 
@@ -52,6 +53,12 @@ Classes: `A` the primary source says it as the document wrote it; `B` the primar
 
 It reports `DRIFT` (one value, more than one definition: `measures`, `unit` or `base` differ) and `CONFLICT` (one definition, more than one value). These are findings to judge, not errors; `--strict` makes them exit 1. With `--text DOC=PATH` (repeatable; several documents compiled in one file may share it), it also checks that each quote is on its page and contains its value (`QUOTE`), and that each page holds as many occurrences of each value as the register has rows for it: more is `MISSED`, fewer is `EXTRA`. It searches every text for every value in the register, reading full-width digits and signs as half-width, allowing brackets and spaces (`[82] %`) and a range written with `~`, `〜`, `～` or a hyphen or dash (`[8-12]回` matches `8~12回`); a digit, comma, point or range sign just before does not count (`60-82%` is not `82%`), nor a digit just after (for a value with no suffix, nor a `%` or a decimal or thousands part). The text is counted with its whitespace, so numbers on two lines are not joined. Pass only documents you meant to inventory in full. `--header-lines` (default 0) and `--note-footer` drop lines as in quotecheck; `--quiet` prints only the summary. Exit status: 0 if no check fires, 1 if `QUOTE`, `MISSED` or `EXTRA` fires (or `DRIFT`/`CONFLICT` with `--strict`), 2 on bad input. `register/numbers_hcs17.tsv` records 75 occurrences of six values (80%, 82%, 1.5年, 3週間, 85%, 8~12回): 72 in Hypothetical Case Study #17 and the documents derived from it (all fictional, written by the author with generative AI) and 3 in Ohi's public series; rows for Ohi's public series, and for the card of it embedded in #17's preface, give only the page and what is measured, not his text. Its run is in `evidence/`.
 
+**datecheck** checks a register of dated facts: facts that are true only as of a date. It keeps three dates apart: the document's date (`doc_date`, or `<=DATE` when only an upper bound is known), the date of the event that decides the fact (`event_date`: a year, a month or a day), and the date the source was opened (`accessed`), and it adds the date by which the row should be checked again (`recheck_by`). The other columns are `id`, `document`, `page`, `statement`, `event`, `status_then` and `status_now` (`true`, `false` or `unknown`), `source_title`, `url`, `class` and `note`.
+
+    python3 -I tools/datecheck.py register/dated_hcs17.tsv --as-of 2026-10-29
+
+Classes: `CURRENT` held on the document's date and holds now; `STALE` held then, no longer holds; `WRONG-THEN` did not hold even then; `UNDATED` depends on a date the document does not give; `CANNOT` could not be checked. The checks: required fields, with a note for every class but CURRENT (T1); allowed values and date forms (T2); class and statuses agree (T3); hindsight: WRONG-THEN whose event comes after the document, or STALE whose event comes before it (T4; an event dated by year or month is compared by its whole period); a URL needs an accessed date no later than `--as-of` (T5); duplicate ids (T6); a row whose `recheck_by` is on or before `--as-of` is due to be checked again (T7). Exit status: 0 if no check fires, 1 if any does, 2 on bad input. `register/dated_hcs17.tsv` records 12 dated facts in Hypothetical Case Study #17 and the documents derived from it (all fictional, written by the author with generative AI); its run is in `evidence/`.
+
 ## Tests
 
     python3 -m unittest discover -s tests
@@ -64,13 +71,16 @@ The tests use a synthetic source written for them.
 
 - `v1.1` → 299422f, made by the author on GitHub on 29 October 2026 (09:57 JST). Immutable.
 
-The tag `v1.2` is made by the author on GitHub after the release commit; until it exists, this list does not include it.
+- `v1.2` → c5c6ac3, made by the author on GitHub on 29 October 2026 (10:49 JST). Immutable.
+
+The tag `v1.3` is made by the author on GitHub after the release commit; until it exists, this list does not include it.
 
 ## Posts that use the kit
 
 - Hypothetical Technical Blog #37, *What This Zero Checked* (28 October 2026; English, 29 October): `quotecheck.py`, `termcount.py`. https://note.com/ayako_iuchi/n/ne55386ce1ffc
 - Hypothetical Technical Blog #38, *Where Did That Number Come From?* (29 October 2026): `sourcecheck.py`, `register/sources_hcs17.tsv`.
-- Hypothetical Technical Blog #39, *What Does That 82% Measure?* (published after this release): `numcheck.py`, `register/numbers_hcs17.tsv`
+- Hypothetical Technical Blog #39, *What Does That 82% Measure?*: `numcheck.py`, `register/numbers_hcs17.tsv`
+- Hypothetical Technical Blog #40, *True as of When?* (published after this release): `datecheck.py`, `register/dated_hcs17.tsv`
 
 ## Ground rules
 
