@@ -41,8 +41,10 @@ Checks (register problems; each makes the exit status 1):
     R1  a required field is empty or not allowed (id form, kind, value,
         places, a formula where none belongs or none where one is needed,
         "of" on a non-candidate or missing on a candidate)
-    R2  a formula does not parse, or names an id not in the register
+    R2  a formula does not parse, is too long or nests too deeply, names an
+        id not in the register, or divides by zero
     R3  a formula refers back to its own row, directly or through others
+        (each row in the loop is reported)
     R4  a duplicate id
     R5  "of" names a row that is not input or derived, or has no value
 
@@ -56,6 +58,12 @@ Findings (about the document's arithmetic; each makes the exit status 1):
 A calculated value matches when it lies within half a unit of the last shown
 place of the shown value (for 1.5 shown to 1 place: 1.45 to 1.55).
 Arithmetic is exact (fractions); nothing is rounded before the comparison.
+A formula that names a derived row uses that row's calculated value, not its
+shown value; to use a shown value as it stands, record it as an input row.
+A division by zero is R2 on the row whose formula divides. A row that only
+depends on a row with a register problem is not reported again. Limits: a
+formula of at most 2000 characters, a value of at most 40 characters, and
+places from 0 to 12.
 
 Exit status: 0 if nothing fires, 1 if a check or finding fires, 2 on bad input.
 """
@@ -70,6 +78,9 @@ REQUIRED = ["id", "document", "page", "label", "shown", "value", "places", "kind
 KINDS = ("input", "derived", "candidate", "placeholder")
 ID = re.compile(r"[A-Za-z][A-Za-z0-9_]*")
 NUM = re.compile(r"[0-9]+(\.[0-9]+)?")
+MAX_FORMULA = 2000
+MAX_NUMBER = 40
+MAX_PLACES = 12
 TOKEN = re.compile(r"\s*(?:([0-9]+(?:\.[0-9]+)?)|([A-Za-z][A-Za-z0-9_]*)|(.))")
 
 
@@ -212,16 +223,33 @@ def load(path):
 
 
 def fmt(x, places=4):
-    return f"{float(x):.{places}f}"
+    """Fraction -> decimal string rounded half-even to `places`, without float."""
+    q = Fraction(round(x * 10 ** places), 10 ** places)
+    sign = "-" if q < 0 else ""
+    q = abs(q)
+    whole, frac = divmod(q.numerator * 10 ** places // q.denominator, 10 ** places)
+    return f"{sign}{whole}.{frac:0{places}d}" if places else f"{sign}{whole}"
+
+
+class _Skip(Exception):
+    """A dependency has a register problem already reported; say nothing more."""
+
+
+class _Open(Exception):
+    def __init__(self, name):
+        super().__init__(name)
+        self.name = name
 
 
 def check(rows):
     """Return (issues, findings, results). results: id -> calculated Fraction."""
     issues, findings = [], []
-    by_id, trees = {}, {}
+    by_id, trees, bad = {}, {}, set()
 
     def flag(r, code, msg):
         issues.append((r["_line"], r["id"], code, msg))
+        if r["id"]:
+            bad.add(r["id"])
 
     for r in rows:
         kind = r["kind"]
@@ -232,15 +260,16 @@ def check(rows):
             flag(r, "R1", f"id {r['id']!r} is not a letter followed by letters, digits or underscores")
         if kind and kind not in KINDS:
             flag(r, "R1", f"kind {kind!r} is not one of {', '.join(KINDS)}")
-        r["_value"] = parse_value(r["value"])
-        r["_places"] = int(r["places"]) if re.fullmatch(r"[0-9]+", r["places"] or "") else None
+        r["_value"] = parse_value(r["value"]) if len(r["value"]) <= MAX_NUMBER else None
+        r["_places"] = (int(r["places"]) if re.fullmatch(r"[0-9]{1,2}", r["places"] or "")
+                        and int(r["places"]) <= MAX_PLACES else None)
         if kind in ("input", "derived"):
             if not r["shown"]:
                 flag(r, "R1", "shown is empty")
             if r["_value"] is None:
-                flag(r, "R1", f"value {r['value']!r} is not a plain decimal")
+                flag(r, "R1", f"value {r['value'][:40]!r} is not a plain decimal of at most {MAX_NUMBER} characters")
             if r["_places"] is None:
-                flag(r, "R1", f"places {r['places']!r} is not a whole number")
+                flag(r, "R1", f"places {r['places'][:40]!r} is not a whole number from 0 to {MAX_PLACES}")
         if kind == "placeholder" and r["value"] != "-":
             flag(r, "R1", "a placeholder's value is \"-\"")
         if kind in ("derived", "candidate") and not r["formula"]:
@@ -251,16 +280,21 @@ def check(rows):
             flag(r, "R1", "a candidate row needs \"of\"")
         if kind != "candidate" and r["of"]:
             flag(r, "R1", "only a candidate row has \"of\"")
-        if r["id"]:
+        if r["id"] and ID.fullmatch(r["id"]):
             if r["id"] in by_id:
                 flag(r, "R4", f"id also on line {by_id[r['id']]['_line']}")
-            else:
-                by_id[r["id"]] = r
-        if r["formula"]:
-            try:
-                trees[r["id"]] = parse(r["formula"])
-            except ValueError as e:
-                flag(r, "R2", f"formula: {e}")
+                continue
+            by_id[r["id"]] = r
+            if r["formula"]:
+                if len(r["formula"]) > MAX_FORMULA:
+                    flag(r, "R2", f"formula is longer than {MAX_FORMULA} characters")
+                    continue
+                try:
+                    trees[r["id"]] = parse(r["formula"])
+                except RecursionError:
+                    flag(r, "R2", "formula: parentheses nest too deeply")
+                except ValueError as e:
+                    flag(r, "R2", f"formula: {e}")
 
     for rid, tree in list(trees.items()):
         unknown = sorted(n for n in names(tree) if n not in by_id)
@@ -274,42 +308,43 @@ def check(rows):
             if target is None or target["kind"] not in ("input", "derived") or target["_value"] is None:
                 flag(r, "R5", f"of {r['of']!r} is not an input or derived row with a value")
 
-    results, state, blocked = {}, {}, {}
-
-    class Cycle(Exception):
-        pass
-
-    class Open(Exception):
-        def __init__(self, name):
-            self.name = name
+    results, failed, stack = {}, {}, []
 
     def value_of(name):
         r = by_id[name]
         if r["kind"] == "placeholder":
-            raise Open(name)
+            raise _Open(name)
         if r["kind"] == "input":
             if r["_value"] is None:
-                raise Open(name)
+                raise _Skip()
             return r["_value"]
+        if name not in trees:
+            raise _Skip()
         return calc(name)
 
     def calc(name):
         if name in results:
             return results[name]
-        if name in blocked:
-            raise blocked[name]
-        if name not in trees:
-            raise Open(name)
-        if state.get(name) == "busy":
-            raise Cycle()
-        state[name] = "busy"
+        if name in failed:
+            raise failed[name]
+        if name in stack:
+            for member in stack[stack.index(name):]:
+                if member not in failed:
+                    flag(by_id[member], "R3", "formula refers back to this row")
+                    failed[member] = _Skip()
+            raise _Skip()
+        stack.append(name)
         try:
             v = evaluate(trees[name], value_of)
-        except (Open, Cycle, ZeroDivisionError) as e:
-            blocked[name] = e
-            raise
+        except ZeroDivisionError:
+            flag(by_id[name], "R2", "formula divides by zero")
+            failed[name] = _Skip()
+            raise failed[name]
+        except (_Open, _Skip) as e:
+            failed.setdefault(name, e)
+            raise failed[name]
         finally:
-            state[name] = "done"
+            stack.pop()
         results[name] = v
         return v
 
@@ -317,12 +352,14 @@ def check(rows):
         r = by_id[rid]
         try:
             calc(rid)
-        except Cycle:
-            flag(r, "R3", "formula refers back to this row")
-        except Open as e:
-            findings.append((r["_line"], rid, "UNRESOLVED", f"needs {e.name}, which has no value"))
-        except ZeroDivisionError:
-            flag(r, "R2", "formula divides by zero")
+        except _Open as e:
+            if rid not in bad:
+                findings.append((r["_line"], rid, "UNRESOLVED", f"needs {e.name}, which has no value"))
+        except _Skip:
+            pass
+        except RecursionError:
+            stack.clear()
+            flag(r, "R2", "formulas depend on each other too deeply")
 
     for rid in trees:
         r = by_id[rid]
@@ -333,7 +370,7 @@ def check(rows):
                                  f"shown {r['shown']} ({r['value']}); formula gives {fmt(v)}"))
 
     for target in rows:
-        cands = [c for c in rows if c["kind"] == "candidate" and c["of"] == target["id"]]
+        cands = [c for c in rows if c["kind"] == "candidate" and c["of"] == target["id"] and target["id"]]
         if not cands or target["_value"] is None or target["_places"] is None:
             continue
         got = [c for c in cands if c["id"] in results

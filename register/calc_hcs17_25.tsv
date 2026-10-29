@@ -3,7 +3,7 @@ I0	#17.25	2	初期投資（先鋒） I₀	[3.2]億円	3.2	1	input			変数表 §
 C	#17.25	2	年間ランニング C	[0.42]億円	0.42	2	input			変数表 §1.1
 r	#17.25	1	停止時間削減率 r	[82]%	0.82	2	input			変数表 §1.1。停止時間の率
 alpha1	#17.25	2	ランプアップ係数 α(t) 初年度	[0.3]	0.3	1	input			変数表 §1.1。初年度
-alpha2	#17.25	2	ランプアップ係数 α(t) 2年目	（記載なし）	-	-	placeholder			変数表 §1.1 は初年度と3年目だけ
+alpha2	#17.25	2	ランプアップ係数 α(t) 2年目	-	-	-	placeholder			変数表 §1.1 は初年度[0.3]と3年目[1.0]だけを書き、2年目の値はない
 pre_loss	#17.25	3	生産機会損失 導入前	導入前[2.5]億円	2.5	1	input			§3.2
 pre_maint	#17.25	3	メンテナンスコスト 導入前	導入前[1.5]億円相当	1.5	1	input			§3.2
 rate_maint	#17.25	3	メンテナンスコスト 削減率	[19]%	0.19	2	input			§3.2
@@ -26,21 +26,21 @@ ben_exp	#17.25	3	緊急対応・特急輸送削減	約[0.28]億円	0.28	2	derive
 ben_yield	#17.25	3	再立ち上げ歩留まり改善	約[0.20]億円	0.20	2	derived	pre_yield * rate_yield		§3.2
 ben_total	#17.25	3	合計（粗）	約[3.32]億円	3.32	2	derived	ben_loss + ben_maint + ben_exp + ben_yield + energy		§3.2 の表の合計行。#17 p.20 の表（画像）も同じ内訳と合計
 total_shown	#17.25	3	合計（粗）の表示値	約[3.32]億円	3.32	2	input			ben_total の表示値を、そのまま入力として使う。文書の他の計算がこの値を使っているかを試すため
-i0_items	#17.25	4	§4.1 の内訳の和	-	-	-	candidate	inv_sensor + inv_edge + inv_cloud + inv_si + inv_poc + inv_pmo + inv_edu	I0	§4.1 の7項目の和を I₀ と比べる
+i0_items	#17.25	4	§4.1 の内訳の和	-	-	-	candidate	inv_sensor + inv_edge + inv_cloud + inv_si + inv_poc + inv_pmo + inv_edu	I0	読み：§4.1 の7項目の和を I₀ と比べる（§4.1 に合計行はない）
 b1	#17.25	2	B1：保守（フラット） 現状の損失水準	[3.8]億円/年	3.8	1	input			§2。どう出したかは書かれていない
 b1_all	#17.25	3	§3.2 の導入前値の和	-	-	-	candidate	pre_loss + pre_maint + pre_exp + pre_yield	b1	読み1：§3.2 の導入前値をすべて足す
 b1_nomaint	#17.25	3	§3.2 の導入前値の和（保全を除く）	-	-	-	candidate	pre_loss + pre_exp + pre_yield	b1	読み2：メンテナンスの「1.5億円相当」を除く
-b1_17	#17	7	#17 §2.4 の表の内訳の和	-	-	-	candidate	pre_loss + maint17 + pre_exp + pre_yield	b1	読み3：保全を #17 p.7 の表（画像）の割増分 0.7億円にする。#17.25 自身の値ではない
+b1_17	#17.25	2	#17 §2.4 の表の内訳の和	-	-	-	candidate	pre_loss + maint17 + pre_exp + pre_yield	b1	読み3：保全の項目を、#17 p.7 の表（画像）の「緊急修理に伴う部品・人件費の割増分 約7,000万円」に置き換える。#17 p.7 の表は合計を「顕在化している直接コスト 合計 約3.8億円/年」と印刷している。#17.25 自身の値ではない
 y1_ben	#17.25	5	CF表 Y1 便益	+[1.0]	1.0	1	input			§5.2
 y1_alpha	#17.25	5	α(1) × 合計（粗）	-	-	-	candidate	alpha1 * total_shown	y1_ben	読み1：表示の合計 3.32 に初年度の係数を掛ける
 y1_alpha_sum	#17.25	5	α(1) × 内訳の和	-	-	-	candidate	alpha1 * ben_total	y1_ben	読み2：内訳の和に初年度の係数を掛ける
 y2_ben	#17.25	5	CF表 Y2 便益	+[2.9]	2.9	1	input			§5.2。ランニングは別の行（Y2 は -[X]）
-y2_net	#17.25	5	合計（粗） − C	-	-	-	candidate	total_shown - C	y2_ben	読み1：便益の行にランニング控除後の値を置いた（#17 p.20 の「年間純便益（運用コスト控除後）約2.9億円」と同じ値）。ランニングの行と合わせると二重に引くことになる
+y2_net	#17.25	5	合計（粗） − C	-	-	-	candidate	total_shown - C	y2_ben	読み1：便益の行にランニング控除後の値を置いた（#17 p.20 の表（画像）の「年間純便益（運用コスト控除後）約2.9億円」と同じ値）。ランニングの Y2 の欄は -[X] で、ここに 0.42 が入れば二重に引くことになる
 y2_alpha	#17.25	5	α(2) × 合計（粗）	-	-	-	candidate	alpha2 * total_shown	y2_ben	読み2：書かれていない2年目の係数（3.32 に対して約0.8735）
-payback	#17.25	6	回収期間（先鋒単体）	[1.5]年	1.5	1	input			§5.3。定義は書かれていない
-pb_shown	#17.25	6	I₀ ÷（合計（粗）− C）	-	-	-	candidate	I0 / (total_shown - C)	payback	単純回収期間、表示の合計 3.32 を使う。#17 の I₀ ÷ 年間純便益2.9 と同じ
-pb_sum	#17.25	6	I₀ ÷（内訳の和 − C）	-	-	-	candidate	I0 / (ben_total - C)	payback	単純回収期間、内訳の和 2.965 を使う
-pb_gross	#17.25	6	I₀ ÷ 合計（粗）	-	-	-	candidate	I0 / total_shown	payback	ランニングを引かない
-pb_gross_sum	#17.25	6	I₀ ÷ 内訳の和	-	-	-	candidate	I0 / ben_total	payback	ランニングを引かず、内訳の和を使う
-pb_cf_a	#17.25	5	CF表の累積が正になる時点（Y2 のランニング 0）	-	-	-	candidate	1 + (I0 - (y1_ben - C)) / y2_ben	payback	Y0 を 0 として、Y1 末までの累積を Y2 の便益で線形に埋める。Y2 のランニング [X] を 0 とした
-pb_cf_b	#17.25	5	CF表の累積が正になる時点（毎年 C）	-	-	-	candidate	2 + (I0 - (y1_ben - C) - (y2_ben - C)) / (total_shown - C)	payback	Y2 にも C を引き、Y3 の純CF を 3.32 − C として線形に埋める
+payback	#17.25	6	回収期間（先鋒単体）	[1.5]年	1.5	1	input			§5.3。定義は書かれていない。#17 p.20 の表（画像）は同じ1.5年を「投資対効果（ROI）達成期間 約1.5年（段階展開後の年間効果額換算ベース）」、p.5 の表（画像）は「（累計投資額／累計純便益ベース）」と書く
+pb_shown	#17.25	6	I₀ ÷（合計（粗）− C）	-	-	-	candidate	I0 / (total_shown - C)	payback	読み：単純回収期間、表示の合計 3.32 からランニングを引く。3.32 − 0.42 は #17 p.20 の表の「年間純便益（運用コスト控除後）約2.9億円」と同じ値になるが、#17 はこの割り算を示していない
+pb_sum	#17.25	6	I₀ ÷（内訳の和 − C）	-	-	-	candidate	I0 / (ben_total - C)	payback	読み：単純回収期間、内訳の和 2.965 からランニングを引く
+pb_gross	#17.25	6	I₀ ÷ 合計（粗）	-	-	-	candidate	I0 / total_shown	payback	読み：ランニングを引かず、表示の合計 3.32 で割る
+pb_gross_sum	#17.25	6	I₀ ÷ 内訳の和	-	-	-	candidate	I0 / ben_total	payback	読み：ランニングを引かず、内訳の和 2.965 で割る
+pb_cf_a	#17.25	5	CF表の累積が正になる時点（Y2 のランニング 0）	-	-	-	candidate	1 + (I0 - (y1_ben - C)) / y2_ben	payback	読み：CF表の累積が正になる時点。Y0 を 0 とし、Y1 末までの累積を Y2 の便益で線形に埋める。投資の Y1・Y2 の [X] と、ランニングの Y2 の [X] を 0 とした（Y2 の 2.9 をランニング控除後の値として扱うのと同じ）
+pb_cf_b	#17.25	5	CF表の累積が正になる時点（毎年 C）	-	-	-	candidate	2 + (I0 - (y1_ben - C) - (y2_ben - C)) / (total_shown - C)	payback	読み：CF表の累積が正になる時点。Y2 にも C を引き、Y3 の純CF を 3.32 − C として線形に埋める。投資の Y1・Y2 の [X] は 0 とした

@@ -136,6 +136,48 @@ class CalccheckTest(unittest.TestCase):
         p = self.reg(row(), encoding="utf-8-sig", nl="\r\n")
         self.assertEqual(calccheck.check(calccheck.load(p))[:2], ([], []))
 
+    def test_robustness(self):
+        cand = dict(shown="-", value="-", places="-")
+        self.assertIn("R1", self.run_check(row(id="", kind="derived", formula="1 + 1"))[0])
+        issues, findings, _ = self.run_check(row(id="t", kind="derived", formula="u"),
+                                             row(id="u", kind="derived", formula="t"),
+                                             row(id="w", kind="derived", formula="t + 1"))
+        self.assertEqual((sorted(issues), findings), (["R3", "R3"], []))
+        issues, findings, _ = self.run_check(row(), row(id="z", kind="derived", formula="a / (a - a)"),
+                                             row(id="w", kind="derived", formula="z + 1"))
+        self.assertEqual((issues, findings), (["R2"], []))
+        issues, findings, _ = self.run_check(row(value="x"), row(id="w", kind="derived", formula="a + 1"))
+        self.assertEqual((issues, findings), (["R1"], []))
+        self.assertIn("R2", self.run_check(row(id="t", kind="derived", formula="(" * 5000 + "1" + ")" * 5000))[0])
+        self.assertIn("R2", self.run_check(row(id="t", kind="derived", formula="(" * 900 + "1" + ")" * 900))[0])
+        self.assertIn("R1", self.run_check(row(places="20000000"))[0])
+        self.assertIn("R1", self.run_check(row(value="9" * 5000))[0])
+        chain = [row(id="c0")] + [row(id=f"c{i}", kind="derived", formula=f"c{i - 1} * 10") for i in range(1, 3000)]
+        issues, _, _ = self.run_check(*chain)
+        self.assertTrue(set(issues) <= {"R2"})
+        self.assertEqual(calccheck.fmt(Fraction(10) ** 400 / 3, 2)[-3:], ".33")
+        self.assertEqual(calccheck.fmt(Fraction(-1, 3)), "-0.3333")
+
+    def test_derived_reference_and_propagation(self):
+        _, findings, results = self.run_check(
+            row(), row(id="t", shown="9", value="9", kind="derived", formula="a + 1"),
+            row(id="u", shown="6", value="6", kind="derived", formula="t * 2"),
+            row(id="x", shown="-", value="-", places="-", kind="placeholder"),
+            row(id="v", shown="1", value="1", kind="derived", formula="x + 1"),
+            row(id="w", shown="1", value="1", kind="derived", formula="v + 1"))
+        self.assertEqual(results["u"], 6)
+        self.assertEqual(sorted(findings), ["MISMATCH", "UNRESOLVED", "UNRESOLVED"])
+
+    def test_quiet_and_files(self):
+        out = io.StringIO()
+        with redirect_stdout(out):
+            calccheck.main([self.reg(row(), row(id="t", shown="5", value="5", kind="derived", formula="a * 2")), "--quiet"])
+        self.assertNotIn("MISMATCH\tline", out.getvalue())
+        self.assertIn("findings: MISMATCH 1", out.getvalue())
+        with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            self.assertEqual(calccheck.main([os.path.join(self.tmp, "none.tsv")]), 2)
+            self.assertEqual(calccheck.main([self.reg(row(), encoding="utf-16")]), 2)
+
 
 if __name__ == "__main__":
     unittest.main()
