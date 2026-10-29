@@ -6,5 +6,6 @@ authors:
   - family-names: Iuchi
     given-names: Ayako
 version: "1.2"
+date-released: "2026-10-29"
 license: MIT
 repository-code: "https://github.com/ayako-iuchi/phm-case-kit"

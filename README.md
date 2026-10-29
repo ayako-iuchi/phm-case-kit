@@ -8,7 +8,7 @@ The kit holds the tools used to check quotes, figures and dated facts in hypothe
 
 ## Status
 
-Version 1.2, in preparation (version 1.1 released on 29 October 2026, version 1.0 on 28 October 2026). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
+Version 1.2, released on 29 October 2026 (version 1.1 earlier the same day, version 1.0 on 28 October 2026). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
 
 | Tool | What it does | Post |
 | --- | --- | --- |
