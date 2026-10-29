@@ -31,11 +31,14 @@ per document), it also checks the register against the text:
               has rows for it (a row on the wrong page, or counted twice)
 
 MISSED and EXTRA count a value as its number and suffix with nothing but
-optional brackets between them ("82%", "[82]%", "［82］％"); full-width digits
-and signs are read as half-width, a range may be written with ~, 〜, ～, - or
-– ("8~12回" matches "[8-12]回"), and a digit, comma or point just before does
-not count ("182%" is not "82%"), nor a digit just after (nor a comma, point
-or % after a value with no suffix: "82" does not count "82.5" or "82%").
+optional brackets and spaces between them ("82%", "[82]%", "［82］ ％");
+full-width digits and signs are read as half-width, a range may be written
+with ~, 〜, ～ or a hyphen or dash ("8~12回" matches "[8-12]回"), and a digit,
+comma, point or range sign just before does not count ("182%" and "60-82%"
+are not "82%"), nor a digit just after (nor, after a value with no suffix, a
+"%" or a decimal or thousands part: "82" does not count "82.5", "82,000" or
+"82 %"). The text is counted with its whitespace, so numbers on two lines
+are not joined.
 Every value in the register is searched for in every text passed, including
 values whose rows are in documents without a text. Several documents compiled
 in one file can share it (--text '#17.2=all.txt' --text '#17.3=all.txt'); a
@@ -74,7 +77,7 @@ from pages import norm, read_pages, page_texts  # noqa: E402
 
 REQUIRED = ["id", "value", "document", "page", "quote", "measures", "unit",
             "base", "period", "placeholder", "note"]
-FULLWIDTH = str.maketrans("０１２３４５６７８９．，％〜～［］－–", "0123456789.,%~~[]--")
+FULLWIDTH = str.maketrans("０１２３４５６７８９．，％〜～［］－–—‐‑‒−", "0123456789.,%~~[]-------")
 RANGE = r"[~\-]"
 NOTE_FOOTER = r"^https?://note\.com/"
 
@@ -132,9 +135,9 @@ def split_value(value):
 def value_pattern(value):
     num, suffix = split_value(value)
     num_re = RANGE.join(re.escape(x) for x in num.split("~"))
-    after = r"(?![\d.,%])" if not suffix else r"(?!\d)"
+    after = r"(?!\s*%|\d|[.,]\d)" if not suffix else r"(?!\d)"
     sfx = r"\s*".join(re.escape(c) for c in suffix)
-    return re.compile(r"(?<![\d.,])\[?\s*" + num_re + r"\s*\]?\s*" + sfx + after)
+    return re.compile(r"(?<![\d.,~\-])\[?\s*" + num_re + r"\s*\]?\s*" + sfx + after)
 
 
 def definition(r):
@@ -167,7 +170,7 @@ def text_checks(rows, texts, doc_path=None):
             continue
         if r["quote"] and norm(r["quote"]) not in pages[p - 1][0]:
             issues.append(("QUOTE", r, f"quote not on p.{p}"))
-        elif r["quote"] and not value_pattern(r["value"]).search(norm(r["quote"]).translate(FULLWIDTH)):
+        elif r["quote"] and not value_pattern(r["value"]).search(r["quote"].translate(FULLWIDTH)):
             issues.append(("QUOTE", r, f"quote does not contain {r['value']}"))
     counts = defaultdict(int)
     for r in rows:

@@ -98,7 +98,9 @@ class NumcheckTest(unittest.TestCase):
         self.assertEqual(numcheck.split_value("８～１２回"), ("8~12", "回"))
         pat = numcheck.value_pattern("8~12回")
         self.assertEqual(len(pat.findall("[8-12]回 8〜12回 8~12 回 18~12回".translate(numcheck.FULLWIDTH))), 3)
-        self.assertEqual(len(numcheck.value_pattern("82").findall("82 82.5 82% 82,000 [82]")), 2)
+        self.assertEqual(len(numcheck.value_pattern("82").findall("82 82.5 82% 82,000 [82] 82 % 82.")), 3)
+        self.assertEqual(len(numcheck.value_pattern("82%").findall("60-82% 60~82%")), 0)
+        self.assertEqual(numcheck.split_value("8−12回"), ("8~12", "回"))
         self.assertEqual(len(numcheck.value_pattern("82%").findall("82% 8件 382% 82 %")), 2)
         code, out = self.run_main(self.reg(row(value="8-12回"), row(id="n2", value="8~12回", document="B", unit="count")))
         self.assertIn("drift: 1", out)
@@ -112,6 +114,9 @@ class NumcheckTest(unittest.TestCase):
         code, out = self.run_main(self.reg(row(quote="停止を")), "--text", f"A={text}")
         self.assertEqual(code, 1)
         self.assertIn("quote does not contain 82%", out)
+        text = self.write("c.txt", "便益 2.5 82% 削減\f")
+        code, out = self.run_main(self.reg(row(quote="2.5 82%")), "--text", f"A={text}")
+        self.assertEqual(code, 0, out)
 
     def test_values_from_documents_without_text_are_searched(self):
         text = self.write("a.txt", "82% と 80%\f")

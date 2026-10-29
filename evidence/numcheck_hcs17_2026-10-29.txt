@@ -1,23 +1,30 @@
-# in the folder that holds the texts: python3 -I <kit>/tools/numcheck.py <kit>/register/numbers_hcs17.tsv --text \#17=hcs17.txt --text \#17.2=hcs17_summary.txt --text \#17.3=hcs17_summary.txt --text \#17.8=hcs17_summary.txt --text \#17.10=hcs17_summary.txt --text \#17.11=hcs17_summary.txt --text \#17.13=hcs17_summary.txt --text \#17.14=hcs17_summary.txt --text \#17.17=hcs17_summary.txt --text \#17.19=hcs17_summary.txt --text \#17.20=hcs17_summary.txt --text \#17.24=hcs17_01.txt --text \#17.25=hcs17_02.txt --text \#17.26=hcs17_03.txt --text \#17.28=hcs17_28.txt --text \#17.30=hcs17_30.txt 
+# in the folder that holds the texts: python3 -I <kit>/tools/numcheck.py <kit>/register/numbers_hcs17.tsv --text \#17=hcs17.txt --text \#17.2=hcs17_summary.txt --text \#17.3=hcs17_summary.txt --text \#17.4=hcs17_summary.txt --text \#17.5=hcs17_summary.txt --text \#17.6=hcs17_summary.txt --text \#17.7=hcs17_summary.txt --text \#17.8=hcs17_summary.txt --text \#17.9=hcs17_summary.txt --text \#17.10=hcs17_summary.txt --text \#17.11=hcs17_summary.txt --text \#17.12=hcs17_summary.txt --text \#17.13=hcs17_summary.txt --text \#17.14=hcs17_summary.txt --text \#17.15=hcs17_summary.txt --text \#17.16=hcs17_summary.txt --text \#17.17=hcs17_summary.txt --text \#17.18=hcs17_summary.txt --text \#17.19=hcs17_summary.txt --text \#17.20=hcs17_summary.txt --text \#17.24=hcs17_01.txt --text \#17.25=hcs17_02.txt --text \#17.26=hcs17_03.txt --text \#17.28=hcs17_28.txt --text \#17.29=hcs17_29.txt --text \#17.30=hcs17_30.txt
 # run on 2026-10-29. Texts: pdftotext -layout extracts of the author's fictional documents (HCS #17 and the documents derived from it; #17.2-#17.20 are compiled in one file). The texts are not in the kit.
 DRIFT	2 definitions in 6 rows	3週間
-		measures=兆候の検知後に部品交換を行う期限 | unit=期間 | base=-	hcs17-n42,hcs17-n44
-		measures=検知リードタイム（平均） | unit=期間 | base=-	hcs17-n40,hcs17-n41,hcs17-n43,hcs17-n45
+		measures=兆候の検知後に部品交換を行う期限 | unit=期間 | base=-	hcs17-n58,hcs17-n60
+		measures=検知リードタイム（平均） | unit=期間 | base=-	hcs17-n56,hcs17-n57,hcs17-n59,hcs17-n61
+DRIFT	6 definitions in 18 rows	80%
+		measures=Scope 3 排出の削減 | unit=排出量 | base=-	hcs17-n09
+		measures=再立ち上げ歩留まり損失に掛ける削減率 | unit=金額 | base=導入前[0.25]億円	hcs17-n18
+		measures=緊急対応・特急輸送の費用に掛ける削減率 | unit=金額 | base=導入前[0.35]億円	hcs17-n17
+		measures=緊急部品輸送に伴う CO₂ 排出の削減 | unit=排出量 | base=-	hcs17-n03,hcs17-n04,hcs17-n05,hcs17-n06,hcs17-n07,hcs17-n10,hcs17-n11,hcs17-n12,hcs17-n13,hcs17-n14,hcs17-n15
+		measures=計画外停止の削減（源泉の事例の数値として。何の量かは書かれていない） | unit=記載なし | base=-	hcs17-n08,hcs17-n16
+		measures=計画外停止の時間の削減率 | unit=時間 | base=導入前	hcs17-n01,hcs17-n02
 DRIFT	3 definitions in 16 rows	82%
-		measures=生産機会損失の金額に掛ける削減率 | unit=金額 | base=導入前[2.5]億円	hcs17-n16
-		measures=計画外停止の削減（何の量かは書かれていない） | unit=記載なし | base=-	hcs17-n03,hcs17-n04,hcs17-n05,hcs17-n06,hcs17-n07,hcs17-n08,hcs17-n09,hcs17-n10,hcs17-n11,hcs17-n12,hcs17-n13,hcs17-n14,hcs17-n18
-		measures=計画外停止の時間の削減率 | unit=時間 | base=記載なし	hcs17-n15,hcs17-n17
+		measures=生産機会損失の金額に掛ける削減率 | unit=金額 | base=導入前[2.5]億円	hcs17-n32
+		measures=計画外停止の削減（何の量かは書かれていない） | unit=記載なし | base=-	hcs17-n19,hcs17-n20,hcs17-n21,hcs17-n22,hcs17-n23,hcs17-n24,hcs17-n25,hcs17-n26,hcs17-n27,hcs17-n28,hcs17-n29,hcs17-n30,hcs17-n34
+		measures=計画外停止の時間の削減率 | unit=時間 | base=記載なし	hcs17-n31,hcs17-n33
 DRIFT	5 definitions in 12 rows	85%
-		measures=OEE の高水準 | unit=割合 | base=-	hcs17-n46,hcs17-n48,hcs17-n50
-		measures=アラートの適合率 | unit=割合 | base=アラート（区分の記載なし）	hcs17-n49,hcs17-n51,hcs17-n52,hcs17-n55,hcs17-n56
-		measures=ベンダーが報告する精度（仮の例） | unit=割合 | base=-	hcs17-n57
-		measures=即時対応アラートの適合率 | unit=割合 | base=即時対応アラート	hcs17-n47,hcs17-n54
-		measures=計画外停止の時間の削減率 | unit=時間 | base=記載なし	hcs17-n53
+		measures=OEE の高水準 | unit=割合 | base=-	hcs17-n62,hcs17-n64,hcs17-n66
+		measures=アラートの適合率 | unit=割合 | base=アラート（区分の記載なし）	hcs17-n65,hcs17-n67,hcs17-n68,hcs17-n71,hcs17-n72
+		measures=ベンダーが報告する精度（仮の例） | unit=割合 | base=-	hcs17-n73
+		measures=即時対応アラートの適合率 | unit=割合 | base=即時対応アラート	hcs17-n63,hcs17-n70
+		measures=計画外停止の時間の削減率 | unit=時間 | base=記載なし	hcs17-n69
 DRIFT	2 definitions in 2 rows	8~12回
-		measures=計画外停止に起因する納期遅延の回数 | unit=回数 | base=-	hcs17-n58
-		measures=計画外停止の回数 | unit=回数 | base=-	hcs17-n59
-CONFLICT	measures=計画外停止の時間の削減率 | unit=時間 | base=記載なし	values 82%, 85%	hcs17-n15,hcs17-n17,hcs17-n53
-rows: 59  values: 6  documents: 15
-drift: 4  conflict: 1
-quote: 0  missed: 0  extra: 0  (texts: 7 files, 16 documents)
+		measures=計画外停止に起因する納期遅延の回数 | unit=回数 | base=-	hcs17-n74
+		measures=計画外停止の回数 | unit=回数 | base=-	hcs17-n75
+CONFLICT	measures=計画外停止の時間の削減率 | unit=時間 | base=記載なし	values 82%, 85%	hcs17-n31,hcs17-n33,hcs17-n69
+rows: 75  values: 6  documents: 17
+drift: 5  conflict: 1
+quote: 0  missed: 0  extra: 0  (texts: 8 files, 26 documents)
 # exit 0
