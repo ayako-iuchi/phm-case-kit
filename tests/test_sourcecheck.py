@@ -2,6 +2,7 @@
 import datetime as dt
 import io
 import os
+import shutil
 import sys
 import tempfile
 import unittest
@@ -27,6 +28,7 @@ def row(**kw):
 class SourcecheckTest(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, self.tmp)
         self.as_of = dt.date(2026, 10, 29)
 
     def reg(self, *lines):
@@ -78,6 +80,27 @@ class SourcecheckTest(unittest.TestCase):
         self.assertIn("R6", self.codes(row(), row()))
         self.assertIn("R7", self.codes(row(**{"class": "E", "note": "n"})))
 
+    def test_dates_strict(self):
+        self.assertIn("R5", self.codes(row(accessed="20261029")))
+        self.assertIn("R5", self.codes(row(accessed="2026-W44-4")))
+        self.assertIn("R5", self.codes(row(url="", accessed="garbage")))
+        self.assertIn("R5", self.codes(row(url="", accessed="2099-01-01")))
+        with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            self.assertEqual(sourcecheck.main([self.reg(row()), "--as-of", "20261029"]), 2)
+
+    def test_e_has_no_source(self):
+        e = dict(source_kind="none", source_title="", issuer="", edition="", url="", location="",
+                 underlying="-", accessed="", **{"class": "E", "note": "n"})
+        self.assertEqual(self.codes(row(**e)), [])
+        for k, v in (("url", "https://example.org/x"), ("source_title", "T"), ("location", "p.1")):
+            self.assertIn("R7", self.codes(row(**{**e, k: v, "accessed": "2026-10-29"})), k)
+
+    def test_bom_and_crlf(self):
+        p = os.path.join(self.tmp, "b.tsv")
+        with open(p, "w", encoding="utf-8-sig", newline="") as f:
+            f.write(HEADER + "\r\n" + row() + "\r\n")
+        self.assertEqual(sourcecheck.check(sourcecheck.load(p), self.as_of), [])
+
     def test_summary_and_exit(self):
         p = self.reg(row(), row(id="x2", **{"class": "B", "note": "n"}))
         buf = io.StringIO()
@@ -99,6 +122,14 @@ class SourcecheckTest(unittest.TestCase):
                 self.assertEqual(sourcecheck.main([p]), 2, text)
         with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
             self.assertEqual(sourcecheck.main([self.reg(row()), "--as-of", "soon"]), 2)
+        with open(p, "w", encoding="utf-8") as f:
+            f.write(HEADER + "\tid\n" + row() + "\tx2\n")
+        with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            self.assertEqual(sourcecheck.main([p]), 2)
+        with open(p, "w", encoding="utf-8") as f:
+            f.write(HEADER + "\n" + row(statement="x" * 200000) + "\n")
+        with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            self.assertEqual(sourcecheck.main([p]), 2)
 
 
 if __name__ == "__main__":
