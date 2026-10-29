@@ -29,11 +29,15 @@ Columns (tab-separated, header row required, other columns ignored):
     url           its URL, if on the web
     accessed      date the source was opened (YYYY-MM-DD)
     recheck_by    date by which the row should be checked again (YYYY-MM-DD)
-    class         CURRENT | STALE | WRONG-THEN | UNDATED | CANNOT
+    class         CURRENT | SUPERSEDED | STALE | WRONG-THEN | UNDATED | CANNOT
     note          what changed, or what date is missing
 
 Classes:
     CURRENT     held on the document's date and holds now
+    SUPERSEDED  holds as a record of its time, but what it cites has since
+                been replaced (a newer edition, a later version); the event
+                is the replacement, and may come before the document (an
+                older edition cited after a newer one was out)
     STALE       held on the document's date, no longer holds
     WRONG-THEN  did not hold even on the document's date
     UNDATED     depends on a date the document does not give
@@ -41,15 +45,21 @@ Classes:
 
 Checks:
     T1  a required field is empty: id, document, page, statement, doc_date,
-        event, status_then, status_now, class (and note for every class but
-        CURRENT)
+        event, status_then, status_now, recheck_by, class, source_title
+        (except for CANNOT), event_date for SUPERSEDED, STALE and
+        WRONG-THEN, and note for every class but CURRENT
     T2  a value is not allowed (class, status, a date's form)
-    T3  class and statuses disagree: CURRENT needs true/true, STALE
-        true/false, WRONG-THEN false then, CANNOT unknown/unknown
+    T3  class and statuses disagree: CURRENT and SUPERSEDED need true/true,
+        STALE true/false, WRONG-THEN false then, CANNOT unknown/unknown;
+        UNDATED may not be false then or true then and false now (those are
+        WRONG-THEN and STALE)
     T4  hindsight: WRONG-THEN whose event comes after the document's date
         (a later change does not make a statement wrong when written), or
-        STALE whose event comes before it (it had already changed)
-    T5  a URL without an accessed date, or an accessed date after --as-of
+        STALE whose event comes before it (it had already changed); also
+        STALE or SUPERSEDED whose event comes after --as-of (not yet
+        happened)
+    T5  a URL without an accessed date, or an accessed date (with or
+        without a URL) after --as-of
     T6  a duplicate id
     T7  recheck due: recheck_by is on or before --as-of (default: today)
 
@@ -70,9 +80,9 @@ import sys
 REQUIRED = ["id", "document", "page", "statement", "doc_date", "event", "event_date",
             "status_then", "status_now", "source_title", "url", "accessed", "recheck_by",
             "class", "note"]
-CLASSES = ("CURRENT", "STALE", "WRONG-THEN", "UNDATED", "CANNOT")
+CLASSES = ("CURRENT", "SUPERSEDED", "STALE", "WRONG-THEN", "UNDATED", "CANNOT")
 STATUSES = ("true", "false", "unknown")
-DAY = re.compile(r"\d{4}-\d{2}-\d{2}")
+DAY = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}")
 
 
 def parse_day(s):
@@ -87,10 +97,10 @@ def parse_day(s):
 def parse_period(s):
     """'2024' / '2024-04' / '2024-04-01' -> (first day, last day), or None."""
     try:
-        if re.fullmatch(r"\d{4}", s):
+        if re.fullmatch(r"[0-9]{4}", s):
             y = int(s)
             return dt.date(y, 1, 1), dt.date(y, 12, 31)
-        if re.fullmatch(r"\d{4}-\d{2}", s):
+        if re.fullmatch(r"[0-9]{4}-[0-9]{2}", s):
             y, m = int(s[:4]), int(s[5:])
             return dt.date(y, m, 1), dt.date(y, m, calendar.monthrange(y, m)[1])
     except ValueError:
@@ -146,9 +156,13 @@ def check(rows, as_of):
     for r in rows:
         cls, then, now = r["class"], r["status_then"], r["status_now"]
         for k in ("id", "document", "page", "statement", "doc_date", "event",
-                  "status_then", "status_now", "class"):
+                  "status_then", "status_now", "recheck_by", "class"):
             if not r[k]:
                 flag(r, "T1", f"{k} is empty")
+        if cls != "CANNOT" and not r["source_title"]:
+            flag(r, "T1", "source_title is empty")
+        if cls in ("SUPERSEDED", "STALE", "WRONG-THEN") and r["event_date"] in ("", "-"):
+            flag(r, "T1", f"class {cls} needs an event_date")
         if cls and cls != "CURRENT" and not r["note"]:
             flag(r, "T1", f"class {cls} needs a note")
         if cls and cls not in CLASSES:
@@ -167,18 +181,22 @@ def check(rows, as_of):
         for k in ("accessed", "recheck_by"):
             if r[k] and parse_day(r[k]) is None:
                 flag(r, "T2", f"{k} {r[k]!r} is not YYYY-MM-DD")
-        expect = {"CURRENT": ("true", "true"), "STALE": ("true", "false"),
+        expect = {"CURRENT": ("true", "true"), "SUPERSEDED": ("true", "true"), "STALE": ("true", "false"),
                   "CANNOT": ("unknown", "unknown")}.get(cls)
         if expect and (then, now) != expect:
             flag(r, "T3", f"class {cls} needs status_then={expect[0]}, status_now={expect[1]}")
         if cls == "WRONG-THEN" and then != "false":
             flag(r, "T3", "class WRONG-THEN needs status_then=false")
+        if cls == "UNDATED" and (then == "false" or (then, now) == ("true", "false")):
+            flag(r, "T3", "class UNDATED with these statuses is WRONG-THEN or STALE")
         if doc and ev:
             d, exact = doc
             if cls == "WRONG-THEN" and ev[0] > d:
                 flag(r, "T4", f"WRONG-THEN, but the event ({r['event_date']}) comes after the document ({r['doc_date']})")
             if cls == "STALE" and exact and ev[1] < d:
                 flag(r, "T4", f"STALE, but the event ({r['event_date']}) comes before the document ({r['doc_date']})")
+        if ev and cls in ("STALE", "SUPERSEDED") and ev[0] > as_of:
+            flag(r, "T4", f"{cls}, but the event ({r['event_date']}) comes after {as_of}")
         acc = parse_day(r["accessed"]) if r["accessed"] else None
         if r["url"] and not r["accessed"]:
             flag(r, "T5", "url without an accessed date")
@@ -207,7 +225,7 @@ def main(argv=None):
             raise ValueError(f"--as-of {args.as_of!r} is not YYYY-MM-DD")
         rows = load(args.register)
     except (OSError, ValueError, UnicodeDecodeError) as e:
-        print(f"datecheck: {e}", file=sys.stderr)
+        print(f"datecheck: {args.register}: {e}" if isinstance(e, UnicodeDecodeError) else f"datecheck: {e}", file=sys.stderr)
         return 2
     issues = check(rows, as_of)
     if not args.quiet:
@@ -215,8 +233,9 @@ def main(argv=None):
             print(f"{code}\tline {line}\tid {rid}\t{msg}")
     counts = {c: sum(r["class"] == c for r in rows) for c in CLASSES}
     dues = [parse_day(r["recheck_by"]) for r in rows if parse_day(r["recheck_by"] or "")]
+    other = sum(r["class"] not in CLASSES for r in rows)
     print(f"rows: {len(rows)}")
-    print("class: " + "  ".join(f"{c} {n}" for c, n in counts.items()))
+    print("class: " + "  ".join(f"{c} {n}" for c, n in counts.items()) + (f"  other {other}" if other else ""))
     print(f"next recheck: {min(dues) if dues else '-'}")
     print(f"issues: {len(issues)}")
     return 1 if issues else 0

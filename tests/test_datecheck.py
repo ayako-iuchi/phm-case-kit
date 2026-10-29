@@ -50,6 +50,8 @@ class DatecheckTest(unittest.TestCase):
             row(id="d5", status_then="unknown", status_now="unknown", url="", accessed="",
                 **{"class": "CANNOT", "note": "statute not opened"}),
             row(id="d6", doc_date="<=2026-08-25"),
+            row(id="d7", event_date="2026-05-29", **{"class": "SUPERSEDED", "note": "new edition"}),
+            row(id="d8", doc_date="2026-06-07", event_date="2026-05-29", **{"class": "SUPERSEDED", "note": "cited after"}),
         ), [])
 
     def test_required_and_values(self):
@@ -66,6 +68,12 @@ class DatecheckTest(unittest.TestCase):
         self.assertIn("T3", self.codes(row(status_now="false")))
         self.assertIn("T3", self.codes(row(**{"class": "WRONG-THEN", "note": "n"})))
         self.assertIn("T3", self.codes(row(**{"class": "CANNOT", "note": "n"})))
+        self.assertIn("T3", self.codes(row(status_then="false", **{"class": "UNDATED", "note": "n"})))
+        self.assertIn("T3", self.codes(row(status_now="false", **{"class": "UNDATED", "note": "n"})))
+        self.assertIn("T3", self.codes(row(status_now="false", event_date="2026-06", **{"class": "SUPERSEDED", "note": "n"})))
+        self.assertIn("T1", self.codes(row(event_date="-", status_now="false", **{"class": "STALE", "note": "n"})))
+        self.assertIn("T1", self.codes(row(recheck_by="")))
+        self.assertIn("T1", self.codes(row(source_title="")))
 
     def test_hindsight(self):
         later = row(event_date="2026-06-30", status_then="false", status_now="false",
@@ -78,6 +86,8 @@ class DatecheckTest(unittest.TestCase):
         bound = row(doc_date="<=2026-08-25", event_date="2026-06", status_now="false",
                     **{"class": "STALE", "note": "n"})
         self.assertNotIn("T4", self.codes(bound))
+        future = row(event_date="2027-01", status_now="false", **{"class": "STALE", "note": "n"})
+        self.assertIn("T4", self.codes(future))
 
     def test_accessed_and_recheck(self):
         self.assertIn("T5", self.codes(row(accessed="")))
@@ -91,7 +101,7 @@ class DatecheckTest(unittest.TestCase):
         with redirect_stdout(out):
             code = datecheck.main([self.reg(row(), row(id="d2", recheck_by="2026-12-01")), "--as-of", "2026-10-29"])
         self.assertEqual(code, 0)
-        self.assertIn("class: CURRENT 2  STALE 0  WRONG-THEN 0  UNDATED 0  CANNOT 0", out.getvalue())
+        self.assertIn("class: CURRENT 2  SUPERSEDED 0  STALE 0  WRONG-THEN 0  UNDATED 0  CANNOT 0", out.getvalue())
         self.assertIn("next recheck: 2026-12-01", out.getvalue())
         with redirect_stdout(io.StringIO()):
             self.assertEqual(datecheck.main([self.reg(row(recheck_by="2026-01-01")), "--as-of", "2026-10-29"]), 1)
@@ -106,6 +116,8 @@ class DatecheckTest(unittest.TestCase):
                 self.assertEqual(datecheck.main([p]), 2, text[:60])
         with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
             self.assertEqual(datecheck.main([self.reg(row()), "--as-of", "20261029"]), 2)
+        self.assertEqual(datecheck.parse_period("２０２６"), None)
+        self.assertEqual(datecheck.parse_day("2026-02-30"), None)
 
     def test_bom_and_crlf(self):
         p = self.reg(row(), encoding="utf-8-sig", nl="\r\n")

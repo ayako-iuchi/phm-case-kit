@@ -57,7 +57,7 @@ English: [README.md](README.md)
 
     python3 -I tools/datecheck.py register/dated_hcs17.tsv --as-of 2026-10-29
 
-判定は、`CURRENT` 文書の日付でも今も成り立つ、`STALE` 当時は成り立ち今は成り立たない、`WRONG-THEN` 当時も成り立たない、`UNDATED` 日付で真偽が変わるのに日付がない、`CANNOT` 確かめられない、です。点検は、必須の欄と CURRENT 以外の注記（T1）、許される値と日付の形（T2）、判定と status の一致（T3）、後知恵（T4。文書より後の出来事で WRONG-THEN にしている行と、文書より前の出来事で STALE にしている行。年や年月の出来事はその期間全体で比べる）、URL には `--as-of` 以前の確認日（T5）、id の重複（T6）、`recheck_by` が `--as-of` 以前で再確認の時期が来た行（T7）です。終了コードは、指摘がなければ 0、あれば 1、入力の誤りは 2 です。`register/dated_hcs17.tsv` は、Hypothetical Case Study #17 と派生文書（すべて筆者が生成AIで作った架空の文書）の、時点のある事実12件の台帳で、実行結果を `evidence/` に置きます。
+判定は、`CURRENT` 文書の日付でも今も成り立つ、`SUPERSEDED` 当時の資料としては成り立つが、引いたものが新しい版に置き換わった（文書より前に置き換わっていた場合も含む）、`STALE` 当時は成り立ち今は成り立たない、`WRONG-THEN` 当時も成り立たない、`UNDATED` 日付で真偽が変わるのに日付がない、`CANNOT` 確かめられない、です。点検は、必須の欄（`recheck_by`、CANNOT 以外の資料名、SUPERSEDED・STALE・WRONG-THEN の出来事の日付、CURRENT 以外の注記を含む）（T1）、許される値と日付の形（T2）、判定と status の一致（UNDATED で、当時成り立たない行や、当時成り立ち今は成り立たない行も指摘）（T3）、後知恵（T4。文書より後の出来事で WRONG-THEN にしている行、文書より前の出来事で STALE にしている行、`--as-of` までに起きていない出来事で STALE や SUPERSEDED にしている行。年や年月の出来事はその期間全体で比べる）、URL には確認日が要り、確認日は `--as-of` 以前（T5）、id の重複（T6）、`recheck_by` が `--as-of` 以前で再確認の時期が来た行（T7）です。終了コードは、指摘がなければ 0、あれば 1、入力の誤りは 2 です。`register/dated_hcs17.tsv` は、Hypothetical Case Study #17 と派生文書（すべて筆者が生成AIで作った架空の文書）の、時点のある事実の台帳（14行）です。Blog #40 のための棚卸し（約25件）から、日本の制度・白書・開示と国際規格・フレームワークの事実を選び、海外の法制度と確かめられなかった項目は外しています。複数の文書が使う事実には、複数の行があります。実行結果を `evidence/` に置きます。
 
 ## テスト
 
