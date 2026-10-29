@@ -17,6 +17,7 @@ Version 1.3, released on 29 October 2026 (versions 1.2 and 1.1 earlier the same 
 | `tools/sourcecheck.py` | Checks a source register, which traces each real-world fact in a document to a primary source, a secondary source or nowhere, and counts the rows by class | Blog #38 |
 | `tools/numcheck.py` | Checks a number register: where one value carries more than one definition across related documents, and whether the register missed an occurrence | Blog #39 |
 | `tools/datecheck.py` | Checks a register of dated facts: whether each was true on the document's date and is true now, whether a later event is being called an error, and which rows are due to be checked again | Blog #40 |
+| `tools/calccheck.py` | Recalculates a register of numbers taken from a document: whether each total or product gives the number shown, and whether any stated reading reproduces a number whose calculation the document does not give | Blog #41 |
 
 ## Using the tools
 
@@ -59,6 +60,12 @@ It reports `DRIFT` (one value, more than one definition: `measures`, `unit` or `
 
 Classes: `CURRENT` held on the document's date and holds now; `SUPERSEDED` holds as a record of its time, but what it cites has since been replaced by a newer edition or version (the replacement may come before the document, when an older edition is cited after a newer one is out); `STALE` held then, no longer holds; `WRONG-THEN` did not hold even then; `UNDATED` depends on a date the document does not give; `CANNOT` could not be checked. The checks: required fields, including `recheck_by`, a source title (except for CANNOT), an event date for SUPERSEDED, STALE and WRONG-THEN, and a note for every class but CURRENT (T1); allowed values and date forms (T2); class and statuses agree, and an UNDATED row may not be false then, or true then and false now (T3); hindsight: WRONG-THEN whose event comes after the document, STALE whose event comes before it, or STALE or SUPERSEDED whose event has not happened by `--as-of` (T4; an event dated by year or month is compared by its whole period); a URL needs an accessed date, and no accessed date may be later than `--as-of` (T5); duplicate ids (T6); a row whose `recheck_by` is on or before `--as-of` is due to be checked again (T7). Exit status: 0 if no check fires, 1 if any does, 2 on bad input. `register/dated_hcs17.tsv` records 21 rows on dated facts in Hypothetical Case Study #17 and the documents derived from it (all fictional, written by the author with generative AI). It is a selection from an inventory of about 27 items made for Blog #40: it keeps every item about Japan's rules, white papers and disclosure and about international standards and frameworks that could be checked against a primary source, and leaves out foreign laws, figures from international bodies and items that could not be fully checked. A fact used by several documents may have one row or several. Its run is in `evidence/`.
 
+**calccheck** recalculates a register of numbers taken from a document. Each row is one number: `id`, `document`, `page`, `label`, `shown` (as the document shows it), `value` (a plain decimal in the register's unit, 82% as 0.82, or `-`), `places` (decimals shown), `kind`, `formula`, `of` and `note`. Kinds: `input` (given, not derived), `derived` (shown with the document's own formula), `candidate` (one reading of how a shown number might have been calculated, when the document does not say; `of` names that number) and `placeholder` (left open, such as `[X]`). Formulas use `+ - * /`, parentheses, decimal numbers and other rows' ids; they are parsed, not evaluated as Python, and the arithmetic is exact.
+
+    python3 -I tools/calccheck.py register/calc_hcs17_25.tsv
+
+A calculated value matches when it lies within half a unit of the last shown place. Findings about the document: `MISMATCH` (a derived row does not give the number shown), `NOREPRO` (a shown number has candidates, none of which gives it) and `UNRESOLVED` (a formula needs a placeholder). Register problems: required fields and allowed values (R1), formulas that do not parse or name an unknown id (R2), a formula that refers back to its own row (R3), duplicate ids (R4), and `of` naming a row without a shown value (R5). The tool checks arithmetic, not meaning: it cannot tell a rate of hours from a rate of money. Exit status: 0 if nothing fires, 1 if a check or finding fires, 2 on bad input. `register/calc_hcs17_25.tsv` records the business-plan outline template Hypothetical Case Study #17.25 (fictional, written by the author with generative AI), with one value printed in a table of #17 (p. 7, an image); a few rows are readings the document does not state, and each says so in its note. Its run is in `evidence/`.
+
 ## Tests
 
     python3 -m unittest discover -s tests
@@ -73,14 +80,17 @@ The tests use a synthetic source written for them.
 
 - `v1.2` → c5c6ac3, made by the author on GitHub on 29 October 2026 (10:49 JST). Immutable.
 
-The tag `v1.3` is made by the author on GitHub after the release commit; until it exists, this list does not include it.
+- `v1.3` → 7df67ed, made by the author on GitHub on 29 October 2026 (11:35 JST). Immutable.
+
+The tag `v1.4` is made by the author on GitHub after the release commit; until it exists, this list does not include it.
 
 ## Posts that use the kit
 
 - Hypothetical Technical Blog #37, *What This Zero Checked* (28 October 2026; English, 29 October): `quotecheck.py`, `termcount.py`. https://note.com/ayako_iuchi/n/ne55386ce1ffc
 - Hypothetical Technical Blog #38, *Where Did That Number Come From?* (29 October 2026): `sourcecheck.py`, `register/sources_hcs17.tsv`.
 - Hypothetical Technical Blog #39, *What Does That 82% Measure?*: `numcheck.py`, `register/numbers_hcs17.tsv`
-- Hypothetical Technical Blog #40, *True as of When?* (published after this release): `datecheck.py`, `register/dated_hcs17.tsv`
+- Hypothetical Technical Blog #40, *True as of When?*: `datecheck.py`, `register/dated_hcs17.tsv`
+- Hypothetical Technical Blog #41, *How Was That 1.5 Years Calculated?* (published after this release): `calccheck.py`, `register/calc_hcs17_25.tsv`
 
 ## Ground rules
 

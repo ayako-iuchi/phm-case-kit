@@ -17,6 +17,7 @@ English: [README.md](README.md)
 | `tools/sourcecheck.py` | 文書の中の実在の事実を、一次資料・二次資料・どこにもない、のどこまでたどれたかを記録した台帳を点検し、判定ごとに数える | Blog #38 |
 | `tools/numcheck.py` | 関連する文書群で、1つの値が別々の定義で使われていないか、台帳が出現を取りこぼしていないかを点検する | Blog #39 |
 | `tools/datecheck.py` | 時点のある事実の台帳を点検する。文書の日付で成り立っていたか、今も成り立つか、後の出来事を誤りと呼んでいないか、再確認の時期が来た行はどれか | Blog #40 |
+| `tools/calccheck.py` | 文書から写した数字の台帳を計算し直す。合計や掛け算が表示どおりになるか、計算の仕方が書かれていない数字を、考えられる読み方のどれかで再現できるか | Blog #41 |
 
 ## 使い方
 
@@ -59,6 +60,12 @@ English: [README.md](README.md)
 
 判定は、`CURRENT` 文書の日付でも今も成り立つ、`SUPERSEDED` 当時の資料としては成り立つが、引いたものが新しい版に置き換わった（文書より前に置き換わっていた場合も含む）、`STALE` 当時は成り立ち今は成り立たない、`WRONG-THEN` 当時も成り立たない、`UNDATED` 日付で真偽が変わるのに日付がない、`CANNOT` 確かめられない、です。点検は、必須の欄（`recheck_by`、CANNOT 以外の資料名、SUPERSEDED・STALE・WRONG-THEN の出来事の日付、CURRENT 以外の注記を含む）（T1）、許される値と日付の形（T2）、判定と status の一致（UNDATED で、当時成り立たない行や、当時成り立ち今は成り立たない行も指摘）（T3）、後知恵（T4。文書より後の出来事で WRONG-THEN にしている行、文書より前の出来事で STALE にしている行、`--as-of` までに起きていない出来事で STALE や SUPERSEDED にしている行。年や年月の出来事はその期間全体で比べる）、URL には確認日が要り、確認日は `--as-of` 以前（T5）、id の重複（T6）、`recheck_by` が `--as-of` 以前で再確認の時期が来た行（T7）です。終了コードは、指摘がなければ 0、あれば 1、入力の誤りは 2 です。`register/dated_hcs17.tsv` は、Hypothetical Case Study #17 と派生文書（すべて筆者が生成AIで作った架空の文書）の、時点のある事実の台帳（21行）です。Blog #40 のための棚卸し（約27件）から、日本の制度・白書・開示と国際規格・フレームワークについての項目で、一次資料で確かめられたものをすべて入れ、海外の法制度、国際機関の数字、確かめきれなかった項目は外しています。複数の文書が使う事実には、1行のものと複数行のものがあります。実行結果を `evidence/` に置きます。
 
+**calccheck** は、文書から写した数字の台帳を計算し直します。1行が1つの数字で、列は `id`、`document`、`page`、`label`、`shown`（文書の表示のまま）、`value`（台帳の単位での小数。82% は 0.82。なければ `-`）、`places`（表示の小数の桁数）、`kind`、`formula`、`of`、`note` です。`kind` は、`input`（文書が与え、導いていない数字）、`derived`（文書自身の式とともに示された数字）、`candidate`（計算の仕方が書かれていない数字について、考えられる読み方の1つ。`of` にその数字の id）、`placeholder`（`[X]` など空けてある数字）です。式は `+ - * /`、括弧、小数、ほかの行の id で書きます。式は Python として実行せずに構文を解析し、計算は分数で厳密に行います。
+
+    python3 -I tools/calccheck.py register/calc_hcs17_25.tsv
+
+計算値が、表示の最後の桁の半単位以内なら一致とします。文書についての指摘は、`MISMATCH`（derived の行が表示どおりにならない）、`NOREPRO`（表示された数字に candidate があるが、どれも再現しない）、`UNRESOLVED`（式が placeholder を必要とする）です。台帳の問題は、必須の欄と許される値（R1）、式の構文や存在しない id（R2）、自分の行に戻る式（R3）、id の重複（R4）、表示値のない行を指す `of`（R5）です。計算は確かめますが、意味は確かめません。時間の率と金額の率の区別はできません。終了コードは、何もなければ 0、指摘があれば 1、入力の誤りは 2 です。`register/calc_hcs17_25.tsv` は、事業計画書の骨子テンプレート Hypothetical Case Study #17.25（筆者が生成AIで作った架空の文書）の台帳で、#17 の表（p.7、画像）に印刷された値を1つ含みます。文書が書いていない読み方の行がいくつかあり、それぞれ注記にそう書いてあります。実行結果を `evidence/` に置きます。
+
 ## テスト
 
     python3 -m unittest discover -s tests
@@ -73,14 +80,17 @@ English: [README.md](README.md)
 
 - `v1.2` → c5c6ac3。2026年10月29日（10:49 JST）に筆者が GitHub で作成。改変禁止（immutable）。
 
-タグ `v1.3` は、リリースのコミットの後に筆者が GitHub で作ります。できるまでは、この一覧に載せません。
+- `v1.3` → 7df67ed。2026年10月29日（11:35 JST）に筆者が GitHub で作成。改変禁止（immutable）。
+
+タグ `v1.4` は、リリースのコミットの後に筆者が GitHub で作ります。できるまでは、この一覧に載せません。
 
 ## キットを使う記事
 
 - Hypothetical Technical Blog #37「不一致0件は何を確かめたか」（2026年10月28日）：`quotecheck.py`、`termcount.py`。https://note.com/ayako_iuchi/n/n280b77ac18ec
 - Hypothetical Technical Blog #38「その数字はどこから来たか」（2026年10月29日）：`sourcecheck.py`、`register/sources_hcs17.tsv`。https://note.com/ayako_iuchi/n/n7016091e1000
 - Hypothetical Technical Blog #39「その82%は何を測っているか」：`numcheck.py`、`register/numbers_hcs17.tsv`
-- Hypothetical Technical Blog #40「その事実はいつの事実か」（このリリースの後に公開）：`datecheck.py`、`register/dated_hcs17.tsv`
+- Hypothetical Technical Blog #40「その事実はいつの事実か」：`datecheck.py`、`register/dated_hcs17.tsv`
+- Hypothetical Technical Blog #41「その1.5年はどう計算したか」（このリリースの後に公開）：`calccheck.py`、`register/calc_hcs17_25.tsv`
 
 ## 決まり
 

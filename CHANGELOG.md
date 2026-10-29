@@ -2,6 +2,13 @@
 
 Revisions are dated and kept visible. Nothing is changed silently.
 
+## Kit v1.4 — 2026-10-29
+
+- Added `tools/calccheck.py`, `tests/test_calccheck.py` (9 tests; 78 in all), `register/calc_hcs17_25.tsv` and `evidence/calccheck_hcs17_2026-10-29.txt`, for Hypothetical Technical Blog #41 (*How Was That 1.5 Years Calculated?*). Standard library only.
+- `calccheck.py` recalculates a register of numbers taken from a document, with exact arithmetic and a formula parser (no Python evaluation). It compares each derived number with the number shown, at the precision shown, and, for a number whose calculation the document does not give, tries each recorded reading (`candidate`). It reports `MISMATCH`, `NOREPRO` and `UNRESOLVED`, and register problems R1–R5.
+- `register/calc_hcs17_25.tsv` records the business-plan outline template Hypothetical Case Study #17.25 (fictional, written by the author with generative AI): 45 rows, one of them a value printed in a table of #17 (p. 7, an image) and copied as printed. The run reports one `MISMATCH` (the benefit rows sum to 2.965, the total shown is 3.32), one `NOREPRO` (no recorded reading gives the payback period of 1.5 years: 0.96, 1.08, 1.10, 1.26, 1.90 and 2.05 years) and one `UNRESOLVED` (a reading of year 2's benefit needs a ramp-up factor the document does not give).
+- README.md and README.ja.md: the tool table, a section on calccheck, the tag `v1.3` (7df67ed, 29 October 2026, 11:35 JST, immutable), and Blog #41 in the list of posts. Blog #40 is no longer marked as published after a release.
+
 ## Kit v1.3 — 2026-10-29
 
 - **Released on 29 October 2026,** before Hypothetical Technical Blog #40 (*True as of When?*), which cites it, is published. `main` was fast-forwarded to the branch `kit-v1.3`. The entries below were written while the release was in preparation. The final check of the post found two notes that said more than their sources: hcs17-d16 (now cites the term as the minister's criteria give it) and hcs17-d19 (no longer gives a part or edition of IEC 62443; the event date is now "-"). The run is unchanged. The tag `v1.3` is made by the author on GitHub after this commit. `CITATION.cff` gives the release date, and both READMEs say the version was released.

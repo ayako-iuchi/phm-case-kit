@@ -1,0 +1,20 @@
+MISMATCH	line 27	id ben_total	shown 約[3.32]億円 (3.32); formula gives 2.9650
+UNRESOLVED	line 39	id y2_alpha	needs alpha2, which has no value
+NOREPRO	line 40	id payback	shown [1.5]年 (1.5); no candidate gives it: pb_shown=1.1034, pb_sum=1.2574, pb_gross=0.9639, pb_gross_sum=1.0793, pb_cf_a=1.9034, pb_cf_b=2.0483
+candidate	i0_items	of I0	3.2000	gives it
+candidate	b1_all	of b1	4.6000	does not
+candidate	b1_nomaint	of b1	3.1000	does not
+candidate	b1_17	of b1	3.8000	gives it
+candidate	y1_alpha	of y1_ben	0.9960	gives it
+candidate	y1_alpha_sum	of y1_ben	0.8895	does not
+candidate	y2_net	of y2_ben	2.9000	gives it
+candidate	pb_shown	of payback	1.1034	does not
+candidate	pb_sum	of payback	1.2574	does not
+candidate	pb_gross	of payback	0.9639	does not
+candidate	pb_gross_sum	of payback	1.0793	does not
+candidate	pb_cf_a	of payback	1.9034	does not
+candidate	pb_cf_b	of payback	2.0483	does not
+rows: 45
+kind: input 25  derived 5  candidate 14  placeholder 1
+findings: MISMATCH 1  NOREPRO 1  UNRESOLVED 1
+issues: 0
