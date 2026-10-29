@@ -8,13 +8,14 @@ The kit holds the tools used to check quotes, figures and dated facts in hypothe
 
 ## Status
 
-Version 1.1, released on 29 October 2026 (version 1.0 on 28 October 2026). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
+Version 1.2, in preparation (version 1.1 released on 29 October 2026, version 1.0 on 28 October 2026). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
 
 | Tool | What it does | Post |
 | --- | --- | --- |
 | `tools/quotecheck.py` | Checks that each quotation is on the page given for it, flags how much an OK is worth, and runs a self-test that alters the quotations | Blog #37 |
 | `tools/termcount.py` | Counts where a term occurs, page by page; a count of 0 is reported only as "not in the extracted text of these pages" | Blog #37 |
 | `tools/sourcecheck.py` | Checks a source register, which traces each real-world fact in a document to a primary source, a secondary source or nowhere, and counts the rows by class | Blog #38 |
+| `tools/numcheck.py` | Checks a number register: where one value carries more than one definition across related documents, and whether the register missed an occurrence | Blog #39 |
 
 ## Using the tools
 
@@ -45,6 +46,12 @@ Write your quotations as a tab-separated file with the columns `id`, `page_from`
 
 Classes: `A` the primary source says it as the document wrote it; `B` the primary source says it, but a qualifier, premise, year, scope or unit was dropped or changed; `C` found only in a secondary source; `D` the primary source says something different; `E` could not be checked. The checks: required fields, with a note for B to E (R1); allowed values (R2); A, B and D need a primary source with a title and a location (R3); C needs the secondary source (R4); a URL needs an accessed date, and any accessed date must be written YYYY-MM-DD and be no later than `--as-of` (R5); duplicate ids (R6); E has no source: `source_kind` none and no title, URL or location (R7). A header that names a column twice, or a field too large to read, is bad input. `--quiet` prints only the summary. Exit status: 0 if no check fires, 1 if any does, 2 on bad input. Where a fact falls between two classes is a judgement, which the note should give. `register/sources_hcs17.tsv` traces the 14 real-world facts in Hypothetical Case Study #17 (a fictional document); its run is in `evidence/`.
 
+**numcheck** checks a number register: one row per occurrence of a number in a set of related documents, with what that document says the number measures. The columns are `id`, `value` (as written, e.g. `82%`, `1.5年`, `8~12回`), `document`, `page`, `quote` (a short quote containing the value, or empty), `measures`, `unit`, `base` (what it is a share of), `period`, `placeholder` (`yes` if marked like `[82]`) and `note`.
+
+    python3 -I tools/numcheck.py register/numbers_hcs17.tsv --text '#17=hcs17.txt' --text '#17.25=hcs17_02.txt'
+
+It reports `DRIFT` (one value, more than one definition: `measures`, `unit` or `base` differ) and `CONFLICT` (one definition, more than one value). These are findings to judge, not errors; `--strict` makes them exit 1. With `--text DOC=PATH` (repeatable; several documents compiled in one file may share it), it also checks that each quote is on its page (`QUOTE`) and that no page holds more occurrences of a value than the register has rows for it (`MISSED`). It searches the texts for every value that a row of a passed document has, reading full-width digits and signs as half-width and allowing brackets (`[82]%`); a digit, comma or point just before or after does not count. Pass only documents you meant to inventory in full. `--header-lines` (default 0) and `--note-footer` drop lines as in quotecheck; `--quiet` prints only the summary. Exit status: 0 if no check fires, 1 if `QUOTE` or `MISSED` fires (or `DRIFT`/`CONFLICT` with `--strict`), 2 on bad input. `register/numbers_hcs17.tsv` records 58 occurrences of six values across Hypothetical Case Study #17 and the documents derived from it (all fictional, written by the author with generative AI); rows from Ohi's public series give only the page and what is measured, not his text. Its run is in `evidence/`.
+
 ## Tests
 
     python3 -m unittest discover -s tests
@@ -55,12 +62,15 @@ The tests use a synthetic source written for them.
 
 - `v1.0` → 88eb816, made by the author on GitHub on 28 October 2026 (13:58 JST). Not immutable: release immutability was turned on after it.
 
-The tag `v1.1` is made by the author on GitHub after the release commit; until it exists, this list does not include it.
+- `v1.1` → 299422f, made by the author on GitHub on 29 October 2026 (09:57 JST). Immutable.
+
+The tag `v1.2` is made by the author on GitHub after the release commit; until it exists, this list does not include it.
 
 ## Posts that use the kit
 
 - Hypothetical Technical Blog #37, *What This Zero Checked* (28 October 2026; English, 29 October): `quotecheck.py`, `termcount.py`. https://note.com/ayako_iuchi/n/ne55386ce1ffc
-- Hypothetical Technical Blog #38, *Where Did That Number Come From?* (published after this release): `sourcecheck.py`, `register/sources_hcs17.tsv`
+- Hypothetical Technical Blog #38, *Where Did That Number Come From?* (29 October 2026): `sourcecheck.py`, `register/sources_hcs17.tsv`.
+- Hypothetical Technical Blog #39, *What Does That 82% Measure?* (published after this release): `numcheck.py`, `register/numbers_hcs17.tsv`
 
 ## Ground rules
 

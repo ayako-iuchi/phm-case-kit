@@ -8,13 +8,14 @@ English: [README.md](README.md)
 
 ## 状態
 
-版 1.1。2026年10月29日にリリース（版 1.0 は2026年10月28日）。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
+版 1.2（準備中。版 1.1 は2026年10月29日、版 1.0 は2026年10月28日にリリース）。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
 
 | 道具 | すること | 記事 |
 | --- | --- | --- |
 | `tools/quotecheck.py` | 引用が、示した頁にあるかを確かめる。「ある」がどれだけの意味を持つかに印を付け、引用をわざと変えて検出できるかを試す | Blog #37 |
 | `tools/termcount.py` | 語がどの頁に何回出てくるかを数える。0回のときは「この頁範囲の抽出テキストにない」とだけ出す | Blog #37 |
 | `tools/sourcecheck.py` | 文書の中の実在の事実を、一次資料・二次資料・どこにもない、のどこまでたどれたかを記録した台帳を点検し、判定ごとに数える | Blog #38 |
+| `tools/numcheck.py` | 関連する文書群で、1つの値が別々の定義で使われていないか、台帳が出現を取りこぼしていないかを点検する | Blog #39 |
 
 ## 使い方
 
@@ -45,6 +46,12 @@ English: [README.md](README.md)
 
 判定は、`A` 一次資料に書いたとおりある、`B` 一次資料にあるが、限定・前提・年・範囲・単位が落ちたか変わった、`C` 二次資料にしかない、`D` 一次資料と違う、`E` 確かめられない、です。点検は、必須の欄と、B〜E の注記（R1）、許される値（R2）、A・B・D には題と場所のある一次資料（R3）、C には二次資料（R4）、URL には確認日が要り、確認日は YYYY-MM-DD の形で `--as-of` 以前であること（R5）、id の重複（R6）、E には資料なし（`source_kind` が none で、題・URL・場所が空）（R7）です。見出しに同じ列名が2度ある台帳や、読めないほど大きい欄は入力の誤りです。`--quiet` は集計だけを出します。終了コードは、指摘がなければ 0、あれば 1、入力の誤りは 2 です。2つの判定の境目にある事実は人の判断で、注記にその理由を書きます。`register/sources_hcs17.tsv` は、Hypothetical Case Study #17（架空の文書）の実在の事実14項目をたどった台帳で、その実行結果を `evidence/` に置きます。
 
+**numcheck** は数値台帳を点検します。関連する文書群の中で数字が出てくるたびに1行とし、その文書がその数字を何の数字として書いているかを記録します。列は `id`、`value`（書かれたとおりの値。`82%`、`1.5年`、`8~12回` など）、`document`、`page`、`quote`（値を含む短い抜き書き。空でもよい）、`measures`（何を測るか）、`unit`、`base`（何に対する割合か）、`period`、`placeholder`（`[82]` のような印があれば `yes`）、`note` です。
+
+    python3 -I tools/numcheck.py register/numbers_hcs17.tsv --text '#17=hcs17.txt' --text '#17.25=hcs17_02.txt'
+
+`DRIFT`（1つの値に定義が2つ以上。`measures`、`unit`、`base` のどれかが違う）と `CONFLICT`（1つの定義に値が2つ以上）を出します。これは人が判断する所見で、誤りではありません。`--strict` を付けると終了コード 1 にします。`--text DOC=PATH`（繰り返し可。1つのファイルにまとめた複数の文書は同じファイルを指せます）を渡すと、抜き書きがその頁にあるか（`QUOTE`）と、ある頁に台帳の行数より多くその値が出てこないか（`MISSED`）も確かめます。渡した文書の行にある値をすべて探し、全角の数字と記号は半角として読み、括弧（`[82]%`）を許します。直前や直後の数字・カンマ・小数点は別の数とみなします。全部を棚卸ししたつもりの文書だけを渡してください。`--header-lines`（既定 0）と `--note-footer` は quotecheck と同じく行を除き、`--quiet` は集計だけを出します。終了コードは、指摘がなければ 0、`QUOTE` か `MISSED` があれば 1（`--strict` では `DRIFT`・`CONFLICT` も 1）、入力の誤りは 2 です。`register/numbers_hcs17.tsv` は、Hypothetical Case Study #17 と派生文書（すべて筆者が生成AIで作った架空の文書）に出てくる6つの値の58か所を記録した台帳です。大井氏の公開出典の行は、頁と何を測るかだけで、氏の文章は入れていません。実行結果は `evidence/` に置きます。
+
 ## テスト
 
     python3 -m unittest discover -s tests
@@ -55,12 +62,15 @@ English: [README.md](README.md)
 
 - `v1.0` → 88eb816。2026年10月28日（13:58 JST）に筆者が GitHub で作成。リリースの改変禁止（immutable）は、その後に有効にしたので、このタグには付いていません。
 
-タグ `v1.1` は、リリースのコミットの後に筆者が GitHub で作ります。できるまでは、この一覧に載せません。
+- `v1.1` → 299422f。2026年10月29日（09:57 JST）に筆者が GitHub で作成。改変禁止（immutable）。
+
+タグ `v1.2` は、リリースのコミットの後に筆者が GitHub で作ります。できるまでは、この一覧に載せません。
 
 ## キットを使う記事
 
 - Hypothetical Technical Blog #37「不一致0件は何を確かめたか」（2026年10月28日）：`quotecheck.py`、`termcount.py`。https://note.com/ayako_iuchi/n/n280b77ac18ec
-- Hypothetical Technical Blog #38「その数字はどこから来たか」（このリリースの後に公開）：`sourcecheck.py`、`register/sources_hcs17.tsv`
+- Hypothetical Technical Blog #38「その数字はどこから来たか」（2026年10月29日）：`sourcecheck.py`、`register/sources_hcs17.tsv`。https://note.com/ayako_iuchi/n/n7016091e1000
+- Hypothetical Technical Blog #39「その82%は何を測っているか」（このリリースの後に公開）：`numcheck.py`、`register/numbers_hcs17.tsv`
 
 ## 決まり
 

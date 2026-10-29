@@ -2,6 +2,13 @@
 
 Revisions are dated and kept visible. Nothing is changed silently.
 
+## Kit v1.2 — in preparation
+
+- Added `tools/numcheck.py`, `tests/test_numcheck.py` (9 tests; 58 in all), `register/numbers_hcs17.tsv` and `evidence/numcheck_hcs17_2026-10-29.txt`, for Hypothetical Technical Blog #39 (*What Does That 82% Measure?*). Standard library only.
+- `numcheck.py` checks a number register: one row per occurrence of a number in a set of related documents, with what the document says it measures. It reports one value with more than one definition (DRIFT) and one definition with more than one value (CONFLICT) as findings, and, given the texts, quotes not on their page (QUOTE) and occurrences the register missed (MISSED).
+- `register/numbers_hcs17.tsv` records 58 occurrences of six values (82%, 80%, 1.5年, 3週間, 85%, 8~12回) in Hypothetical Case Study #17 and the documents derived from it, all fictional and written by the author with generative AI. It was drafted from an inventory made on 29 October 2026 by a separate agent that had written none of the documents; the first numcheck run on the draft reported 26 MISSED occurrences, which were added. Rows for Takeaki Ohi's public series (and for the card of it embedded in #17's preface) give the page and what is measured, with an empty quote. Run on 29 October 2026: 5 values with more than one definition, no CONFLICT, no QUOTE, no MISSED.
+- Both READMEs describe `numcheck.py`, list the tag `v1.1` (299422f, made on 29 October 2026 at 09:57 JST, immutable) and give the address of Blog #38 in Japanese. `CITATION.cff` names version 1.2.
+
 ## Kit v1.1 — 2026-10-29
 
 - Added `tools/sourcecheck.py`, `tests/test_sourcecheck.py` (12 tests; 49 in all), `register/sources_hcs17.tsv` and `evidence/sourcecheck_hcs17_2026-10-29.txt`, for Hypothetical Technical Blog #38 (*Where Did That Number Come From?*). Standard library only.
