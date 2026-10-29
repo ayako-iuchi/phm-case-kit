@@ -2,6 +2,14 @@
 
 Revisions are dated and kept visible. Nothing is changed silently.
 
+## Kit v1.1 — 2026-10-29
+
+- Added `tools/sourcecheck.py`, `tests/test_sourcecheck.py` (9 tests; 46 in all), `register/sources_hcs17.tsv` and `evidence/sourcecheck_hcs17_2026-10-29.txt`, for Hypothetical Technical Blog #38 (*Where Did That Number Come From?*). Standard library only.
+- `sourcecheck.py` checks a source register: one row per real-world fact in a document, with the source it was traced to (primary, secondary or none), where in that source, the statistic the source rests on, the date it was opened, a class from A to E and a note. It checks the register, not the facts.
+- `register/sources_hcs17.tsv` traces the 14 real-world facts in Hypothetical Case Study #17 (a fictional document by the author). The trace was made by a separate agent on 29 October 2026 and checked at the primary sources by another agent that had not made it. That check moved one row, `hcs17-03` (the overtime cap), from B to D: the case study says the cap does not apply to manufacturing, and the Ministry of Health, Labour and Welfare's page says it has applied since April 2019 (2020 for small and medium-sized firms). The notes of `hcs17-12` and `hcs17-13` were narrowed to what was opened. Run on 29 October 2026: A 6, B 3, C 2, D 2, E 1; no issues. The register holds no third-party text beyond short phrases needed to say what differs.
+- Both READMEs describe `sourcecheck.py`, list the tag `v1.0` (88eb816, made on 28 October 2026 at 13:58 JST, not immutable), give the addresses of Blog #37 and name Blog #38. They now write the company as Kompas Co. Ltd., with a space, as the author decided on 28 October 2026; the v1.0 entry below kept "Kompas Co.Ltd." and is left as written.
+- `CITATION.cff` names version 1.1.
+
 ## Kit v1.0 — 2026-10-28
 
 - **Released on 28 October 2026,** before Hypothetical Technical Blog #37 (*What This Zero Checked*), which cites it, is published. `main` was fast-forwarded to the branch `kit-v1.0`; no history on `main` was rewritten. The entries below were written while the release was in preparation and are kept as written. The tag `v1.0` is made by the author on GitHub after this commit; until it exists, the READMEs' list of tags does not include it. `CITATION.cff` now gives the release date. Both READMEs now say the version was released, name Blog #37 by its title, and write the company as Kompas Co.Ltd., as the source's byline does (the README in English had "Kompas Co., Ltd.", the Japanese one had no English name).

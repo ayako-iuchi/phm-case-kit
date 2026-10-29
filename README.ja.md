@@ -8,12 +8,13 @@ English: [README.md](README.md)
 
 ## 状態
 
-版 1.0。2026年10月28日にリリース。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
+版 1.1。2026年10月29日にリリース（版 1.0 は2026年10月28日）。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
 
 | 道具 | すること | 記事 |
 | --- | --- | --- |
 | `tools/quotecheck.py` | 引用が、示した頁にあるかを確かめる。「ある」がどれだけの意味を持つかに印を付け、引用をわざと変えて検出できるかを試す | Blog #37 |
 | `tools/termcount.py` | 語がどの頁に何回出てくるかを数える。0回のときは「この頁範囲の抽出テキストにない」とだけ出す | Blog #37 |
+| `tools/sourcecheck.py` | 文書の中の実在の事実を、一次資料・二次資料・どこにもない、のどこまでたどれたかを記録した台帳を点検し、判定ごとに数える | Blog #38 |
 
 ## 使い方
 
@@ -38,6 +39,12 @@ English: [README.md](README.md)
 
 **termcount** は空白を除いてから数えるので、行で分かれた語も見つけます。重なった出現も数え、頁の区切りをまたぐものは数えません。0回は、その頁範囲の抽出テキストにないことだけを意味します。`evidence/` には記事が引く実行結果を置きます。
 
+**sourcecheck** が点検するのは台帳で、事実ではありません。資料を開くことはできません。台帳はタブ区切りで、1行に1つの事実を書きます。列は `id`、`document`、`page`、`statement`、`cited_ref`、`source_kind`（`primary`、`secondary`、`none`）、`source_title`、`issuer`、`edition`、`url`、`location`、`underlying`（その資料自身が拠る統計）、`accessed`（YYYY-MM-DD）、`class`、`note` です。
+
+    python3 -I tools/sourcecheck.py register/sources_hcs17.tsv --as-of 2026-10-29
+
+判定は、`A` 一次資料に書いたとおりある、`B` 一次資料にあるが、限定・前提・年・範囲・単位が落ちたか変わった、`C` 二次資料にしかない、`D` 一次資料と違う、`E` 確かめられない、です。点検は、必須の欄と、B〜E の注記（R1）、許される値（R2）、A・B・D には題と場所のある一次資料（R3）、C には二次資料（R4）、URL には `--as-of` 以前の確認日（R5）、id の重複（R6）、E には資料なし（R7）です。終了コードは、指摘がなければ 0、あれば 1、入力の誤りは 2 です。2つの判定の境目にある事実は人の判断で、注記にその理由を書きます。`register/sources_hcs17.tsv` は、Hypothetical Case Study #17（架空の文書）の実在の事実14項目をたどった台帳で、その実行結果を `evidence/` に置きます。
+
 ## テスト
 
     python3 -m unittest discover -s tests
@@ -46,16 +53,19 @@ English: [README.md](README.md)
 
 ## タグ
 
-まだありません。タグ `v1.0` は、リリースのコミットの後に筆者が GitHub で作ります。できるまでは、この一覧に載せません。
+- `v1.0` → 88eb816。2026年10月28日（13:58 JST）に筆者が GitHub で作成。リリースの改変禁止（immutable）は、その後に有効にしたので、このタグには付いていません。
+
+タグ `v1.1` は、リリースのコミットの後に筆者が GitHub で作ります。できるまでは、この一覧に載せません。
 
 ## キットを使う記事
 
-- Hypothetical Technical Blog #37「不一致0件は何を確かめたか」（このリリースの後に公開）：`quotecheck.py`、`termcount.py`
+- Hypothetical Technical Blog #37「不一致0件は何を確かめたか」（2026年10月28日）：`quotecheck.py`、`termcount.py`。https://note.com/ayako_iuchi/n/n280b77ac18ec
+- Hypothetical Technical Blog #38「その数字はどこから来たか」（このリリースの後に公開）：`sourcecheck.py`、`register/sources_hcs17.tsv`
 
 ## 決まり
 
 - **事例はすべて架空です。** 事例の文書（Hypothetical Case Study #17 とその派生文書）に出てくる企業・人物・数値は、筆者が生成AIを使って作ったもので、実在の企業の記録ではありません。
-- **公開資料だけを使います。** 連載の手法の出典は、株式会社KOMPAS（Kompas Co.Ltd.）CEO 大井竹昭氏の公開 note マガジン「予兆管理」です。氏の考えとして書くのは、この公開出典で確かめられるものだけです。英語の表記も、氏の第1回の表記「Predictive Maintenance / Prognostics and Health Management - PHM」に従います。
+- **公開資料だけを使います。** 連載の手法の出典は、株式会社KOMPAS（Kompas Co. Ltd.）CEO 大井竹昭氏の公開 note マガジン「予兆管理」です。氏の考えとして書くのは、この公開出典で確かめられるものだけです。英語の表記も、氏の第1回の表記「Predictive Maintenance / Prognostics and Health Management - PHM」に従います。
 - **第三者の文章はこのリポジトリに入れません。** 出典のPDFやそのテキストはコミットしません。道具は、利用者が自分で用意したファイルを読みます。
 - 記載の企業とは関係がなく、その承認を受けたものでもありません。
 

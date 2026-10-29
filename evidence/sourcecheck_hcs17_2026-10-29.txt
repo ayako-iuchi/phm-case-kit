@@ -1,0 +1,7 @@
+# python3 -I tools/sourcecheck.py register/sources_hcs17.tsv --as-of 2026-10-29
+# run on 2026-10-29; the register records sources opened on 2026-10-29
+rows: 14
+class: A 6  B 3  C 2  D 2  E 1
+source: primary 11  secondary 2  none 1
+issues: 0
+# exit 0

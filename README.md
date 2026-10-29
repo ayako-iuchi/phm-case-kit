@@ -8,12 +8,13 @@ The kit holds the tools used to check quotes, figures and dated facts in hypothe
 
 ## Status
 
-Version 1.0, released on 28 October 2026. Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
+Version 1.1, released on 29 October 2026 (version 1.0 on 28 October 2026). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
 
 | Tool | What it does | Post |
 | --- | --- | --- |
 | `tools/quotecheck.py` | Checks that each quotation is on the page given for it, flags how much an OK is worth, and runs a self-test that alters the quotations | Blog #37 |
 | `tools/termcount.py` | Counts where a term occurs, page by page; a count of 0 is reported only as "not in the extracted text of these pages" | Blog #37 |
+| `tools/sourcecheck.py` | Checks a source register, which traces each real-world fact in a document to a primary source, a secondary source or nowhere, and counts the rows by class | Blog #38 |
 
 ## Using the tools
 
@@ -38,6 +39,12 @@ Write your quotations as a tab-separated file with the columns `id`, `page_from`
 
 **termcount** removes whitespace before counting, so a term broken across lines is found; it counts overlapping occurrences, and not across a page break. A count of 0 means only that the term is not in the extracted text of those pages. `evidence/` holds the runs cited by the posts.
 
+**sourcecheck** checks a register, not the facts: it cannot open a source. The register is a tab-separated file with one row per fact and the columns `id`, `document`, `page`, `statement`, `cited_ref`, `source_kind` (`primary`, `secondary` or `none`), `source_title`, `issuer`, `edition`, `url`, `location`, `underlying` (the statistic the source itself rests on), `accessed` (YYYY-MM-DD), `class` and `note`.
+
+    python3 -I tools/sourcecheck.py register/sources_hcs17.tsv --as-of 2026-10-29
+
+Classes: `A` the primary source says it as the document wrote it; `B` the primary source says it, but a qualifier, premise, year, scope or unit was dropped or changed; `C` found only in a secondary source; `D` the primary source says something different; `E` could not be checked. The checks: required fields, with a note for B to E (R1); allowed values (R2); A, B and D need a primary source with a title and a location (R3); C needs the secondary source (R4); a URL needs an accessed date no later than `--as-of` (R5); duplicate ids (R6); E has no source (R7). Exit status: 0 if no check fires, 1 if any does, 2 on bad input. Where a fact falls between two classes is a judgement, which the note should give. `register/sources_hcs17.tsv` traces the 14 real-world facts in Hypothetical Case Study #17 (a fictional document); its run is in `evidence/`.
+
 ## Tests
 
     python3 -m unittest discover -s tests
@@ -46,16 +53,19 @@ The tests use a synthetic source written for them.
 
 ## Tags
 
-None yet. The tag `v1.0` is made by the author on GitHub after the release commit; until it exists, this list does not include it.
+- `v1.0` → 88eb816, made by the author on GitHub on 28 October 2026 (13:58 JST). Not immutable: release immutability was turned on after it.
+
+The tag `v1.1` is made by the author on GitHub after the release commit; until it exists, this list does not include it.
 
 ## Posts that use the kit
 
-- Hypothetical Technical Blog #37, *What This Zero Checked* (published after this release): `quotecheck.py`, `termcount.py`
+- Hypothetical Technical Blog #37, *What This Zero Checked* (28 October 2026; English, 29 October): `quotecheck.py`, `termcount.py`. https://note.com/ayako_iuchi/n/ne55386ce1ffc
+- Hypothetical Technical Blog #38, *Where Did That Number Come From?* (published after this release): `sourcecheck.py`, `register/sources_hcs17.tsv`
 
 ## Ground rules
 
 - **All cases are fictional.** The companies, people and figures in the case documents (Hypothetical Case Study #17 and its derivatives) were created by the author with generative AI. They are not records of any real company.
-- **Public sources only.** The method behind the series is Takeaki Ohi's (CEO, Kompas Co.Ltd.) public note magazine on 予兆管理, which renders the term in English as "Predictive Maintenance / Prognostics and Health Management - PHM". Only what can be checked in that public source is attributed to him.
+- **Public sources only.** The method behind the series is Takeaki Ohi's (CEO, Kompas Co. Ltd.) public note magazine on 予兆管理, which renders the term in English as "Predictive Maintenance / Prognostics and Health Management - PHM". Only what can be checked in that public source is attributed to him.
 - **No third-party text in this repository.** Source PDFs and their text extracts are never committed. The tools read files you supply yourself.
 - Not affiliated with or endorsed by any company mentioned.
 
