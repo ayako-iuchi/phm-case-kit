@@ -201,6 +201,19 @@ class CalccheckTest(unittest.TestCase):
             row(id="c1", formula="x / a", **cand))
         self.assertEqual(sorted(findings), ["NOREPRO", "UNRESOLVED"])
 
+    def test_loops_and_operand_order(self):
+        issues, findings, _ = self.run_check(row(id="A", kind="derived", formula="B + C"),
+                                             row(id="B", kind="derived", formula="A"),
+                                             row(id="C", kind="derived", formula="B"))
+        self.assertEqual((sorted(issues), findings), (["R3", "R3", "R3"], []))
+        x = row(id="x", shown="-", value="-", places="-", kind="placeholder")
+        for f in ("(a / 0) * x", "x * (a / 0)"):
+            issues, findings, _ = self.run_check(row(), x, row(id="t", kind="derived", formula=f))
+            self.assertEqual((issues, findings), (["R2"], []), f)
+        for f in ("b + x", "x + b"):
+            issues, findings, _ = self.run_check(row(), x, row(id="b", value="?"), row(id="t", kind="derived", formula=f))
+            self.assertEqual((issues, findings), (["R1"], []), f)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -63,8 +63,10 @@ Arithmetic is exact (fractions); nothing is rounded before the comparison.
 A formula that names a derived row uses that row's calculated value, not its
 shown value; to use a shown value as it stands, record it as an input row.
 A division by zero is R2 on the row whose formula divides. A row that only
-depends on a row with a register problem is not reported again, and a shown
-number whose candidates all fail on register problems gets no NOREPRO.
+depends on a row whose value a register problem leaves unknown is not
+reported again, nor is a row with its own register problem checked for
+MISMATCH; a shown number whose candidates all fail on register problems gets
+no NOREPRO, and NOREPRO names the candidates that could not be calculated.
 Rows are calculated in dependency order, so the order of rows does not
 matter. Limits: a formula of at most 2000 characters, a value of at most 40
 characters, places from 0 to 12, and calculated values of at most 4000 bits
@@ -187,40 +189,76 @@ class TooLarge(ValueError):
     pass
 
 
+class _Skip(Exception):
+    """A dependency has a register problem already reported; say nothing more."""
+
+
+class _Open(Exception):
+    def __init__(self, name):
+        super().__init__(name)
+        self.name = name
+
+
+class _Gap:
+    """A value that cannot be known: a placeholder ("open") or a register problem ("skip")."""
+
+    def __init__(self, kind, name):
+        self.kind, self.name = kind, name
+
+
+def _join(x, y):
+    gaps = [g for g in (x, y) if isinstance(g, _Gap)]
+    return next((g for g in gaps if g.kind == "skip"), gaps[0])
+
+
 def evaluate(tree, env):
-    """Post-order evaluation without recursion. Raises TooLarge past MAX_BITS."""
+    """Post-order evaluation without recursion.
+
+    env(name) returns a Fraction, or raises _Open or _Skip. Every operand is
+    evaluated, so the result does not depend on operand order: a division by
+    zero or a value past MAX_BITS is raised even when another operand is
+    unknown; otherwise _Skip wins over _Open."""
     done, todo = {}, [(tree, False)]
     while todo:
         node, ready = todo.pop()
         k = node[0]
         if k == "num":
-            done[id(node)] = node[1]
-            continue
-        if k == "id":
-            done[id(node)] = env(node[1])
-            continue
-        if not ready:
+            v = node[1]
+        elif k == "id":
+            try:
+                v = env(node[1])
+            except _Open as e:
+                v = _Gap("open", e.name)
+            except _Skip:
+                v = _Gap("skip", node[1])
+        elif not ready:
             todo.append((node, True))
             todo.extend((c, False) for c in _children(node))
             continue
-        if k == "neg":
-            v = -done.pop(id(node[1]))
+        elif k == "neg":
+            x = done.pop(id(node[1]))
+            v = x if isinstance(x, _Gap) else -x
         else:
             x, y = done.pop(id(node[1])), done.pop(id(node[2]))
-            if k == "+":
+            if k == "/" and not isinstance(y, _Gap) and y == 0:
+                raise ZeroDivisionError("division by zero")
+            if isinstance(x, _Gap) or isinstance(y, _Gap):
+                v = _join(x, y)
+            elif k == "+":
                 v = x + y
             elif k == "-":
                 v = x - y
             elif k == "*":
                 v = x * y
             else:
-                if y == 0:
-                    raise ZeroDivisionError("division by zero")
                 v = x / y
-        if max(v.numerator.bit_length(), v.denominator.bit_length()) > MAX_BITS:
+        if not isinstance(v, _Gap) and max(v.numerator.bit_length(), v.denominator.bit_length()) > MAX_BITS:
             raise TooLarge("a calculated value is too large")
         done[id(node)] = v
-    return done[id(tree)]
+    v = done[id(tree)]
+    if isinstance(v, _Gap):
+        raise _Skip() if v.kind == "skip" else _Open(v.name)
+    return v
 
 
 def matches(calc, value, places):
@@ -263,16 +301,6 @@ def fmt(x, places=4):
     q = abs(q)
     whole, frac = divmod(q.numerator * 10 ** places // q.denominator, 10 ** places)
     return f"{sign}{whole}.{frac:0{places}d}" if places else f"{sign}{whole}"
-
-
-class _Skip(Exception):
-    """A dependency has a register problem already reported; say nothing more."""
-
-
-class _Open(Exception):
-    def __init__(self, name):
-        super().__init__(name)
-        self.name = name
 
 
 def check(rows):
@@ -362,6 +390,44 @@ def check(rows):
                 color[child] = "grey"
                 path.append(child)
                 todo.append(iter(deps[child]))
+    # Rows in a loop: strongly connected groups of more than one row, or a row
+    # that names itself (iterative Tarjan).
+    index, low, onstack, stk, counter = {}, {}, set(), [], [0]
+    for root in trees:
+        if root in index:
+            continue
+        work = [(root, iter(deps[root]))]
+        index[root] = low[root] = counter[0]
+        counter[0] += 1
+        stk.append(root)
+        onstack.add(root)
+        while work:
+            node, it = work[-1]
+            child = next(it, None)
+            if child is not None:
+                if child not in index:
+                    index[child] = low[child] = counter[0]
+                    counter[0] += 1
+                    stk.append(child)
+                    onstack.add(child)
+                    work.append((child, iter(deps[child])))
+                elif child in onstack:
+                    low[node] = min(low[node], index[child])
+                continue
+            work.pop()
+            if work:
+                parent = work[-1][0]
+                low[parent] = min(low[parent], low[node])
+            if low[node] == index[node]:
+                group = []
+                while True:
+                    w = stk.pop()
+                    onstack.discard(w)
+                    group.append(w)
+                    if w == node:
+                        break
+                if len(group) > 1 or node in deps[node]:
+                    looped.update(group)
     for rid in trees:
         if rid in looped:
             flag(by_id[rid], "R3", "formula refers back to this row")
@@ -405,7 +471,8 @@ def check(rows):
 
     for rid in trees:
         r = by_id[rid]
-        if r["kind"] == "derived" and rid in results and r["_value"] is not None and r["_places"] is not None:
+        if (r["kind"] == "derived" and rid in results and rid not in bad
+                and r["_value"] is not None and r["_places"] is not None):
             v = results[rid]
             if not matches(v, r["_value"], r["_places"]):
                 findings.append((r["_line"], rid, "MISMATCH",
@@ -420,9 +487,11 @@ def check(rows):
         tried = [c for c in cands if c["id"] in results or isinstance(state.get(c["id"]), tuple)]
         if not got and tried:
             done = [f"{c['id']}={fmt(results[c['id']])}" for c in cands if c["id"] in results]
+            undone = [c["id"] for c in cands if c["id"] not in results]
             findings.append((target["_line"], target["id"], "NOREPRO",
                              f"shown {target['shown']} ({target['value']}); no candidate gives it"
-                             + (f": {', '.join(done)}" if done else "")))
+                             + (f": {', '.join(done)}" if done else "")
+                             + (f"; not calculated: {', '.join(undone)}" if undone else "")))
     return issues, findings, results
 
 
