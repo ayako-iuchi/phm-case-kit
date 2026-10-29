@@ -53,7 +53,7 @@ class NumcheckTest(unittest.TestCase):
                      row(id="n3", document="C", value="80%"))
         code, out = self.run_main(p)
         self.assertEqual(code, 0)  # findings, not failures
-        self.assertIn("DRIFT\t82%\t2 definitions in 2 rows", out)
+        self.assertIn("DRIFT\t2 definitions in 2 rows\t82%", out)
         self.assertIn("CONFLICT", out)
         self.assertIn("values 80%, 82%", out)
         code, _ = self.run_main(p, "--strict")
@@ -93,6 +93,32 @@ class NumcheckTest(unittest.TestCase):
         code, out = self.run_main(p, "--text", f"A={text}", "--text", f"B={text}")
         self.assertIn("MISSED\tA+B p.2: 82% occurs 2 times, register has 1", out)
 
+    def test_ranges_and_spacing(self):
+        self.assertEqual(numcheck.split_value("8-12回"), ("8~12", "回"))
+        self.assertEqual(numcheck.split_value("８～１２回"), ("8~12", "回"))
+        pat = numcheck.value_pattern("8~12回")
+        self.assertEqual(len(pat.findall("[8-12]回 8〜12回 8~12 回 18~12回".translate(numcheck.FULLWIDTH))), 3)
+        self.assertEqual(len(numcheck.value_pattern("82").findall("82 82.5 82% 82,000 [82]")), 2)
+        self.assertEqual(len(numcheck.value_pattern("82%").findall("82% 8件 382% 82 %")), 2)
+        code, out = self.run_main(self.reg(row(value="8-12回"), row(id="n2", value="8~12回", document="B", unit="count")))
+        self.assertIn("drift: 1", out)
+
+    def test_extra_and_quote_value(self):
+        text = self.write("a.txt", "82%\f")
+        code, out = self.run_main(self.reg(row(), row(id="n2")), "--text", f"A={text}")
+        self.assertEqual(code, 1)
+        self.assertIn("EXTRA\tA p.1: 82% occurs 1 times, register has 2", out)
+        text = self.write("b.txt", "停止を82%削減\f")
+        code, out = self.run_main(self.reg(row(quote="停止を")), "--text", f"A={text}")
+        self.assertEqual(code, 1)
+        self.assertIn("quote does not contain 82%", out)
+
+    def test_values_from_documents_without_text_are_searched(self):
+        text = self.write("a.txt", "82% と 80%\f")
+        code, out = self.run_main(self.reg(row(), row(id="n2", value="80%", document="Z")), "--text", f"A={text}")
+        self.assertEqual(code, 1)
+        self.assertIn("MISSED\tA p.1: 80% occurs 1 times, register has 0", out)
+
     def test_page_past_end(self):
         text = self.write("a.txt", "82%\f")
         code, out = self.run_main(self.reg(row(page="3")), "--text", f"A={text}")
@@ -111,13 +137,14 @@ class NumcheckTest(unittest.TestCase):
             HEADER + "\n" + row() + "\n" + row() + "\n",
             HEADER + "\n" + row(measures="") + "\n",
             HEADER + "\n" + row(note="x" * 200000) + "\n",
+            HEADER + "\n" + row(page="\u0661") + "\n",
         ]
         for c in cases:
             code, _ = self.run_main(self.write("b.tsv", c))
             self.assertEqual(code, 2, c[:80])
         p = self.reg(row())
         for args in (["--text", "A"], ["--text", "A=/nonexistent"], ["--text", f"A={p}", "--text", f"A={p}"],
-                     ["--text", "=x"]):
+                     ["--text", "=x"], ["--header-lines", "-1"]):
             code, _ = self.run_main(p, *args)
             self.assertEqual(code, 2, args)
 

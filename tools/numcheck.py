@@ -23,25 +23,32 @@ With --text DOC=PATH (a pdftotext extract with form feeds between pages, one
 per document), it also checks the register against the text:
 
     QUOTE     the row's quote is not on the page given (all whitespace
-              removed from both, as in quotecheck)
+              removed from both, as in quotecheck), or does not contain
+              the row's value
     MISSED    a page has more occurrences of a value than the register has
               rows for that value, document and page
+    EXTRA     a page has fewer occurrences of a value than the register
+              has rows for it (a row on the wrong page, or counted twice)
 
-MISSED counts a value as its number and suffix with nothing but optional
-brackets between them ("82%", "[82]%", "［82］％"); full-width digits and
-signs are read as half-width, and a digit, comma or point just before or
-just after does not count ("182%" is not "82%"). Several documents compiled
+MISSED and EXTRA count a value as its number and suffix with nothing but
+optional brackets between them ("82%", "[82]%", "［82］％"); full-width digits
+and signs are read as half-width, a range may be written with ~, 〜, ～, - or
+– ("8~12回" matches "[8-12]回"), and a digit, comma or point just before does
+not count ("182%" is not "82%"), nor a digit just after (nor a comma, point
+or % after a value with no suffix: "82" does not count "82.5" or "82%").
+Every value in the register is searched for in every text passed, including
+values whose rows are in documents without a text. Several documents compiled
 in one file can share it (--text '#17.2=all.txt' --text '#17.3=all.txt'); a
 page of that file is then counted against the rows of all of them. It is a
 check on the
-register's completeness for the documents you pass: it searches them for
-every value that a row of one of those documents has, so pass only documents
+register's completeness for the documents you pass, so pass only documents
 you meant to inventory in full. Rows of documents without a --text are not
 checked against any text; a row with an empty quote is not quote-checked.
 
 Columns (tab-separated, header row required, other columns ignored):
     id           unique id
-    value        the number as written, normalized ("82%", "1.5年", "3.2億円")
+    value        the number as written; full-width digits are read as half-width
+                 and a range is read with ~ ("82%", "1.5年", "8~12回")
     document     document id (matches DOC in --text)
     page         page number in that document's text (1 = before the first \\f)
     quote        a short quote that contains the value ("" to skip)
@@ -52,7 +59,7 @@ Columns (tab-separated, header row required, other columns ignored):
     placeholder  yes if marked as a placeholder (e.g. [82]), else no
     note         anything else
 
-Exit status: 0 if no check fires, 1 if QUOTE or MISSED fires (or DRIFT or
+Exit status: 0 if no check fires, 1 if QUOTE, MISSED or EXTRA fires (or DRIFT or
 CONFLICT with --strict), 2 on bad input.
 """
 import argparse
@@ -67,7 +74,8 @@ from pages import norm, read_pages, page_texts  # noqa: E402
 
 REQUIRED = ["id", "value", "document", "page", "quote", "measures", "unit",
             "base", "period", "placeholder", "note"]
-FULLWIDTH = str.maketrans("０１２３４５６７８９．，％〜［］－", "0123456789.,%~[]-")
+FULLWIDTH = str.maketrans("０１２３４５６７８９．，％〜～［］－–", "0123456789.,%~~[]--")
+RANGE = r"[~\-]"
 NOTE_FOOTER = r"^https?://note\.com/"
 
 
@@ -94,7 +102,7 @@ def load(path):
                 for k in ("id", "value", "document", "page", "measures"):
                     if not r[k]:
                         raise ValueError(f"{path}:{n}: {k} is empty")
-                if not r["page"].isdigit() or int(r["page"]) < 1:
+                if not re.fullmatch(r"[0-9]+", r["page"]) or int(r["page"]) < 1:
                     raise ValueError(f"{path}:{n}: page {r['page']!r} is not a page number")
                 if r["placeholder"] not in ("yes", "no"):
                     raise ValueError(f"{path}:{n}: placeholder must be yes or no")
@@ -115,14 +123,18 @@ def load(path):
 def split_value(value):
     """'82%' -> ('82', '%'); '8~12回' -> ('8~12', '回'); None if no leading number."""
     v = norm(value).translate(FULLWIDTH)
-    m = re.fullmatch(r"(\d[\d.,]*(?:[~\-–]\d[\d.,]*)?)(.*)", v)
-    return (m.group(1), m.group(2)) if m else None
+    m = re.fullmatch(r"(\d[\d.,]*(?:" + RANGE + r"\d[\d.,]*)?)(.*)", v)
+    if not m:
+        return None
+    return re.sub(RANGE, "~", m.group(1)), m.group(2)
 
 
 def value_pattern(value):
     num, suffix = split_value(value)
-    return re.compile(r"(?<![\d.,])\[?" + re.escape(num) + r"\]?" + re.escape(suffix) +
-                      (r"(?![\d])" if not suffix else ""))
+    num_re = RANGE.join(re.escape(x) for x in num.split("~"))
+    after = r"(?![\d.,%])" if not suffix else r"(?!\d)"
+    sfx = r"\s*".join(re.escape(c) for c in suffix)
+    return re.compile(r"(?<![\d.,])\[?\s*" + num_re + r"\s*\]?\s*" + sfx + after)
 
 
 def definition(r):
@@ -141,7 +153,7 @@ def findings(rows):
 
 
 def text_checks(rows, texts, doc_path=None):
-    """texts: {doc: [normalized page text, ...]}; doc_path: {doc: path}, so that several
+    """texts: {doc: [(normalized page text, page text with its whitespace), ...]}; doc_path: {doc: path}, so that several
     documents compiled in one file are counted together. Returns (code, row or None, message)."""
     issues = []
     doc_path = doc_path or {d: d for d in texts}
@@ -153,16 +165,17 @@ def text_checks(rows, texts, doc_path=None):
         if p > len(pages):
             issues.append(("QUOTE", r, f"page {p} is past the end ({len(pages)} pages)"))
             continue
-        if r["quote"] and norm(r["quote"]) not in pages[p - 1]:
+        if r["quote"] and norm(r["quote"]) not in pages[p - 1][0]:
             issues.append(("QUOTE", r, f"quote not on p.{p}"))
+        elif r["quote"] and not value_pattern(r["value"]).search(norm(r["quote"]).translate(FULLWIDTH)):
+            issues.append(("QUOTE", r, f"quote does not contain {r['value']}"))
     counts = defaultdict(int)
     for r in rows:
         if r["document"] in doc_path:
             counts[(doc_path[r["document"]], int(r["page"]), "".join(split_value(r["value"])))] += 1
     values = {}
     for r in rows:
-        if r["document"] in texts:  # values from documents without a text are not searched for
-            values.setdefault("".join(split_value(r["value"])), r["value"])
+        values.setdefault("".join(split_value(r["value"])), r["value"])
     done = set()
     for doc, pages in texts.items():
         path = doc_path[doc]
@@ -173,10 +186,12 @@ def text_checks(rows, texts, doc_path=None):
         for key, value in values.items():
             pat = value_pattern(value)
             for i, t in enumerate(pages, start=1):
-                n = len(pat.findall(t.translate(FULLWIDTH)))
+                n = len(pat.findall(t[1].translate(FULLWIDTH)))
                 have = counts.get((path, i, key), 0)
                 if n > have:
                     issues.append(("MISSED", None, f"{name} p.{i}: {value} occurs {n} times, register has {have}"))
+                elif n < have:
+                    issues.append(("EXTRA", None, f"{name} p.{i}: {value} occurs {n} times, register has {have}"))
     return issues
 
 
@@ -192,6 +207,8 @@ def main(argv=None):
     ap.add_argument("--quiet", action="store_true", help="print only the summary")
     args = ap.parse_args(argv)
     try:
+        if args.header_lines < 0:
+            raise ValueError("--header-lines must be 0 or more")
         rows = load(args.register)
         texts, doc_path, cache = {}, {}, {}
         for spec in args.text:
@@ -204,7 +221,7 @@ def main(argv=None):
             if key not in cache:
                 pages = read_pages(path, header_lines=args.header_lines,
                                    drop_line_regex=NOTE_FOOTER if args.note_footer else None)
-                cache[key] = page_texts(pages)
+                cache[key] = list(zip(page_texts(pages), ("\n".join(lines) for lines in pages)))
             texts[doc], doc_path[doc] = cache[key], key
     except (OSError, ValueError, UnicodeDecodeError) as e:
         print(f"numcheck: {e}", file=sys.stderr)
@@ -214,7 +231,7 @@ def main(argv=None):
     if not args.quiet:
         for v, rs in sorted(drift.items()):
             defs = sorted({definition(r) for r in rs})
-            print(f"DRIFT\t{rs[0]['value']}\t{len(defs)} definitions in {len(rs)} rows")
+            print(f"DRIFT\t{len(defs)} definitions in {len(rs)} rows\t{rs[0]['value']}")
             for d in defs:
                 ids = ",".join(r["id"] for r in rs if definition(r) == d)
                 print(f"\t\tmeasures={d[0]} | unit={d[1]} | base={d[2]}\t{ids}")
@@ -229,6 +246,7 @@ def main(argv=None):
     print(f"rows: {len(rows)}  values: {len(by_value)}  documents: {len(docs)}")
     print(f"drift: {len(drift)}  conflict: {len(conflict)}")
     print(f"quote: {sum(c == 'QUOTE' for c, _, _ in issues)}  missed: {sum(c == 'MISSED' for c, _, _ in issues)}"
+          f"  extra: {sum(c == 'EXTRA' for c, _, _ in issues)}"
           f"  (texts: {len(set(doc_path.values()))} files, {len(texts)} documents)")
     bad = bool(issues) or (args.strict and (drift or conflict))
     return 1 if bad else 0
