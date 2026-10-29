@@ -178,6 +178,29 @@ class CalccheckTest(unittest.TestCase):
             self.assertEqual(calccheck.main([os.path.join(self.tmp, "none.tsv")]), 2)
             self.assertEqual(calccheck.main([self.reg(row(), encoding="utf-16")]), 2)
 
+    def test_long_sums_big_values_and_order(self):
+        issues, findings, results = self.run_check(row(), row(id="t", shown="1998", value="1998", kind="derived",
+                                                               formula="+".join(["a"] * 999)))
+        self.assertEqual((issues, findings, results["t"]), ([], [], 1998))
+        issues, _, _ = self.run_check(row(value="9" * 40, places="0"),
+                                      row(id="t", kind="derived", formula="*".join(["a"] * 111)))
+        self.assertEqual(issues, ["R2"])
+        chain = [row(id=f"c{i}", kind="derived", formula=f"c{i - 1} + 1", value=str(i + 2)) for i in range(2999, 0, -1)]
+        issues, findings, results = self.run_check(*(chain + [row(id="c0")]))
+        self.assertEqual((issues, findings, results["c2999"]), ([], [], 3001))
+
+    def test_norepro_not_reported_for_register_problems(self):
+        cand = dict(shown="-", value="-", places="-", kind="candidate", of="p")
+        issues, findings, _ = self.run_check(
+            row(), row(id="p", shown="[1.5]", value="1.5", places="1"),
+            row(id="c1", formula="a / 0", **cand), row(id="c2", formula="c2 + 1", **cand))
+        self.assertEqual((sorted(issues), findings), (["R2", "R3"], []))
+        _, findings, _ = self.run_check(
+            row(), row(id="p", shown="[1.5]", value="1.5", places="1"),
+            row(id="x", shown="-", value="-", places="-", kind="placeholder"),
+            row(id="c1", formula="x / a", **cand))
+        self.assertEqual(sorted(findings), ["NOREPRO", "UNRESOLVED"])
+
 
 if __name__ == "__main__":
     unittest.main()

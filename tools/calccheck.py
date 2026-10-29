@@ -35,14 +35,16 @@ Kinds:
     candidate    one reading of how a shown number might have been
                  calculated, when the document does not say; several
                  candidates may point at the same number
-    placeholder  a number the document leaves open ([X]); value is "-"
+    placeholder  a number the document leaves open ([X]) or does not give;
+                 value is "-"
 
 Checks (register problems; each makes the exit status 1):
     R1  a required field is empty or not allowed (id form, kind, value,
         places, a formula where none belongs or none where one is needed,
         "of" on a non-candidate or missing on a candidate)
     R2  a formula does not parse, is too long or nests too deeply, names an
-        id not in the register, or divides by zero
+        id not in the register, divides by zero, or gives a value past the
+        size limit
     R3  a formula refers back to its own row, directly or through others
         (each row in the loop is reported)
     R4  a duplicate id
@@ -61,9 +63,12 @@ Arithmetic is exact (fractions); nothing is rounded before the comparison.
 A formula that names a derived row uses that row's calculated value, not its
 shown value; to use a shown value as it stands, record it as an input row.
 A division by zero is R2 on the row whose formula divides. A row that only
-depends on a row with a register problem is not reported again. Limits: a
-formula of at most 2000 characters, a value of at most 40 characters, and
-places from 0 to 12.
+depends on a row with a register problem is not reported again, and a shown
+number whose candidates all fail on register problems gets no NOREPRO.
+Rows are calculated in dependency order, so the order of rows does not
+matter. Limits: a formula of at most 2000 characters, a value of at most 40
+characters, places from 0 to 12, and calculated values of at most 4000 bits
+(about 1200 digits; larger is R2).
 
 Exit status: 0 if nothing fires, 1 if a check or finding fires, 2 on bad input.
 """
@@ -81,6 +86,7 @@ NUM = re.compile(r"[0-9]+(\.[0-9]+)?")
 MAX_FORMULA = 2000
 MAX_NUMBER = 40
 MAX_PLACES = 12
+MAX_BITS = 4000
 TOKEN = re.compile(r"\s*(?:([0-9]+(?:\.[0-9]+)?)|([A-Za-z][A-Za-z0-9_]*)|(.))")
 
 
@@ -159,34 +165,62 @@ def parse(formula):
     return tree
 
 
+def _children(node):
+    if node[0] in ("num", "id"):
+        return ()
+    if node[0] == "neg":
+        return (node[1],)
+    return (node[1], node[2])
+
+
 def names(tree):
-    if tree[0] == "id":
-        return {tree[1]}
-    if tree[0] == "num":
-        return set()
-    if tree[0] == "neg":
-        return names(tree[1])
-    return names(tree[1]) | names(tree[2])
+    out, todo = set(), [tree]
+    while todo:
+        node = todo.pop()
+        if node[0] == "id":
+            out.add(node[1])
+        todo.extend(_children(node))
+    return out
+
+
+class TooLarge(ValueError):
+    pass
 
 
 def evaluate(tree, env):
-    k = tree[0]
-    if k == "num":
-        return tree[1]
-    if k == "id":
-        return env(tree[1])
-    if k == "neg":
-        return -evaluate(tree[1], env)
-    a, b = evaluate(tree[1], env), evaluate(tree[2], env)
-    if k == "+":
-        return a + b
-    if k == "-":
-        return a - b
-    if k == "*":
-        return a * b
-    if b == 0:
-        raise ZeroDivisionError("division by zero")
-    return a / b
+    """Post-order evaluation without recursion. Raises TooLarge past MAX_BITS."""
+    done, todo = {}, [(tree, False)]
+    while todo:
+        node, ready = todo.pop()
+        k = node[0]
+        if k == "num":
+            done[id(node)] = node[1]
+            continue
+        if k == "id":
+            done[id(node)] = env(node[1])
+            continue
+        if not ready:
+            todo.append((node, True))
+            todo.extend((c, False) for c in _children(node))
+            continue
+        if k == "neg":
+            v = -done.pop(id(node[1]))
+        else:
+            x, y = done.pop(id(node[1])), done.pop(id(node[2]))
+            if k == "+":
+                v = x + y
+            elif k == "-":
+                v = x - y
+            elif k == "*":
+                v = x * y
+            else:
+                if y == 0:
+                    raise ZeroDivisionError("division by zero")
+                v = x / y
+        if max(v.numerator.bit_length(), v.denominator.bit_length()) > MAX_BITS:
+            raise TooLarge("a calculated value is too large")
+        done[id(node)] = v
+    return done[id(tree)]
 
 
 def matches(calc, value, places):
@@ -308,7 +342,31 @@ def check(rows):
             if target is None or target["kind"] not in ("input", "derived") or target["_value"] is None:
                 flag(r, "R5", f"of {r['of']!r} is not an input or derived row with a value")
 
-    results, failed, stack = {}, {}, []
+    # Order the rows so that each comes after the rows it names (no recursion).
+    deps = {rid: sorted(n for n in names(t) if n in trees) for rid, t in trees.items()}
+    order, color, looped = [], {}, set()
+    for root in trees:
+        if color.get(root):
+            continue
+        color[root], path, todo = "grey", [root], [iter(deps[root])]
+        while todo:
+            child = next(todo[-1], None)
+            if child is None:
+                todo.pop()
+                node = path.pop()
+                color[node] = "black"
+                order.append(node)
+            elif color.get(child) == "grey":
+                looped.update(path[path.index(child):])
+            elif not color.get(child):
+                color[child] = "grey"
+                path.append(child)
+                todo.append(iter(deps[child]))
+    for rid in trees:
+        if rid in looped:
+            flag(by_id[rid], "R3", "formula refers back to this row")
+
+    results, state = {}, {}  # state: "skip" (register problem upstream) or ("open", name)
 
     def value_of(name):
         r = by_id[name]
@@ -318,48 +376,32 @@ def check(rows):
             if r["_value"] is None:
                 raise _Skip()
             return r["_value"]
-        if name not in trees:
-            raise _Skip()
-        return calc(name)
-
-    def calc(name):
         if name in results:
             return results[name]
-        if name in failed:
-            raise failed[name]
-        if name in stack:
-            for member in stack[stack.index(name):]:
-                if member not in failed:
-                    flag(by_id[member], "R3", "formula refers back to this row")
-                    failed[member] = _Skip()
+        st = state.get(name, "skip")
+        if st == "skip":
             raise _Skip()
-        stack.append(name)
-        try:
-            v = evaluate(trees[name], value_of)
-        except ZeroDivisionError:
-            flag(by_id[name], "R2", "formula divides by zero")
-            failed[name] = _Skip()
-            raise failed[name]
-        except (_Open, _Skip) as e:
-            failed.setdefault(name, e)
-            raise failed[name]
-        finally:
-            stack.pop()
-        results[name] = v
-        return v
+        raise _Open(st[1])
 
-    for rid in trees:
-        r = by_id[rid]
+    for rid in order:
+        if rid in looped:
+            state[rid] = "skip"
+            continue
         try:
-            calc(rid)
+            results[rid] = evaluate(trees[rid], value_of)
         except _Open as e:
-            if rid not in bad:
-                findings.append((r["_line"], rid, "UNRESOLVED", f"needs {e.name}, which has no value"))
+            state[rid] = ("open", e.name)
         except _Skip:
-            pass
-        except RecursionError:
-            stack.clear()
-            flag(r, "R2", "formulas depend on each other too deeply")
+            state[rid] = "skip"
+        except ZeroDivisionError:
+            flag(by_id[rid], "R2", "formula divides by zero")
+            state[rid] = "skip"
+        except TooLarge as e:
+            flag(by_id[rid], "R2", str(e))
+            state[rid] = "skip"
+        if state.get(rid, None) not in (None, "skip") and rid not in bad:
+            r = by_id[rid]
+            findings.append((r["_line"], rid, "UNRESOLVED", f"needs {state[rid][1]}, which has no value"))
 
     for rid in trees:
         r = by_id[rid]
@@ -375,7 +417,8 @@ def check(rows):
             continue
         got = [c for c in cands if c["id"] in results
                and matches(results[c["id"]], target["_value"], target["_places"])]
-        if not got:
+        tried = [c for c in cands if c["id"] in results or isinstance(state.get(c["id"]), tuple)]
+        if not got and tried:
             done = [f"{c['id']}={fmt(results[c['id']])}" for c in cands if c["id"] in results]
             findings.append((target["_line"], target["id"], "NOREPRO",
                              f"shown {target['shown']} ({target['value']}); no candidate gives it"
