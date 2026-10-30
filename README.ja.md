@@ -8,7 +8,7 @@ English: [README.md](README.md)
 
 ## 状態
 
-版 1.4。2026年10月29日にリリース（版 1.3、1.2、1.1 は同じ日、版 1.0 は2026年10月28日）。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
+版 1.5、準備中（版 1.4 は2026年10月29日にリリース、版 1.3、1.2、1.1 は同じ日、版 1.0 は2026年10月28日）。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
 
 | 道具 | すること | 記事 |
 | --- | --- | --- |
@@ -18,6 +18,7 @@ English: [README.md](README.md)
 | `tools/numcheck.py` | 関連する文書群で、1つの値が別々の定義で使われていないか、台帳が出現を取りこぼしていないかを点検する | Blog #39 |
 | `tools/datecheck.py` | 時点のある事実の台帳を点検する。文書の日付で成り立っていたか、今も成り立つか、後の出来事を誤りと呼んでいないか、再確認の時期が来た行はどれか | Blog #40 |
 | `tools/calccheck.py` | 文書から写した数字の台帳を計算し直す。合計や掛け算が表示どおりになるか、計算の仕方が書かれていない数字を、考えられる読み方のどれかで再現できるか | Blog #41 |
+| `tools/quotediff.py` | 原文どおりでない引用について、原文でいちばん近い箇所を探し、省いた語・足した語・置き換えた語を並べる | Blog #42 |
 
 ## 使い方
 
@@ -66,6 +67,12 @@ English: [README.md](README.md)
 
 計算値が、表示の最後の桁の半単位以内なら一致とします。文書についての指摘は、`MISMATCH`（derived の行が表示どおりにならない）、`NOREPRO`（表示された数字に candidate があるが、どれも再現しない）、`UNRESOLVED`（式が placeholder を必要とする）です。台帳の問題は、必須の欄と許される値（R1）、式の構文や存在しない id（R2）、自分の行に戻る式（R3）、id の重複（R4）、表示値のない行を指す `of`（R5）です。ゼロ除算と、大きさの上限を超える計算値も R2 で、循環はその輪のすべての行を R3 で示します。計算は確かめますが、意味は確かめません。時間の率と金額の率の区別はできません。終了コードは、何もなければ 0、指摘があれば 1、入力の誤りは 2 です。`register/calc_hcs17_25.tsv` は、事業計画書の骨子テンプレート Hypothetical Case Study #17.25（筆者が生成AIで作った架空の文書）の台帳で、#17 の表（p.7、画像）に印刷された値を1つ含みます。文書が書いていない読み方の行がいくつかあり、それぞれ注記にそう書いてあります。実行結果を `evidence/` に置きます。
 
+**quotediff** は、引用を原文と比べます。台帳の1行が1つの引用で、列は `id`、`document`、`page`、`source`（`--text` で与えた名前）、`quote`（文書のとおり、引用符を除く）、`marked`（`none`、省略を `…`・`...`・`／` で示した `ellipsis`、要約だと書いた `paraphrase`）、`note` です。
+
+    python3 -I tools/quotediff.py register/quotes_hcs17.tsv --text '#17=hcs17.txt' --note-footer
+
+空白を除き、Unicode の NFKC をかけてから比べます。分類は `EXACT`、`ELLIPSIS`（印のあいだの部分がすべて原文に順にある）、`PARAPHRASE`（要約と明記し、原文どおりでない）、`ALTERED`（類似度が `--min-ratio`（既定 0.6）以上の箇所がある。省略・追加・置き換えを文字単位で並べるので、語順の入れ替えは省略と追加として出ます）、`NOT-FOUND` です。`ALTERED` と `NOT-FOUND` は指摘（終了コード 1）、台帳の問題は Q1（必須の欄、許される値）、Q2（`--text` のない source）、Q3（id の重複）で、入力の誤りは 2 です。`register/quotes_hcs17.tsv` は、Hypothetical Case Study #17 の派生文書（すべて筆者が生成AIで作った架空の文書）が #17 の引用として示した107箇所の台帳です。#17.2〜#17.20 の頁はそれらをまとめたファイルの頁で、Blog #42 で使った記事は公開された記事でも確かめました。pdftotext は #17 の3つの段落で行頭の英単語を別の行に移すため、頁の画像では一致する3行が `ALTERED` と出ます。注記にそう書いてあります。大井竹昭氏の文とされた引用は台帳に入れていません。実行結果を `evidence/` に置きます。
+
 ## テスト
 
     python3 -m unittest discover -s tests
@@ -82,7 +89,9 @@ English: [README.md](README.md)
 
 - `v1.3` → 7df67ed。2026年10月29日（11:35 JST）に筆者が GitHub で作成。改変禁止（immutable）。
 
-タグ `v1.4` は、リリースのコミットの後に筆者が GitHub で作ります。できるまでは、この一覧に載せません。
+- `v1.4` → a4d438c。2026年10月30日（10:38 JST）に筆者が GitHub で作成。改変禁止（immutable）。
+
+タグ `v1.5` は、リリースのコミットの後に筆者が GitHub で作ります。できるまでは、この一覧に載せません。
 
 ## キットを使う記事
 
@@ -90,7 +99,8 @@ English: [README.md](README.md)
 - Hypothetical Technical Blog #38「その数字はどこから来たか」（2026年10月29日）：`sourcecheck.py`、`register/sources_hcs17.tsv`。https://note.com/ayako_iuchi/n/n7016091e1000
 - Hypothetical Technical Blog #39「その82%は何を測っているか」：`numcheck.py`、`register/numbers_hcs17.tsv`
 - Hypothetical Technical Blog #40「その事実はいつの事実か」：`datecheck.py`、`register/dated_hcs17.tsv`
-- Hypothetical Technical Blog #41「その1.5年はどう計算したか」（このリリースの後に公開）：`calccheck.py`、`register/calc_hcs17_25.tsv`
+- Hypothetical Technical Blog #41「その1.5年はどう計算したか」（2026年10月30日）：`calccheck.py`、`register/calc_hcs17_25.tsv`。https://note.com/ayako_iuchi/n/n4212c599801a
+- Hypothetical Technical Blog #42（このリリースの後に公開）：`quotediff.py`、`register/quotes_hcs17.tsv`
 
 ## 決まり
 

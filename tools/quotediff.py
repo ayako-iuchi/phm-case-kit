@@ -41,8 +41,9 @@ Classes:
 
 Similarity is 2M / (a + b), where M is the number of characters the
 quotation and the passage share in order and a and b are their lengths
-(difflib). The passage is located by counting shared 4-character sequences,
-then trimmed to the characters that match.
+(difflib). The passage is located by counting shared 4-character sequences;
+of the spans between matching characters there, the one most like the
+quotation is kept.
 
 Findings (exit status 1): ALTERED and NOT-FOUND, and an ELLIPSIS row whose
 parts are not all in the source in order (reported as ALTERED or NOT-FOUND).
@@ -66,8 +67,9 @@ from pages import read_pages  # noqa: E402
 
 REQUIRED = ["id", "document", "page", "source", "quote", "marked", "note"]
 MARKS = ("none", "ellipsis", "paraphrase")
-ELLIPSIS = re.compile(r"(?:…+|\.{3,}|・{3,})")
+ELLIPSIS = re.compile(r"(?:…+|\.{3,}|・{3,}|／)")
 NGRAM = 4
+MAX_BLOCKS = 40
 MAX_QUOTE = 2000
 
 
@@ -118,13 +120,18 @@ class Source:
             blocks = [b for b in sm.get_matching_blocks() if b.size]
             if not blocks:
                 continue
-            a0, a1 = blocks[0].a, blocks[-1].a + blocks[-1].size
-            passage = window[a0:a1]
-            sm2 = difflib.SequenceMatcher(None, passage, q, autojunk=False)
-            ratio = sm2.ratio()
-            cand = (ratio, lo + a0, lo + a1, sm2.get_opcodes(), passage)
-            if best is None or cand[0] > best[0]:
-                best = cand
+            # Trim to the span of matching blocks that resembles q most, so a
+            # stray one-character match at either end does not widen it.
+            if len(blocks) > MAX_BLOCKS:
+                blocks = sorted(sorted(blocks, key=lambda b: -b.size)[:MAX_BLOCKS], key=lambda b: b.a)
+            for i in range(len(blocks)):
+                for j in range(i, len(blocks)):
+                    a0, a1 = blocks[i].a, blocks[j].a + blocks[j].size
+                    passage = window[a0:a1]
+                    sm2 = difflib.SequenceMatcher(None, passage, q, autojunk=False)
+                    ratio = sm2.ratio()
+                    if best is None or ratio > best[0]:
+                        best = (ratio, lo + a0, lo + a1, sm2.get_opcodes(), passage)
         return best
 
 

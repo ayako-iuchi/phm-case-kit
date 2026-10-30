@@ -2,6 +2,13 @@
 
 Revisions are dated and kept visible. Nothing is changed silently.
 
+## Kit v1.5 (in preparation)
+
+- Added `tools/quotediff.py`, `tests/test_quotediff.py` (6 tests; 90 in all), `register/quotes_hcs17.tsv` and `evidence/quotediff_hcs17_2026-10-30.txt`, for Hypothetical Technical Blog #42. Standard library only.
+- `quotediff.py` finds, for each quotation, the passage in the source it most resembles and classifies it as EXACT, ELLIPSIS, PARAPHRASE, ALTERED or NOT-FOUND, listing omissions, additions and replacements for an altered one.
+- `register/quotes_hcs17.tsv` records the 107 passages that Hypothetical Case Study #17's derived documents (fictional, written by the author with generative AI) present as quotations of #17. The run gives EXACT 67, ELLIPSIS 6, PARAPHRASE 1, ALTERED 33 and NOT-FOUND 0; three of the ALTERED rows match on the page image (pdftotext moves a leading English word), and their notes say so. Quotations attributed to Takeaki Ohi are not in the register.
+- README.md and README.ja.md: the tool table, a section on quotediff, the tag `v1.4` (a4d438c, 30 October 2026, 10:38 JST, immutable), Blog #41's published URL, and Blog #42 in the list of posts. The release date of v1.4 in the status line is that of its release commit (29 October); the tag was made on 30 October.
+
 ## Kit v1.4 — 2026-10-29
 
 - **Released on 29 October 2026,** before Hypothetical Technical Blog #41 (*How Was That 1.5 Years Calculated?*), which cites it, is published. `main` was fast-forwarded to the branch `kit-v1.4`. The entries below were written while the release was in preparation. The tag `v1.4` is made by the author on GitHub after this commit. `CITATION.cff` gives the version and release date, and both READMEs say the version was released.

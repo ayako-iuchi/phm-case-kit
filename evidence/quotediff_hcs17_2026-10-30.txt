@@ -1,0 +1,110 @@
+EXACT	line 2	id B01	source p.4
+EXACT	line 3	id B02	source p.4
+EXACT	line 4	id B03	source p.5
+ELLIPSIS	line 5	id B04	source p.5
+EXACT	line 6	id B05	source p.6
+EXACT	line 7	id B06	source p.7
+EXACT	line 8	id B07	source p.9
+ELLIPSIS	line 9	id B08	source p.9
+EXACT	line 10	id B09	source p.13
+EXACT	line 11	id B10	source p.13
+ELLIPSIS	line 12	id B11	source p.13
+ELLIPSIS	line 13	id B12	source p.13
+EXACT	line 14	id B13	source p.13
+EXACT	line 15	id B14	source p.13
+ELLIPSIS	line 16	id B15	source p.15
+EXACT	line 17	id B16	source p.15
+EXACT	line 18	id B17	source p.15
+EXACT	line 19	id B18	source p.20
+EXACT	line 20	id B19	source p.21
+EXACT	line 21	id B20	source p.21
+EXACT	line 22	id B21	source p.21
+EXACT	line 23	id B22	source p.21
+EXACT	line 24	id B23	source p.22
+EXACT	line 25	id B24	source p.23
+EXACT	line 26	id B25	source p.7
+EXACT	line 27	id B26	source p.23
+EXACT	line 28	id B27	source p.14
+EXACT	line 29	id B28	source p.14
+EXACT	line 30	id B29	source p.20
+ALTERED	line 31	id B30	source p.20, similarity 0.96: added «OEE»; omitted «OEE»
+EXACT	line 32	id B31	source p.6
+EXACT	line 33	id B32	source p.7
+EXACT	line 34	id B33	source p.4
+EXACT	line 35	id B34	source p.9
+ELLIPSIS	line 36	id B35	source p.21
+EXACT	line 37	id B36	source p.6
+EXACT	line 38	id B37	source p.19
+EXACT	line 39	id B38	source p.19
+EXACT	line 40	id B39	source p.6
+EXACT	line 41	id B40	source p.21
+ALTERED	line 42	id B41	source p.22, similarity 0.99: added «。»
+EXACT	line 43	id B42	source p.9
+EXACT	line 44	id B43	source p.9
+EXACT	line 45	id B44	source p.15
+EXACT	line 46	id B45	source p.19
+EXACT	line 47	id B46	source p.19
+EXACT	line 48	id B47	source p.23
+EXACT	line 49	id B48	source p.9
+EXACT	line 50	id B49	source p.9
+EXACT	line 51	id B50	source p.15
+EXACT	line 52	id B51	source p.5
+EXACT	line 53	id B52	source p.21
+EXACT	line 54	id B53	source p.14
+EXACT	line 55	id B54	source p.13
+EXACT	line 56	id B55	source p.13
+EXACT	line 57	id B56	source p.21
+EXACT	line 58	id B57	source p.15
+EXACT	line 59	id B58	source p.21
+EXACT	line 60	id B59	source p.21
+EXACT	line 61	id B60	source p.13
+EXACT	line 62	id B61	source p.13
+EXACT	line 63	id B62	source p.15
+EXACT	line 64	id B63	source p.11
+EXACT	line 65	id B64	source p.12
+ALTERED	line 66	id B65	source p.16, similarity 0.95: added «PoC»; omitted «PoC»
+EXACT	line 67	id B66	source p.18
+EXACT	line 68	id B67	source p.17
+ALTERED	line 69	id B68	source p.19, similarity 0.97: added «DQM»
+EXACT	line 70	id B69	source p.6
+EXACT	line 71	id B70	source p.17
+EXACT	line 72	id B71	source p.22
+EXACT	line 73	id B72	source p.15
+ALTERED	line 74	id B73	source p.13, similarity 0.60: added «機械が、俺が30年こ»; omitted «30年»; omitted «、機械が»; omitted «という»; replaced «それなら自分» with «......じゃあ、俺»
+PARAPHRASE	line 75	id Q01	source p.16, similarity 0.88: omitted «そのまま»
+ALTERED	line 76	id Q02	source p.13, similarity 0.88: replaced «組織» with «データ»
+ALTERED	line 77	id Q03	source p.13, similarity 0.92: added «のか»
+ALTERED	line 78	id Q04	source p.3, similarity 0.70: added «(AI執筆)»
+ALTERED	line 79	id Q05	source p.13, similarity 0.92: added «のか»
+ALTERED	line 80	id Q06	source p.13, similarity 0.92: added «のか»
+ALTERED	line 81	id Q07	source p.6, similarity 0.73: replaced «TBM» with «◯年で交換»
+EXACT	line 82	id Q08	source p.13
+EXACT	line 83	id Q09	source p.13
+ALTERED	line 84	id Q10	source p.9, similarity 0.78: added «奪うのではなく、»
+ALTERED	line 85	id Q11	source p.14, similarity 0.90: added «いつ»
+ALTERED	line 86	id Q12	source p.13, similarity 0.92: added «のか»
+ALTERED	line 87	id Q13	source p.6, similarity 0.89: added «の無駄»
+ALTERED	line 88	id Q14	source p.6, similarity 0.91: added «劣化»
+ALTERED	line 89	id Q15	source p.13, similarity 0.92: added «のか»
+ALTERED	line 90	id Q16	source p.8, similarity 0.93: omitted «、»; omitted «層»; added «る»
+ALTERED	line 91	id Q17	source p.15, similarity 0.88: added «は別物»
+EXACT	line 92	id Q18	source p.8
+EXACT	line 93	id Q19	source p.7
+ALTERED	line 94	id Q20	source p.8, similarity 0.93: omitted «、»; omitted «層»; added «る»
+ALTERED	line 95	id Q21	source p.18, similarity 0.91: replaced «は» with «=»; replaced «は» with «=»
+ALTERED	line 96	id Q22	source p.13, similarity 0.92: added «のか»
+ALTERED	line 97	id Q23	source p.9, similarity 0.78: omitted «「»; omitted «」»; omitted «判断»; replaced «つながら» with «直結し»
+ALTERED	line 98	id Q24	source p.13, similarity 0.80: omitted «てき»; omitted «、»; omitted «という»; replaced «。それなら» with «、では»; added «のか»
+ALTERED	line 99	id Q25	source p.19, similarity 0.81: added «DQM»; omitted «、技術基盤の中で»; omitted «「»; omitted «」»; omitted «「»
+ALTERED	line 100	id Q26	source p.14, similarity 0.65: added «財務KPIを問うの»; added «間違い»
+ALTERED	line 101	id Q27	source p.21, similarity 0.86: added «二層KPI=»; omitted «で»
+ALTERED	line 102	id Q28	source p.13, similarity 0.92: added «のか»
+ALTERED	line 103	id Q29	source p.3, similarity 0.65: added «経営層に予兆管理»; added «的»; omitted «経営層に»
+ALTERED	line 104	id Q30	source p.5, similarity 0.85: added «自社の»; replaced «材» with «資»
+ALTERED	line 105	id Q31	source p.3, similarity 0.82: omitted «層»; added «論点»
+ALTERED	line 106	id Q32	source p.13, similarity 0.92: added «俺»; added «、»
+ALTERED	line 107	id Q33	source p.15, similarity 0.93: omitted «の»; omitted «の»; added «、»; added «る»
+EXACT	line 108	id Q34	source p.21
+rows: 107
+class: EXACT 67  ELLIPSIS 6  PARAPHRASE 1  ALTERED 33  NOT-FOUND 0
+issues: 0

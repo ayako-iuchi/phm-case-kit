@@ -8,7 +8,7 @@ The kit holds the tools used to check quotes, figures and dated facts in hypothe
 
 ## Status
 
-Version 1.4, released on 29 October 2026 (versions 1.3, 1.2 and 1.1 earlier the same day, version 1.0 on 28 October 2026). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
+Version 1.5, in preparation (version 1.4 released on 29 October 2026, versions 1.3, 1.2 and 1.1 earlier the same day, version 1.0 on 28 October 2026). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
 
 | Tool | What it does | Post |
 | --- | --- | --- |
@@ -18,6 +18,7 @@ Version 1.4, released on 29 October 2026 (versions 1.3, 1.2 and 1.1 earlier the 
 | `tools/numcheck.py` | Checks a number register: where one value carries more than one definition across related documents, and whether the register missed an occurrence | Blog #39 |
 | `tools/datecheck.py` | Checks a register of dated facts: whether each was true on the document's date and is true now, whether a later event is being called an error, and which rows are due to be checked again | Blog #40 |
 | `tools/calccheck.py` | Recalculates a register of numbers taken from a document: whether each total or product gives the number shown, and whether any recorded reading reproduces a number whose calculation the document does not give | Blog #41 |
+| `tools/quotediff.py` | For a quotation that is not word for word, finds the passage in the source it most resembles and lists what was left out, added or replaced | Blog #42 |
 
 ## Using the tools
 
@@ -66,6 +67,12 @@ Classes: `CURRENT` held on the document's date and holds now; `SUPERSEDED` holds
 
 A calculated value matches when it lies within half a unit of the last shown place. Findings about the document: `MISMATCH` (a derived row does not give the number shown), `NOREPRO` (a shown number has candidates, none of which gives it) and `UNRESOLVED` (a formula needs a placeholder). Register problems: required fields and allowed values (R1), formulas that do not parse or name an unknown id (R2), a formula that refers back to its own row (R3), duplicate ids (R4), and `of` naming a row without a shown value (R5). R2 also covers a division by zero and a calculated value past the size limit, and R3 reports every row in a loop. The tool checks arithmetic, not meaning: it cannot tell a rate of hours from a rate of money. Exit status: 0 if nothing fires, 1 if a check or finding fires, 2 on bad input. `register/calc_hcs17_25.tsv` records the business-plan outline template Hypothetical Case Study #17.25 (fictional, written by the author with generative AI), with one value printed in a table of #17 (p. 7, an image); a few rows are readings the document does not state, and each says so in its note. Its run is in `evidence/`.
 
+**quotediff** compares quotations with their source. Each row of the register is one quotation: `id`, `document`, `page`, `source` (a name given with `--text`), `quote` (as the document gives it, without its quote marks), `marked` (`none`, `ellipsis` when the document shows omissions with `…`, `...` or `／`, `paraphrase` when it says it is a summary) and `note`.
+
+    python3 -I tools/quotediff.py register/quotes_hcs17.tsv --text '#17=hcs17.txt' --note-footer
+
+Both texts are compared without whitespace and after Unicode NFKC. Classes: `EXACT`, `ELLIPSIS` (every part between the marks is in the source, in order), `PARAPHRASE` (marked, and not exact), `ALTERED` (a passage with similarity of at least `--min-ratio`, default 0.6, exists; the tool lists omissions, additions and replacements, character by character, so a reordering shows as an omission and an addition) and `NOT-FOUND`. `ALTERED` and `NOT-FOUND` are findings (exit 1); register problems are Q1 (required fields, allowed values), Q2 (a source with no `--text`) and Q3 (duplicate ids); bad input exits 2. `register/quotes_hcs17.tsv` records the 107 passages that Hypothetical Case Study #17's derived documents present as quotations of #17 (all fictional, written by the author with generative AI). Pages of #17.2–#17.20 are pages of a compiled file of those posts; the posts used in Blog #42 were also checked against the published articles. pdftotext moves a leading English word to another line in three of #17's paragraphs, so three rows that match on the page image show as `ALTERED`; their notes say so. Quotations attributed to Takeaki Ohi are not in the register. Its run is in `evidence/`.
+
 ## Tests
 
     python3 -m unittest discover -s tests
@@ -82,7 +89,9 @@ The tests use a synthetic source written for them.
 
 - `v1.3` → 7df67ed, made by the author on GitHub on 29 October 2026 (11:35 JST). Immutable.
 
-The tag `v1.4` is made by the author on GitHub after the release commit; until it exists, this list does not include it.
+- `v1.4` → a4d438c, made by the author on GitHub on 30 October 2026 (10:38 JST). Immutable.
+
+The tag `v1.5` is made by the author on GitHub after the release commit; until it exists, this list does not include it.
 
 ## Posts that use the kit
 
@@ -90,7 +99,8 @@ The tag `v1.4` is made by the author on GitHub after the release commit; until i
 - Hypothetical Technical Blog #38, *Where Did That Number Come From?* (29 October 2026): `sourcecheck.py`, `register/sources_hcs17.tsv`.
 - Hypothetical Technical Blog #39, *What Does That 82% Measure?*: `numcheck.py`, `register/numbers_hcs17.tsv`
 - Hypothetical Technical Blog #40, *True as of When?*: `datecheck.py`, `register/dated_hcs17.tsv`
-- Hypothetical Technical Blog #41, *How Was That 1.5 Years Calculated?* (published after this release): `calccheck.py`, `register/calc_hcs17_25.tsv`
+- Hypothetical Technical Blog #41, *How Was That 1.5 Years Calculated?* (30 October 2026): `calccheck.py`, `register/calc_hcs17_25.tsv`. https://note.com/ayako_iuchi/n/n4489e7f4efd9
+- Hypothetical Technical Blog #42 (published after this release): `quotediff.py`, `register/quotes_hcs17.tsv`
 
 ## Ground rules
 
