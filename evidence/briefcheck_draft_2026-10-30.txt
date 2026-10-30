@@ -1,0 +1,9 @@
+B1	line 6	a number or quotation with no source: - 製造業の就業者は1,046万人で、技能継承が課題になっている。
+B4	line 11	cites a fictional source but does not say so: - 計画外停止82%削減、ROI約1.5年 [4]
+B3	line 15	source 1 is never cited
+B5	line 15	source 1 gives no date
+B3	line 17	source 3 is never cited
+B5	line 17	source 3 gives no date
+lines: 5  with a source: 2
+sources: 4
+issues: B1 1  B2 0  B3 2  B4 1  B5 2  B6 0

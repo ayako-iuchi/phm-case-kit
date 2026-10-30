@@ -8,7 +8,7 @@ The kit holds the tools used to check quotes, figures and dated facts in hypothe
 
 ## Status
 
-Version 1.5, released on 30 October 2026 (version 1.4 on 29 October 2026, versions 1.3, 1.2 and 1.1 the same day, version 1.0 on 28 October 2026). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
+Version 1.6, in preparation (version 1.5 released on 30 October 2026, version 1.4 on 29 October 2026, versions 1.3, 1.2 and 1.1 the same day, version 1.0 on 28 October 2026). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
 
 | Tool | What it does | Post |
 | --- | --- | --- |
@@ -19,6 +19,7 @@ Version 1.5, released on 30 October 2026 (version 1.4 on 29 October 2026, versio
 | `tools/datecheck.py` | Checks a register of dated facts: whether each was true on the document's date and is true now, whether a later event is being called an error, and which rows are due to be checked again | Blog #40 |
 | `tools/calccheck.py` | Recalculates a register of numbers taken from a document: whether each total or product gives the number shown, and whether any recorded reading reproduces a number whose calculation the document does not give | Blog #41 |
 | `tools/quotediff.py` | For a quotation that is not word for word, finds the passage in the source it most resembles and lists what was left out, added or replaced | Blog #42 |
+| `tools/briefcheck.py` | Checks that every number and quotation in a one-page brief cites a source, that fictional figures are marked as fictional, and that every source has a date | Blog #43 |
 
 ## Using the tools
 
@@ -73,6 +74,12 @@ A calculated value matches when it lies within half a unit of the last shown pla
 
 Both texts are compared without whitespace and after Unicode NFKC. Classes: `EXACT`, `ELLIPSIS` (every part between the marks is in the source, in order), `PARAPHRASE` (marked, and not exact), `ALTERED` (a passage with similarity of at least `--min-ratio`, default 0.6, exists; the tool lists omissions, additions and replacements, character by character, so a reordering shows as an omission and an addition) and `NOT-FOUND`. `ALTERED` and `NOT-FOUND` are findings (exit 1); register problems are Q1 (required fields, allowed values), Q2 (a source with no `--text`) and Q3 (duplicate ids); bad input exits 2. `register/quotes_hcs17.tsv` records 101 passages that Hypothetical Case Study #17's derived documents present as quotations of #17 (all fictional, written by the author with generative AI). It is the inventory made for Blog #42, not a complete list: a review found at least two more, and remarks of fictional personas are left out. Pages of #17.2–#17.20 are pages of a compiled file of those posts; the posts used in Blog #42 were also checked against the published articles. pdftotext moves a leading English word to another line in three of #17's paragraphs, so three rows that match on the page image show as `ALTERED`; their notes say so. Quotations attributed to Takeaki Ohi are not in the register. Its run is in `evidence/`.
 
+**briefcheck** checks a one-page brief written in Markdown whose last section is a numbered list of sources under a heading named `出典` or `Sources`, cited in the text as `[1]`, `[2, 3]` or `［1］`. B1: a line with a number or a quotation cites no source (a date followed by 時点 or preceded by "as of" is not counted); B2: a citation names a source not in the list; B3: a source is never cited; B4: a line cites a source whose entry says 架空 or fictional but does not say so itself; B5: a source's entry has no date; B6: the text before the sources is longer than `--max-chars` (default 1600). It checks the brief's form, not its facts. Exit status: 0 if nothing fires, 1 if anything does, 2 on bad input.
+
+    python3 -I tools/briefcheck.py examples/brief_hcs17.ja.md
+
+`templates/brief_template.ja.md` and `templates/brief_template.en.md` are blank briefs. `examples/brief_hcs17.ja.md` is the brief made in Blog #43 for the fictional Hypothetical Case Study #17, with Takeaki Ohi's two sentences replaced by placeholders, since the kit holds no third-party text; `examples/brief_draft.ja.md` is a weak draft made to show the checks firing. Their runs are in `evidence/`.
+
 ## Tests
 
     python3 -m unittest discover -s tests
@@ -91,7 +98,9 @@ The tests use a synthetic source written for them.
 
 - `v1.4` → a4d438c, made by the author on GitHub on 30 October 2026 (10:38 JST). Immutable.
 
-The tag `v1.5` is made by the author on GitHub after the release commit; until it exists, this list does not include it.
+- `v1.5` → 5e2d3f4, made by the author on GitHub on 30 October 2026 (11:11 JST). Immutable.
+
+The tag `v1.6` is made by the author on GitHub after the release commit; until it exists, this list does not include it.
 
 ## Posts that use the kit
 
@@ -100,7 +109,8 @@ The tag `v1.5` is made by the author on GitHub after the release commit; until i
 - Hypothetical Technical Blog #39, *What Does That 82% Measure?*: `numcheck.py`, `register/numbers_hcs17.tsv`
 - Hypothetical Technical Blog #40, *True as of When?*: `datecheck.py`, `register/dated_hcs17.tsv`
 - Hypothetical Technical Blog #41, *How Was That 1.5 Years Calculated?* (30 October 2026): `calccheck.py`, `register/calc_hcs17_25.tsv`. https://note.com/ayako_iuchi/n/n4489e7f4efd9
-- Hypothetical Technical Blog #42, *Is That Quotation Word for Word?* (published after this release): `quotediff.py`, `register/quotes_hcs17.tsv`
+- Hypothetical Technical Blog #42, *Is That Quotation Word for Word?*: `quotediff.py`, `register/quotes_hcs17.tsv`
+- Hypothetical Technical Blog #43, *Does That One Page Show Its Sources?* (published after this release): `briefcheck.py`, `templates/`, `examples/`
 
 ## Ground rules
 

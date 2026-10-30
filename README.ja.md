@@ -8,7 +8,7 @@ English: [README.md](README.md)
 
 ## 状態
 
-版 1.5。2026年10月30日にリリース（版 1.4 は2026年10月29日、版 1.3、1.2、1.1 は同じ日、版 1.0 は2026年10月28日）。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
+版 1.6、準備中（版 1.5 は2026年10月30日にリリース、版 1.4 は2026年10月29日、版 1.3、1.2、1.1 は同じ日、版 1.0 は2026年10月28日）。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
 
 | 道具 | すること | 記事 |
 | --- | --- | --- |
@@ -19,6 +19,7 @@ English: [README.md](README.md)
 | `tools/datecheck.py` | 時点のある事実の台帳を点検する。文書の日付で成り立っていたか、今も成り立つか、後の出来事を誤りと呼んでいないか、再確認の時期が来た行はどれか | Blog #40 |
 | `tools/calccheck.py` | 文書から写した数字の台帳を計算し直す。合計や掛け算が表示どおりになるか、計算の仕方が書かれていない数字を、考えられる読み方のどれかで再現できるか | Blog #41 |
 | `tools/quotediff.py` | 原文どおりでない引用について、原文でいちばん近い箇所を探し、省いた語・足した語・置き換えた語を並べる | Blog #42 |
+| `tools/briefcheck.py` | 1枚資料の数字と引用がすべて出典を示しているか、架空の数字に架空と書いてあるか、出典に日付があるかを点検する | Blog #43 |
 
 ## 使い方
 
@@ -73,6 +74,12 @@ English: [README.md](README.md)
 
 空白を除き、Unicode の NFKC をかけてから比べます。分類は `EXACT`、`ELLIPSIS`（印のあいだの部分がすべて原文に順にある）、`PARAPHRASE`（要約と明記し、原文どおりでない）、`ALTERED`（類似度が `--min-ratio`（既定 0.6）以上の箇所がある。省略・追加・置き換えを文字単位で並べるので、語順の入れ替えは省略と追加として出ます）、`NOT-FOUND` です。`ALTERED` と `NOT-FOUND` は指摘（終了コード 1）、台帳の問題は Q1（必須の欄、許される値）、Q2（`--text` のない source）、Q3（id の重複）で、入力の誤りは 2 です。`register/quotes_hcs17.tsv` は、Hypothetical Case Study #17 の派生文書（すべて筆者が生成AIで作った架空の文書）が #17 の引用として示した101箇所の台帳です。Blog #42 のための棚卸しで、すべてではありません（点検で少なくとも2箇所の漏れが見つかりました。架空の人物の感想は入れていません）。#17.2〜#17.20 の頁はそれらをまとめたファイルの頁で、Blog #42 で使った記事は公開された記事でも確かめました。pdftotext は #17 の3つの段落で行頭の英単語を別の行に移すため、頁の画像では一致する3行が `ALTERED` と出ます。注記にそう書いてあります。大井竹昭氏の文とされた引用は台帳に入れていません。実行結果を `evidence/` に置きます。
 
+**briefcheck** は、最後の節が「出典」または「Sources」の見出しの下の番号つきの出典一覧で、本文に `[1]`・`[2, 3]`・`［1］` の形で出典を示した、Markdown の1枚資料を点検します。B1：数字か引用のある行に出典がない（後ろに「時点」がある日付、前に "as of" がある日付は数えない）、B2：一覧にない出典番号を示している、B3：一度も示されない出典がある、B4：架空（fictional）と書かれた出典を示す行に、架空と書いていない、B5：出典に日付がない、B6：出典の前の本文が `--max-chars`（既定 1600）字より長い、です。形を点検するもので、中身の事実は確かめません。終了コードは、何もなければ 0、指摘があれば 1、入力の誤りは 2 です。
+
+    python3 -I tools/briefcheck.py examples/brief_hcs17.ja.md
+
+`templates/brief_template.ja.md` と `templates/brief_template.en.md` は空の1枚資料です。`examples/brief_hcs17.ja.md` は、Blog #43 で架空事例 Hypothetical Case Study #17 を題材に作った1枚資料から、大井竹昭氏の原文2文を空欄に置き換えたものです（キットには第三者の文を入れません）。`examples/brief_draft.ja.md` は、指摘が出る例として作った下書きです。実行結果を `evidence/` に置きます。
+
 ## テスト
 
     python3 -m unittest discover -s tests
@@ -91,7 +98,9 @@ English: [README.md](README.md)
 
 - `v1.4` → a4d438c。2026年10月30日（10:38 JST）に筆者が GitHub で作成。改変禁止（immutable）。
 
-タグ `v1.5` は、リリースのコミットの後に筆者が GitHub で作ります。できるまでは、この一覧に載せません。
+- `v1.5` → 5e2d3f4。2026年10月30日（11:11 JST）に筆者が GitHub で作成。改変禁止（immutable）。
+
+タグ `v1.6` は、リリースのコミットの後に筆者が GitHub で作ります。できるまでは、この一覧に載せません。
 
 ## キットを使う記事
 
@@ -100,7 +109,8 @@ English: [README.md](README.md)
 - Hypothetical Technical Blog #39「その82%は何を測っているか」：`numcheck.py`、`register/numbers_hcs17.tsv`
 - Hypothetical Technical Blog #40「その事実はいつの事実か」：`datecheck.py`、`register/dated_hcs17.tsv`
 - Hypothetical Technical Blog #41「その1.5年はどう計算したか」（2026年10月30日）：`calccheck.py`、`register/calc_hcs17_25.tsv`。https://note.com/ayako_iuchi/n/n4212c599801a
-- Hypothetical Technical Blog #42「その引用は原文どおりか」（このリリースの後に公開）：`quotediff.py`、`register/quotes_hcs17.tsv`
+- Hypothetical Technical Blog #42「その引用は原文どおりか」：`quotediff.py`、`register/quotes_hcs17.tsv`
+- Hypothetical Technical Blog #43「その1枚に出典はあるか」（このリリースの後に公開）：`briefcheck.py`、`templates/`、`examples/`
 
 ## 決まり
 
