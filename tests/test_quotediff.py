@@ -99,6 +99,33 @@ class QuotediffTest(unittest.TestCase):
             self.assertEqual(quotediff.main([self.reg(row()), "--text", "nopath"]), 2)
             self.assertEqual(quotediff.main([self.reg(row()), "--text", f"S={self.src}", "--text", f"S={self.src}"]), 2)
 
+    def test_ellipsis_marks_and_gap(self):
+        for mark in ("…", "‥", "⋯", "...", "．．．", "・・・", "／"):
+            _, res = self.classes(row(quote=f"ABC社の計画は{mark}終わります", marked="ellipsis"))
+            self.assertEqual(res[0][0], "ELLIPSIS", mark)
+        _, res = self.classes(row(quote="架空の工場では…最初の一歩でした", marked="ellipsis"))
+        self.assertEqual(res[0][0], "ELLIPSIS")
+        far = os.path.join(self.tmp, "far.txt")
+        with open(far, "w", encoding="utf-8") as f:
+            f.write("はじまりの文です。" + "あ" * 500 + "おわりの文です。\n")
+        sources = {"S": quotediff.Source(quotediff.read_pages(far, header_lines=0))}
+        _, results = quotediff.check(quotediff.load(self.reg(row(quote="はじまりの文です。…おわりの文です。", marked="ellipsis"))), sources)
+        self.assertNotEqual(results[0][2], "ELLIPSIS")
+
+    def test_bad_sources_and_bom(self):
+        empty = os.path.join(self.tmp, "empty.txt")
+        open(empty, "w").close()
+        with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            self.assertEqual(quotediff.main([self.reg(row()), "--text", f"S={empty}"]), 2)
+            self.assertEqual(quotediff.main([self.reg(row()), "--text", f"={self.src}"]), 2)
+        p = os.path.join(self.tmp, "bom.tsv")
+        with open(p, "w", encoding="utf-8-sig", newline="") as f:
+            f.write(HEADER + "\r\n" + row() + "\r\n")
+        out = io.StringIO()
+        with redirect_stdout(out):
+            self.assertEqual(quotediff.main([p, "--text", f"S={self.src}", "--quiet"]), 0)
+        self.assertNotIn("EXACT\tline", out.getvalue())
+
 
 if __name__ == "__main__":
     unittest.main()

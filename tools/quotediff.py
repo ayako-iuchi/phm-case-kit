@@ -19,8 +19,9 @@ Columns (tab-separated, header row required, other columns ignored):
     source   the source it is attributed to: a SOURCE given with --text
     quote    the quotation as the document gives it, without its quote marks
     marked   how the document marks it: none | ellipsis | paraphrase
-             (ellipsis: omissions are shown with … or ...; paraphrase: the
-             document says it is a summary or paraphrase)
+             (ellipsis: omissions are shown with …, ‥, ⋯, ..., ．．．, ・・・,
+             ･･･ or ／; paraphrase: the document says it is a summary or
+             paraphrase)
     note     anything else
 
 Matching. Both texts are compared after removing all whitespace and applying
@@ -32,8 +33,10 @@ matching passage starts.
 
 Classes:
     EXACT       the quotation is in the source as it stands
-    ELLIPSIS    marked ellipsis, and every part between the ellipses is in
-                the source, in order
+    ELLIPSIS    marked ellipsis, and every part between the marks is in the
+                source, in order, each within 400 characters of the one
+                before (a failed ELLIPSIS row is compared with its parts
+                joined, so the omissions it marks show as omitted)
     PARAPHRASE  marked paraphrase and not EXACT (reported, not a finding)
     ALTERED     not in the source, but a passage resembles it (similarity at
                 least --min-ratio, default 0.6); the changes are listed
@@ -67,8 +70,9 @@ from pages import read_pages  # noqa: E402
 
 REQUIRED = ["id", "document", "page", "source", "quote", "marked", "note"]
 MARKS = ("none", "ellipsis", "paraphrase")
-ELLIPSIS = re.compile(r"(?:…+|\.{3,}|・{3,}|／)")
+ELLIPSIS = re.compile(r"(?:…+|‥+|⋯+|\.{3,}|．{3,}|・{3,}|･{3,}|／)")
 NGRAM = 4
+MAX_GAP = 400
 MAX_BLOCKS = 40
 MAX_QUOTE = 2000
 
@@ -129,6 +133,10 @@ class Source:
                     a0, a1 = blocks[i].a, blocks[j].a + blocks[j].size
                     passage = window[a0:a1]
                     sm2 = difflib.SequenceMatcher(None, passage, q, autojunk=False)
+                    if best is not None and sm2.real_quick_ratio() <= best[0]:
+                        continue
+                    if best is not None and sm2.quick_ratio() <= best[0]:
+                        continue
                     ratio = sm2.ratio()
                     if best is None or ratio > best[0]:
                         best = (ratio, lo + a0, lo + a1, sm2.get_opcodes(), passage)
@@ -159,7 +167,7 @@ def classify(row, src, min_ratio):
         pos, ok, where = 0, True, None
         for p in parts:
             i = src.text.find(p, pos)
-            if i < 0:
+            if i < 0 or (where is not None and i - pos > MAX_GAP):
                 ok = False
                 break
             where = i if where is None else where
@@ -262,9 +270,13 @@ def main(argv=None):
             if "=" not in spec:
                 raise ValueError(f"--text {spec!r} is not SOURCE=PATH")
             name, path = spec.split("=", 1)
+            if not name:
+                raise ValueError(f"--text {spec!r} has no SOURCE name")
             if name in sources:
                 raise ValueError(f"--text names {name} twice")
             sources[name] = Source(read_pages(path, header_lines=args.header_lines, drop_line_regex=drop))
+            if not sources[name].text:
+                raise ValueError(f"--text {spec!r}: the source has no text")
         rows = load(args.register)
     except (OSError, ValueError, UnicodeDecodeError) as e:
         print(f"quotediff: {e}", file=sys.stderr)

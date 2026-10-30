@@ -93,18 +93,13 @@ EXACT	line 93	id Q19	source p.7
 ALTERED	line 94	id Q20	source p.8, similarity 0.93: omitted «、»; omitted «層»; added «る»
 ALTERED	line 95	id Q21	source p.18, similarity 0.91: replaced «は» with «=»; replaced «は» with «=»
 ALTERED	line 96	id Q22	source p.13, similarity 0.92: added «のか»
-ALTERED	line 97	id Q23	source p.9, similarity 0.78: omitted «「»; omitted «」»; omitted «判断»; replaced «つながら» with «直結し»
-ALTERED	line 98	id Q24	source p.13, similarity 0.80: omitted «てき»; omitted «、»; omitted «という»; replaced «。それなら» with «、では»; added «のか»
-ALTERED	line 99	id Q25	source p.19, similarity 0.81: added «DQM»; omitted «、技術基盤の中で»; omitted «「»; omitted «」»; omitted «「»
-ALTERED	line 100	id Q26	source p.14, similarity 0.65: added «財務KPIを問うの»; added «間違い»
-ALTERED	line 101	id Q27	source p.21, similarity 0.86: added «二層KPI=»; omitted «で»
-ALTERED	line 102	id Q28	source p.13, similarity 0.92: added «のか»
-ALTERED	line 103	id Q29	source p.3, similarity 0.65: added «経営層に予兆管理»; added «的»; omitted «経営層に»
-ALTERED	line 104	id Q30	source p.5, similarity 0.85: added «自社の»; replaced «材» with «資»
-ALTERED	line 105	id Q31	source p.3, similarity 0.82: omitted «層»; added «論点»
-ALTERED	line 106	id Q32	source p.13, similarity 0.92: added «俺»; added «、»
-ALTERED	line 107	id Q33	source p.15, similarity 0.93: omitted «の»; omitted «の»; added «、»; added «る»
-EXACT	line 108	id Q34	source p.21
-rows: 107
-class: EXACT 67  ELLIPSIS 6  PARAPHRASE 1  ALTERED 33  NOT-FOUND 0
+ALTERED	line 97	id Q28	source p.13, similarity 0.92: added «のか»
+ALTERED	line 98	id Q29	source p.3, similarity 0.65: added «経営層に予兆管理»; added «的»; omitted «経営層に»
+ALTERED	line 99	id Q30	source p.5, similarity 0.85: added «自社の»; replaced «材» with «資»
+ALTERED	line 100	id Q31	source p.3, similarity 0.82: omitted «層»; added «論点»
+ALTERED	line 101	id Q32	source p.13, similarity 0.92: added «俺»; added «、»
+ALTERED	line 102	id Q33	source p.15, similarity 0.93: omitted «の»; omitted «の»; added «、»; added «る»
+EXACT	line 103	id Q34	source p.21
+rows: 102
+class: EXACT 67  ELLIPSIS 6  PARAPHRASE 1  ALTERED 28  NOT-FOUND 0
 issues: 0
