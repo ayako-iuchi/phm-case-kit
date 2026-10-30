@@ -85,7 +85,7 @@ English: [README.md](README.md)
 
     python3 -I tools/glosscheck.py register/glossary_series.tsv --pair ja.md=en.md
 
-用語集は、Hypothetical Technical Blog #37〜#41 の英訳時の点検から作りました。違う訳の欄は、公開された英語版に実際に出てくる訳です。使う訳は点検が勧めた形で、1語（DX投資促進税制）はまだ英語版に出ていません。5本にかけた結果を `evidence/` に置きます。記事そのものはキットに入れていません。
+用語集は、Hypothetical Technical Blog #37〜#41 の英訳時の点検から作りました。使う訳も違う訳も、公開された英語版に実際に出てくる訳です。記事の間で訳が違ったものは、点検と連載の決まりに沿って使う訳を決めました（公式の英語名が見つからなかった名前は、小文字の説明で訳す）。5本にかけた結果を `evidence/` に置きます。記事そのものはキットに入れていません。
 
 ## テスト
 

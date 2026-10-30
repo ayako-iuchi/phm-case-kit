@@ -9,7 +9,7 @@ g07	書いていない別のエージェント	a separate Claude agent that had 
 g08	台帳	register	-	-	キットのフォルダ名 register/ と同じ
 g09	2025年版ものづくり白書	White Paper on Manufacturing Industries 2025	2025 White Paper on Manufacturing Industries	Monodzukuri	経済産業省の公式英語名は年が後ろ
 g10	デジタルトランスフォーメーションに向けた研究会	a study group on digital transformation set up by METI	Study Group on Digital Transformation	-	公式英語名がないので、原名と小文字の訳と my translation
-g11	DX投資促進税制	DX Investment Promotion Tax Incentive	DX tax incentive | DX Investment Promotion Tax System | DX tax system	-	公式英語名がない。点検が勧めた形（OECD.AI の英語名）に決める。5本の英語版にはまだ出ていない
+g11	DX投資促進税制	DX tax incentive	DX Investment Promotion Tax System | DX tax system	-	公式の英語名は見つからなかった。原名を残し、小文字の説明で訳して my translation を添える。作った英語名を大文字の固有名のように書かない
 g12	閣議決定	the Cabinet approved	-	-	閣議配布（presented to the Cabinet）と書き分ける
 g13	事業所	establishments	-	-	統計の単位。companies にしない
 g14	複数回答	multiple answers allowed	-	-	落とすと単一回答の多数に読まれる

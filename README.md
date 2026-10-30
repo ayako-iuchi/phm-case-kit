@@ -85,7 +85,7 @@ Both texts are compared without whitespace and after Unicode NFKC. Classes: `EXA
 
     python3 -I tools/glosscheck.py register/glossary_series.tsv --pair ja.md=en.md
 
-The glossary was drafted from the translation checks of Hypothetical Technical Blog #37–#41. Its variants are renderings found in their published English versions; the rendering to use is the one the checks recommended, which for one term (DX投資促進税制) does not yet appear in them. The run on those five posts is in `evidence/`; the posts themselves are not in the kit.
+The glossary was drafted from the translation checks of Hypothetical Technical Blog #37–#41. Every rendering in it, to use or to avoid as a variant, appears in their published English versions; where the posts disagreed, the rendering to use follows the checks and the series' rules (for a name with no official English version found, a lowercase description). The run on those five posts is in `evidence/`; the posts themselves are not in the kit.
 
 ## Tests
 
