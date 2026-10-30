@@ -107,7 +107,9 @@ The tests use a synthetic source written for them.
 
 - `v1.5` → 5e2d3f4, made by the author on GitHub on 30 October 2026 (11:11 JST). Immutable.
 
-The tags `v1.6` and `v1.7` are made by the author on GitHub after their release commits; until they exist, this list does not include them.
+- `v1.6` → d4c3107, made by the author on GitHub on 30 October 2026 (11:49 JST). Immutable. The v1.6 release commit is cf923fd; the tag points to the v1.7 release commit instead, because the link Claude gave the author named the commit by a short hash, which GitHub did not apply, so the tag was made on `main` after v1.7 had been released. `tools/briefcheck.py`, its tests, `templates/`, `examples/` and the briefcheck evidence are identical at both commits.
+
+- `v1.7` → d4c3107, made by the author on GitHub on 30 October 2026 (11:50 JST). Immutable.
 
 ## Posts that use the kit
 
