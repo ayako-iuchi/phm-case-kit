@@ -17,7 +17,10 @@ VARIANT	blog40/en.md:53	id g11	«DX tax system» for DX投資促進税制; use �
 VARIANT	blog40/en.md:53	id g11	«DX tax system» for DX投資促進税制; use «DX Investment Promotion Tax Incentive»
 VARIANT	blog40/en.md:107	id g11	«DX Investment Promotion Tax System» for DX投資促進税制; use «DX Investment Promotion Tax Incentive»
 VARIANT	blog40/en.md:117	id g10	«Study Group on Digital Transformation» for デジタルトランスフォーメーションに向けた研究会; use «a study group on digital transformation set up by METI»
+VARIANT	blog41/en.md:23	id g15	«business-plan template» for 骨子テンプレート; use «outline template»
 VARIANT	blog41/en.md:64	id g24	«operating costs» for ランニングコスト; use «running cost»
+VARIANT	blog41/en.md:70	id g25	«deducting the same part twice» for 二重控除; use «subtracted twice»
+VARIANT	blog41/en.md:70	id g25	«double subtraction» for 二重控除; use «subtracted twice»
 glossary: 29 terms  files: 5
-findings: AVOID 2  VARIANT 17  MISSING 1
+findings: AVOID 2  VARIANT 20  MISSING 1
 issues: 0

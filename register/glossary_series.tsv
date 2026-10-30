@@ -9,7 +9,7 @@ g07	書いていない別のエージェント	a separate Claude agent that had 
 g08	台帳	register	-	-	キットのフォルダ名 register/ と同じ
 g09	2025年版ものづくり白書	White Paper on Manufacturing Industries 2025	2025 White Paper on Manufacturing Industries	Monodzukuri	経済産業省の公式英語名は年が後ろ
 g10	デジタルトランスフォーメーションに向けた研究会	a study group on digital transformation set up by METI	Study Group on Digital Transformation	-	公式英語名がないので、原名と小文字の訳と my translation
-g11	DX投資促進税制	DX Investment Promotion Tax Incentive	DX tax incentive | DX Investment Promotion Tax System | DX tax system	-	公式英語名がない。一つに決め、my translation を添える
+g11	DX投資促進税制	DX Investment Promotion Tax Incentive	DX tax incentive | DX Investment Promotion Tax System | DX tax system	-	公式英語名がない。点検が勧めた形（OECD.AI の英語名）に決める。5本の英語版にはまだ出ていない
 g12	閣議決定	the Cabinet approved	-	-	閣議配布（presented to the Cabinet）と書き分ける
 g13	事業所	establishments	-	-	統計の単位。companies にしない
 g14	複数回答	multiple answers allowed	-	-	落とすと単一回答の多数に読まれる
@@ -23,8 +23,8 @@ g21	回収期間	payback period	-	-	—
 g22	先鋒単体	pilot line alone	-	vanguard	—
 g23	横展開	roll-out	-	horizontal deployment	直訳は不自然
 g24	ランニングコスト	running cost	operating cost	-	1本の中で running と operating を混ぜない
-g25	二重控除	subtracted twice	deducted twice | double deduction	-	subtract と deduct を混ぜない
-g26	保守（フラット）	conservative (flat)	-	maintenance baseline	保守 = conservative。直前のメンテナンスと混同しない
+g25	二重控除	subtracted twice	deducting the same part twice | double subtraction	-	subtract と deduct を混ぜない。一つの言い方にそろえる
+g26	保守側（現状フラット）	conservative (flat)	-	maintenance baseline	保守 = conservative。直前のメンテナンスと混同しない
 g27	関連文献	Further reading	Related documents	-	見出しの定型
-g29	CEO 大井竹昭氏	Takeaki Ohi, CEO of KOMPAS	-	Mr. Ohi | President of KOMPAS	敬称や別の肩書きにしない
+g29	CEO 大井竹昭氏	Takeaki Ohi, CEO of KOMPAS	-	Mr. Ohi	CEO は著者が選んだ表記。記事ごとに変えない
 g30	株式会社KOMPAS	Kompas Co. Ltd.	-	Kompas Co., Ltd. | Kompas Inc.	社名の表記を固定

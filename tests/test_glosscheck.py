@@ -81,11 +81,36 @@ class GlosscheckTest(unittest.TestCase):
     def test_main(self):
         en = self.write("en.md", "Predictive Management\n")
         ja = self.write("ja.md", "回収期間\n")
-        rc, out, _ = self.run_tool(self.gloss, en, "--pair", f"{ja}={en}")
+        rc, out, _ = self.run_tool(self.gloss, "--pair", f"{ja}={en}")
         self.assertEqual(rc, 1)
-        self.assertIn("findings: AVOID 2  VARIANT 0  MISSING 1", out)
+        self.assertIn("findings: AVOID 1  VARIANT 0  MISSING 1", out)
         ok = self.write("ok.md", "Yochō Kanri\n")
         self.assertEqual(self.run_tool(self.gloss, ok, "--quiet")[0], 0)
+
+    def test_review_round1(self):
+        # an empty rendering is a G1 problem, not a crash
+        bad = self.write("empty.tsv", GLOSSARY + "t9\t空\t-\t-\t-\tnote\n")
+        rows = glosscheck.load(bad)
+        self.assertIn("G1", [c for _, _, c, _ in glosscheck.check_glossary(rows)])
+        self.assertIsInstance(glosscheck.check_text(rows, "x", "空"), list)
+        en = self.write("e.md", "x\n")
+        self.assertEqual(self.run_tool(bad, en)[0], 1)
+        # overlapping forms: the accepted form masks a variant inside it; the longer variant wins
+        over = self.write("over.tsv", "id\tja\ten\tvariants\tavoid\tnote\n"
+                          "o1\t骨子\toutline template\ttemplate | plan template | business plan template\t-\tn\n")
+        rows = glosscheck.load(over)
+        self.assertEqual([c for _, _, c, _ in glosscheck.check_text(rows, "the outline template")], [])
+        self.assertEqual(len(glosscheck.check_text(rows, "the business plan template")), 1)
+        # spaces, line breaks and hyphens are interchangeable; -es plurals
+        self.assertEqual(self.codes("unplanned-downtime"), ["VARIANT"])
+        self.assertEqual(self.codes("unplanned\ndowntime"), ["VARIANT"])
+        bx = self.write("bx.tsv", "id\tja\ten\tvariants\tavoid\tnote\nb1\t箱\tbox\tcrate\t-\tn\n")
+        self.assertEqual([c for _, _, c, _ in glosscheck.check_text(glosscheck.load(bx), "two boxes")], [])
+        # a Japanese term is found as a substring
+        self.assertEqual(self.codes("x", "その回収期間は"), ["MISSING"])
+        # BOM and CRLF in the glossary
+        crlf = self.write("crlf.tsv", "\ufeff" + GLOSSARY.replace("\n", "\r\n"))
+        self.assertEqual(len(glosscheck.load(crlf)), 4)
 
     def test_bad_input(self):
         en = self.write("en.md", "x\n")

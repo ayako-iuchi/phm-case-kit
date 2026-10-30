@@ -24,10 +24,12 @@ Glossary columns (tab-separated, header row required, other columns ignored):
 
 Matching. English forms are matched case-insensitively, as whole words where
 the form starts or ends with a letter or digit; a form ending in a letter
-also matches its plural in -s or -es ("outline templates"). A form that contains a
+also matches its plural in -s or -es ("outline templates"). A space or a
+hyphen in a form matches any run of spaces, line breaks or hyphens
+("business plan template" matches "business-plan template"). A form that contains a
 capital letter is matched case-sensitively, so "Predictive Maintenance"
-(the method's English name) and "predictive maintenance" (a general term)
-can be told apart. Japanese terms are matched as plain substrings.
+does not match "predictive maintenance"; a form with no capital letter
+matches in any case. Japanese terms are matched as plain substrings.
 
 Findings (each makes the exit status 1):
     AVOID    a rendering never to use appears
@@ -35,8 +37,13 @@ Findings (each makes the exit status 1):
     MISSING  (--pair only) the Japanese term is in the Japanese file, but
              neither the rendering nor a variant is in the English file
 
-A post may mention a rendering to avoid in order to say it is not used; the
-tool still reports it, and the person reading the report decides.
+Text matched by the rendering to use is not reported as a variant, and where
+two variants overlap only the longer is reported. Words are matched, not
+meanings: a lowercase form also matches the same words capitalised at the
+start of a sentence or in a name, and the tool cannot tell when one English
+word is used for two Japanese terms. A post may mention a rendering to avoid
+in order to say it is not used; the tool still reports it, and the person
+reading the report decides.
 
 Register problems (exit status 1): G1 a required field is empty, G2 a
 duplicate id, G3 the same form listed twice in one row. Exit status 2 on bad
@@ -56,11 +63,15 @@ def forms(cell):
     return [f.strip() for f in cell.split(" | ") if f.strip()]
 
 
+SEP = r"[\s\u00a0\-\u2010\u2011]+"
+
+
 def pattern(form):
     flags = 0 if any(c.isupper() for c in form) else re.I
     left = r"(?<![A-Za-z0-9])" if form[0].isalnum() else ""
     right = r"(?:s|es)?(?![A-Za-z0-9])" if form[-1].isalpha() else (r"(?![A-Za-z0-9])" if form[-1].isalnum() else "")
-    return re.compile(left + re.escape(form) + right, flags)
+    body = SEP.join(re.escape(w) for w in re.split(r"[\s\-]+", form.strip()))
+    return re.compile(left + body + right, flags)
 
 
 def load(path):
@@ -95,7 +106,7 @@ def check_glossary(rows):
     issues, seen = [], {}
     for r in rows:
         for k in ("id", "ja", "en", "note"):
-            if not r[k]:
+            if not r[k] or (k == "en" and not forms(r[k])):
                 issues.append((r["_line"], r["id"], "G1", f"{k} is empty"))
         if r["id"]:
             if r["id"] in seen:
@@ -116,11 +127,21 @@ def check_text(rows, en_text, ja_text=None):
     """Return a list of (line, id, code, message) for one English text."""
     out = []
     for r in rows:
-        for kind, cell in (("AVOID", r["avoid"]), ("VARIANT", r["variants"])):
-            for form in forms(cell):
-                for m in pattern(form).finditer(en_text):
-                    out.append((line_of(en_text, m.start()), r["id"], kind,
-                                f"«{m.group(0)}» for {r['ja']}; use «{forms(r['en'])[0]}»"))
+        if not forms(r["en"]):
+            continue
+        # spans of the accepted forms are not reported; among the other forms,
+        # longer ones are matched first, and a span is reported only once
+        taken = [m.span() for f in forms(r["en"]) for m in pattern(f).finditer(en_text)]
+        cands = [(len(f), f, kind) for kind, cell in (("AVOID", r["avoid"]), ("VARIANT", r["variants"]))
+                 for f in forms(cell)]
+        for _, form, kind in sorted(cands, key=lambda c: -c[0]):
+            for m in pattern(form).finditer(en_text):
+                a, b = m.span()
+                if any(a < y and x < b for x, y in taken):
+                    continue
+                taken.append((a, b))
+                out.append((line_of(en_text, a), r["id"], kind,
+                            f"«{m.group(0)}» for {r['ja']}; use «{forms(r['en'])[0]}»"))
         if ja_text is not None and r["ja"] in ja_text:
             ok = forms(r["en"]) + forms(r["variants"])
             if not any(pattern(f).search(en_text) for f in ok):

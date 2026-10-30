@@ -4,9 +4,10 @@ Revisions are dated and kept visible. Nothing is changed silently.
 
 ## Kit v1.7 (in preparation)
 
-- Added `tools/glosscheck.py`, `tests/test_glosscheck.py` (9 tests; 108 in all), `register/glossary_series.tsv` (29 terms) and `evidence/glosscheck_blog37-41_2026-10-30.txt`, for Hypothetical Technical Blog #44. Standard library only.
+- Added `tools/glosscheck.py`, `tests/test_glosscheck.py` (10 tests; 109 in all), `register/glossary_series.tsv` (29 terms) and `evidence/glosscheck_blog37-41_2026-10-30.txt`, for Hypothetical Technical Blog #44. Standard library only.
 - `glosscheck.py` checks English versions against a glossary of fixed renderings: AVOID a rendering never to use, VARIANT a rendering that differs from the fixed one, MISSING (with `--pair`) a Japanese term whose rendering is not in the English; G1–G3 for problems in the glossary.
-- The glossary was drafted from the translation checks of Blog #37–#41 and holds only renderings found in their published English versions. Its run on those five posts reports AVOID 2 (Blog #37 naming "Predictive Management" to say it is not used), VARIANT 17 and MISSING 1.
+- The glossary was drafted from the translation checks of Blog #37–#41. Its variants are renderings found in their published English versions; the rendering to use is the one the checks recommended. Its run on those five posts reports AVOID 2 (Blog #37 naming "Predictive Management" to say it is not used), VARIANT 20 and MISSING 1.
+- A review by a separate agent that had not written the kit found that a row with no rendering crashed the tool, that the glossary was said to hold only published renderings although one rendering to use and two variants were not in the posts, that overlapping forms were counted twice or flagged correct text, that hyphens and line breaks broke matches, that one Japanese term (g26) was not in the form the posts use, and that g29 listed a title as one to avoid. Fixed before release: a row with no rendering is G1 and is skipped; text matched by the rendering to use is not reported, and the longer of two overlapping forms wins; a space or hyphen in a form matches spaces, line breaks and hyphens; g11's note, g25's variants, g26's Japanese and g29's avoid column and note were corrected; the README and docstring say a lowercase form matches capitalised words too. One test was added and one corrected.
 - README.md and README.ja.md: the tool table, a section on glosscheck, Blog #44 in the list of posts; README.md gives the English URLs of Blog #39 and #40.
 
 ## Kit v1.6 — 2026-10-30
