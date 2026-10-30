@@ -2,6 +2,13 @@
 
 Revisions are dated and kept visible. Nothing is changed silently.
 
+## Kit v1.7 (in preparation)
+
+- Added `tools/glosscheck.py`, `tests/test_glosscheck.py` (9 tests; 108 in all), `register/glossary_series.tsv` (29 terms) and `evidence/glosscheck_blog37-41_2026-10-30.txt`, for Hypothetical Technical Blog #44. Standard library only.
+- `glosscheck.py` checks English versions against a glossary of fixed renderings: AVOID a rendering never to use, VARIANT a rendering that differs from the fixed one, MISSING (with `--pair`) a Japanese term whose rendering is not in the English; G1–G3 for problems in the glossary.
+- The glossary was drafted from the translation checks of Blog #37–#41 and holds only renderings found in their published English versions. Its run on those five posts reports AVOID 2 (Blog #37 naming "Predictive Management" to say it is not used), VARIANT 17 and MISSING 1.
+- README.md and README.ja.md: the tool table, a section on glosscheck, Blog #44 in the list of posts; README.md gives the English URLs of Blog #39 and #40.
+
 ## Kit v1.6 — 2026-10-30
 
 - **Released on 30 October 2026,** before Hypothetical Technical Blog #43 (*Does That One Page Show Its Sources?*), which cites it, is published. `main` was fast-forwarded to the branch `kit-v1.6`. The entries below were written while the release was in preparation. The tag `v1.6` is made by the author on GitHub after this commit. `CITATION.cff` gives the version and release date, and both READMEs say the version was released.

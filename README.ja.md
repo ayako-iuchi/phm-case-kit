@@ -8,7 +8,7 @@ English: [README.md](README.md)
 
 ## 状態
 
-版 1.6、2026年10月30日にリリース（版 1.5 は同じ日、版 1.4 は2026年10月29日、版 1.3、1.2、1.1 は同じ日、版 1.0 は2026年10月28日）。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
+版 1.7、準備中（版 1.6 は2026年10月30日にリリース、版 1.5 は同じ日、版 1.4 は2026年10月29日、版 1.3、1.2、1.1 は同じ日、版 1.0 は2026年10月28日）。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
 
 | 道具 | すること | 記事 |
 | --- | --- | --- |
@@ -20,6 +20,7 @@ English: [README.md](README.md)
 | `tools/calccheck.py` | 文書から写した数字の台帳を計算し直す。合計や掛け算が表示どおりになるか、計算の仕方が書かれていない数字を、考えられる読み方のどれかで再現できるか | Blog #41 |
 | `tools/quotediff.py` | 原文どおりでない引用について、原文でいちばん近い箇所を探し、省いた語・足した語・置き換えた語を並べる | Blog #42 |
 | `tools/briefcheck.py` | 1枚資料の数字と引用がすべて出典を示しているか、架空の数字に架空と書いてあるか、出典に日付があるかを点検する | Blog #43 |
+| `tools/glosscheck.py` | 日本語の記事の英語版について、用語集が使わないと決めた訳、固定訳と違う訳、日本語にあるのに英語にない訳語を数える | Blog #44 |
 
 ## 使い方
 
@@ -80,6 +81,12 @@ English: [README.md](README.md)
 
 `templates/brief_template.ja.md` と `templates/brief_template.en.md` は空の1枚資料です。`examples/brief_hcs17.ja.md` は、Blog #43 で架空事例 Hypothetical Case Study #17 を題材に作った1枚資料から、大井竹昭氏の原文2文を空欄に置き換えたものです（キットには第三者の文を入れません）。`examples/brief_draft.ja.md` は、指摘が出る例として作った下書きです。実行結果を `evidence/` に置きます。
 
+**glosscheck** は、英語版を用語集（`register/glossary_series.tsv`。日本語の語ごとに1行で、列は `id`、`ja`、`en`（使う訳。複数の形は ` | ` で区切る）、`variants`（見つかった違う訳）、`avoid`（使わない訳）、`note`）と照らします。`AVOID`（使わない訳がある）、`VARIANT`（違う訳がある）、`--pair JA=EN` を付けると `MISSING`（日本語の語が日本語版にあるのに、英語版に訳も違う訳もない）を出します。英語の形は語の単位で、大文字を含まない形は大文字小文字を区別せずに探し、文字で終わる形は -s・-es の複数形にも一致します。用語集の問題は、G1：必須の欄が空、G2：id の重複、G3：1行に同じ形が2回、です。言葉を点検するもので、意味は確かめません。2つの日本語に1つの英語が当たっていることや、訳が文に合っているかは分かりません。使わないことを言うために訳を挙げた記事も数えるので、読む人が判断します。終了コードは、何もなければ 0、指摘があれば 1、入力の誤りは 2 です。
+
+    python3 -I tools/glosscheck.py register/glossary_series.tsv --pair ja.md=en.md
+
+用語集は、Hypothetical Technical Blog #37〜#41 の英訳時の点検から作り、公開された英語版に実際に出てくる訳だけを入れました。5本にかけた結果を `evidence/` に置きます。記事そのものはキットに入れていません。
+
 ## テスト
 
     python3 -m unittest discover -s tests
@@ -110,7 +117,8 @@ English: [README.md](README.md)
 - Hypothetical Technical Blog #40「その事実はいつの事実か」：`datecheck.py`、`register/dated_hcs17.tsv`
 - Hypothetical Technical Blog #41「その1.5年はどう計算したか」（2026年10月30日）：`calccheck.py`、`register/calc_hcs17_25.tsv`。https://note.com/ayako_iuchi/n/n4212c599801a
 - Hypothetical Technical Blog #42「その引用は原文どおりか」：`quotediff.py`、`register/quotes_hcs17.tsv`
-- Hypothetical Technical Blog #43「その1枚に出典はあるか」（このリリースの後に公開）：`briefcheck.py`、`templates/`、`examples/`
+- Hypothetical Technical Blog #43「その1枚に出典はあるか」：`briefcheck.py`、`templates/`、`examples/`
+- Hypothetical Technical Blog #44「その訳語は毎回同じか」（このリリースの後に公開）：`glosscheck.py`、`register/glossary_series.tsv`
 
 ## 決まり
 

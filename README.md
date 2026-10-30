@@ -8,7 +8,7 @@ The kit holds the tools used to check quotes, figures and dated facts in hypothe
 
 ## Status
 
-Version 1.6, released on 30 October 2026 (version 1.5 the same day, version 1.4 on 29 October 2026, versions 1.3, 1.2 and 1.1 the same day, version 1.0 on 28 October 2026). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
+Version 1.7, in preparation (version 1.6 released on 30 October 2026, version 1.5 the same day, version 1.4 on 29 October 2026, versions 1.3, 1.2 and 1.1 the same day, version 1.0 on 28 October 2026). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
 
 | Tool | What it does | Post |
 | --- | --- | --- |
@@ -20,6 +20,7 @@ Version 1.6, released on 30 October 2026 (version 1.5 the same day, version 1.4 
 | `tools/calccheck.py` | Recalculates a register of numbers taken from a document: whether each total or product gives the number shown, and whether any recorded reading reproduces a number whose calculation the document does not give | Blog #41 |
 | `tools/quotediff.py` | For a quotation that is not word for word, finds the passage in the source it most resembles and lists what was left out, added or replaced | Blog #42 |
 | `tools/briefcheck.py` | Checks that every number and quotation in a one-page brief cites a source, that fictional figures are marked as fictional, and that every source has a date | Blog #43 |
+| `tools/glosscheck.py` | Counts, in English versions of Japanese posts, the renderings a glossary says to avoid, the variants of a fixed rendering, and the Japanese terms whose rendering is missing | Blog #44 |
 
 ## Using the tools
 
@@ -80,6 +81,12 @@ Both texts are compared without whitespace and after Unicode NFKC. Classes: `EXA
 
 `templates/brief_template.ja.md` and `templates/brief_template.en.md` are blank briefs. `examples/brief_hcs17.ja.md` is the brief made in Blog #43 for the fictional Hypothetical Case Study #17, with Takeaki Ohi's two sentences replaced by placeholders, since the kit holds no third-party text; `examples/brief_draft.ja.md` is a weak draft made to show the checks firing. Their runs are in `evidence/`.
 
+**glosscheck** checks English versions against a glossary (`register/glossary_series.tsv`: one row per Japanese term, with columns `id`, `ja`, `en` (the rendering to use; several accepted forms separated by ` | `), `variants` (renderings seen that differ from it), `avoid` (renderings never to use) and `note`). It reports `AVOID` (a rendering never to use appears), `VARIANT` (a variant appears) and, with `--pair JA=EN`, `MISSING` (the Japanese term is in the Japanese file, but neither its rendering nor a variant is in the English). English forms match as whole words, case-insensitively unless the form has a capital letter, and a form ending in a letter also matches its plural in -s or -es. Glossary problems: G1 a required field is empty, G2 a duplicate id, G3 a form listed twice in one row. It checks wording, not meaning: it cannot tell when one English word is used for two Japanese terms, or whether a rendering fits its sentence. A post that names a rendering in order to say it is not used is still reported; the reader decides. Exit status: 0 if nothing fires, 1 if anything does, 2 on bad input.
+
+    python3 -I tools/glosscheck.py register/glossary_series.tsv --pair ja.md=en.md
+
+The glossary was drafted from the translation checks of Hypothetical Technical Blog #37–#41 and holds only renderings that appear in their published English versions. The run on those five posts is in `evidence/`; the posts themselves are not in the kit.
+
 ## Tests
 
     python3 -m unittest discover -s tests
@@ -106,11 +113,12 @@ The tag `v1.6` is made by the author on GitHub after the release commit; until i
 
 - Hypothetical Technical Blog #37, *What This Zero Checked* (28 October 2026; English, 29 October): `quotecheck.py`, `termcount.py`. https://note.com/ayako_iuchi/n/ne55386ce1ffc
 - Hypothetical Technical Blog #38, *Where Did That Number Come From?* (29 October 2026): `sourcecheck.py`, `register/sources_hcs17.tsv`. https://note.com/ayako_iuchi/n/nd17f26a59311
-- Hypothetical Technical Blog #39, *What Does That 82% Measure?*: `numcheck.py`, `register/numbers_hcs17.tsv`
-- Hypothetical Technical Blog #40, *True as of When?*: `datecheck.py`, `register/dated_hcs17.tsv`
+- Hypothetical Technical Blog #39, *What Does That 82% Measure?* (30 October 2026): `numcheck.py`, `register/numbers_hcs17.tsv`. https://note.com/ayako_iuchi/n/n4cb5a26625db
+- Hypothetical Technical Blog #40, *True as of When?* (30 October 2026): `datecheck.py`, `register/dated_hcs17.tsv`. https://note.com/ayako_iuchi/n/n16c739264aab
 - Hypothetical Technical Blog #41, *How Was That 1.5 Years Calculated?* (30 October 2026): `calccheck.py`, `register/calc_hcs17_25.tsv`. https://note.com/ayako_iuchi/n/n4489e7f4efd9
 - Hypothetical Technical Blog #42, *Is That Quotation Word for Word?*: `quotediff.py`, `register/quotes_hcs17.tsv`
-- Hypothetical Technical Blog #43, *Does That One Page Show Its Sources?* (published after this release): `briefcheck.py`, `templates/`, `examples/`
+- Hypothetical Technical Blog #43, *Does That One Page Show Its Sources?* `briefcheck.py`, `templates/`, `examples/`
+- Hypothetical Technical Blog #44, *Is It the Same English Every Time?* (published after this release): `glosscheck.py`, `register/glossary_series.tsv`
 
 ## Ground rules
 

@@ -1,0 +1,23 @@
+AVOID	blog37/en.md:24	id g01	«Predictive Management» for 予兆管理; use «Yochō Kanri»
+AVOID	blog37/en.md:73	id g01	«Predictive Management» for 予兆管理; use «Yochō Kanri»
+VARIANT	blog37/en.md:120	id g27	«Related documents» for 関連文献; use «Further reading»
+VARIANT	blog38/en.md:28	id g11	«DX tax incentive» for DX投資促進税制; use «DX Investment Promotion Tax Incentive»
+VARIANT	blog39/en.md:32	id g15	«business plan template» for 骨子テンプレート; use «outline template»
+VARIANT	blog39/en.md:35	id g15	«proposal template» for 骨子テンプレート; use «outline template»
+VARIANT	blog39/en.md:45	id g15	«business plan template» for 骨子テンプレート; use «outline template»
+VARIANT	blog39/en.md:47	id g15	«requirements template» for 骨子テンプレート; use «outline template»
+VARIANT	blog39/en.md:49	id g15	«business plan template» for 骨子テンプレート; use «outline template»
+VARIANT	blog39/en.md:49	id g15	«requirements template» for 骨子テンプレート; use «outline template»
+MISSING	blog40/en.md:0	id g23	横展開 is in the Japanese; «roll-out» is not in the English
+VARIANT	blog40/en.md:3	id g09	«2025 White Paper on Manufacturing Industries» for 2025年版ものづくり白書; use «White Paper on Manufacturing Industries 2025»
+VARIANT	blog40/en.md:38	id g11	«DX Investment Promotion Tax System» for DX投資促進税制; use «DX Investment Promotion Tax Incentive»
+VARIANT	blog40/en.md:40	id g09	«2025 White Paper on Manufacturing Industries» for 2025年版ものづくり白書; use «White Paper on Manufacturing Industries 2025»
+VARIANT	blog40/en.md:52	id g15	«proposal template» for 骨子テンプレート; use «outline template»
+VARIANT	blog40/en.md:53	id g11	«DX tax system» for DX投資促進税制; use «DX Investment Promotion Tax Incentive»
+VARIANT	blog40/en.md:53	id g11	«DX tax system» for DX投資促進税制; use «DX Investment Promotion Tax Incentive»
+VARIANT	blog40/en.md:107	id g11	«DX Investment Promotion Tax System» for DX投資促進税制; use «DX Investment Promotion Tax Incentive»
+VARIANT	blog40/en.md:117	id g10	«Study Group on Digital Transformation» for デジタルトランスフォーメーションに向けた研究会; use «a study group on digital transformation set up by METI»
+VARIANT	blog41/en.md:64	id g24	«operating costs» for ランニングコスト; use «running cost»
+glossary: 29 terms  files: 5
+findings: AVOID 2  VARIANT 17  MISSING 1
+issues: 0
