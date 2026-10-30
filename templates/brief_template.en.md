@@ -12,7 +12,8 @@ As of (D Month YYYY)
 
 **The method (in the author's own words)**
 
-- "(The original, word for word. If you reword, drop the quotation marks and write 'the gist is that …'.)" (part, page) [2]
+- "(The original, word for word.)" (part, page) [2]
+<!-- If you reword, do not use quotation marks; write: the gist is that … -->
 
 **A case to learn from (say fictional if it is)**
 

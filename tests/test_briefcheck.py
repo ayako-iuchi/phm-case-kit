@@ -50,6 +50,27 @@ class BriefcheckTest(unittest.TestCase):
         for d in ("2026年10月", "2026-10-30", "30 October 2026", "October 2026"):
             self.assertNotIn("B5", self.codes(GOOD.replace("2026年5月21日", d)), d)
 
+    def test_round2_layouts(self):
+        # a sources heading with no space after # is read, not a crash
+        self.assertEqual(self.codes(GOOD.replace("## 出典", "##出典：")), [])
+        # lines after or inside the sources list are checked
+        for tail in ("\n12兆円の損失\n", "\n---\n12兆円の損失\n", "\n### メモ\n12兆円の損失\n",
+                     "   - 補足：損失は12兆円「引用」\n", "\n# 12兆円\n"):
+            self.assertIn("B1", self.codes(GOOD + tail), tail)
+        # an indented paragraph is joined only to a list item with no blank line between
+        self.assertIn("B1", self.codes(GOOD.replace("- 判断の前に、記録を集める。\n",
+                                                    "- 判断の前に、記録を集める。\n\n    3件を集める。\n")))
+        self.assertEqual(self.codes(GOOD.replace("- 判断の前に、記録を集める。\n",
+                                                 "- 判断の前に、記録を集める。\n  それは3件 [1]\n")), [])
+        # numbered headings and full-width list numbers are not numbers
+        self.assertEqual(self.codes(GOOD.replace("- 判断の前に", "## 1. 判断の前に\n\n１．判断の前に")), [])
+        # 1) sources and a duplicate with its line number
+        self.assertEqual(self.codes(GOOD.replace("1. 著者", "1) 著者").replace("2. 事例", "2) 事例")), [])
+        with self.assertRaisesRegex(ValueError, "line 14: source 1"):
+            briefcheck.check(GOOD + "1. 二重 2026年1月\n")
+        for d in ("2026/10/30", "令和8年10月"):
+            self.assertNotIn("B5", self.codes(GOOD.replace("2026年5月21日", d)), d)
+
     def test_bad_input(self):
         tmp = tempfile.mkdtemp()
         self.addCleanup(shutil.rmtree, tmp)
