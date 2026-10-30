@@ -66,6 +66,22 @@ class BriefcheckTest(unittest.TestCase):
             self.assertEqual(briefcheck.main([p, "--quiet"]), 0)
         self.assertIn("issues: B1 0  B2 0  B3 0  B4 0  B5 0  B6 0", out.getvalue())
 
+    def test_layout(self):
+        after = GOOD + "\n## 補足\n\n- 損失は12兆円 \n"
+        self.assertIn("B1", self.codes(after))
+        self.assertIn("B1", self.codes(GOOD.replace("- 判断の前に、記録を集める。", "## 12兆円の損失")))
+        wrapped = GOOD.replace("- 架空事例では、停止時間が約180時間から約32時間に減った [2]",
+                               "- 架空事例では、停止時間が約180時間から\n  約32時間に減った [2]")
+        self.assertEqual(self.codes(wrapped), [])
+        auto = GOOD.replace("2. 事例の題", "1. 事例の題")
+        self.assertEqual(self.codes(auto), [])
+        wrapped_src = GOOD.replace("2. 事例の題（架空の事例）2026年5月21日", "2. 事例の題（架空の事例）\n   2026年5月21日")
+        self.assertEqual(self.codes(wrapped_src), [])
+        self.assertEqual(self.codes(GOOD.replace("## 出典", "## 出典：")), [])
+        self.assertEqual(self.codes(GOOD.replace("2026年5月21日", "2026/5/21")), [])
+        numbered = GOOD.replace("- 判断の前に、記録を集める。", "1. 判断の前に、記録を集める。")
+        self.assertEqual(self.codes(numbered), [])
+
 
 if __name__ == "__main__":
     unittest.main()

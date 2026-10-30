@@ -19,12 +19,15 @@ Checks (each makes the exit status 1):
         source's entry) but does not say 架空 or fictional itself
     B5  a source's entry gives no date (2026年10月30日, 2026年10月,
         2026-10-30, 30 October 2026 or October 2026)
-    B6  the text before the sources is longer than --max-chars characters
-        (default 1600, about one printed page of Japanese), not counting
-        spaces and Markdown marks
+    B6  the checked lines are longer than --max-chars characters in all
+        (default 1600), not counting spaces, Markdown marks and the
+        sources: a rough guide to one page, not a page count
 
-Lines checked are every non-empty line before the sources heading except
-headings (#), the title, horizontal rules and HTML comments. In B1, a date followed by 時点
+Lines checked are every non-empty line outside the sources section except
+the title (#), horizontal rules and HTML comments; headings below the title
+are checked, and a line indented under a list item is joined to it. A list
+item's own number is not counted as a number. Numbers such as 第8回 or Q4
+are counted, so cite the source on that line. In B1, a date followed by 時点
 or preceded by "as of" is not counted as a number, and neither are the
 digits of a citation itself ([1]). A line counts as citing a source if it
 contains a marker; a marker covers its whole line.
@@ -35,13 +38,15 @@ import argparse
 import re
 import sys
 
-SOURCES_HEADING = re.compile(r"^#{1,6}\s*(出典|Sources)\s*$")
+SOURCES_HEADING = re.compile(r"^#{1,6}\s*(出典|Sources)\s*[:：]?\s*$", re.I)
+HEADING_LEVEL = re.compile(r"^(#{1,6})\s")
+LIST = re.compile(r"^([-*+]|\d+[.)])\s")
 HEADING = re.compile(r"^#{1,6}\s")
 ITEM = re.compile(r"^\s*(\d+)\.\s+(.*\S)\s*$")
 MARKER = re.compile(r"[\[［]\s*(\d+(?:\s*[,，、]\s*\d+)*)\s*[\]］]")
 ASOF = re.compile(r"(\d{4}年\d{1,2}月(?:\d{1,2}日)?\s*時点|as of\s+(?:\d{1,2}\s+)?[A-Z][a-z]+\s+\d{4}"
                   r"|as of\s+\d{4}-\d{2}(?:-\d{2})?)", re.I)
-DATE = re.compile(r"(\d{4}年\d{1,2}月(\d{1,2}日)?|\d{4}-\d{2}(-\d{2})?"
+DATE = re.compile(r"(\d{4}年\d{1,2}月(\d{1,2}日)?|\d{4}-\d{2}(-\d{2})?|\d{4}/\d{1,2}(/\d{1,2})?|令和\d+年\d{1,2}月"
                   r"|(\d{1,2}\s+)?(January|February|March|April|May|June|July|August|September|October"
                   r"|November|December)\s+\d{4})")
 QUOTE = re.compile(r"[「『“\"]")
@@ -49,33 +54,48 @@ FICTION = re.compile(r"架空|fictional", re.I)
 
 
 def parse(text):
-    """Return (lines, sources): lines = [(lineno, text)], sources = {n: (lineno, entry)}."""
-    lines, sources, in_sources, title_seen = [], {}, False, False
+    """Return (lines, sources): lines = [(lineno, text)], sources = {n: (lineno, entry)}.
+
+    A line indented under a list item continues that item; it is joined to it.
+    Headings below the title (## and deeper) are checked like other lines.
+    The sources section ends at the next heading of the same or a higher
+    level; lines after it are checked too."""
+    lines, items, in_sources, level = [], [], False, 0
     text = re.sub(r"<!--.*?-->", lambda m: "\n" * m.group(0).count("\n"), text, flags=re.S)
     for n, raw in enumerate(text.splitlines(), start=1):
         s = raw.strip()
+        h = HEADING_LEVEL.match(s)
         if SOURCES_HEADING.match(s):
-            in_sources = True
+            in_sources, level = True, len(h.group(1))
             continue
         if in_sources:
-            if HEADING.match(s):
+            if h and len(h.group(1)) <= level:
                 in_sources = False
+            elif h:
                 continue
-            m = ITEM.match(raw)
-            if m:
-                k = int(m.group(1))
-                if k in sources:
-                    raise ValueError(f"line {n}: source {k} is listed twice")
-                sources[k] = (n, m.group(2))
+            else:
+                m = ITEM.match(raw)
+                if m:
+                    items.append([n, int(m.group(1)), m.group(2)])
+                elif s and raw[:1].isspace() and items:
+                    items[-1][2] += " " + s
+                continue
+        if not s or re.fullmatch(r"[-*_]{3,}", s) or s.startswith("# "):
             continue
-        if not s or HEADING.match(s) or re.fullmatch(r"[-*_]{3,}", s):
-            title_seen = title_seen or s.startswith("# ")
-            continue
-        if sources:
+        if raw[:1].isspace() and lines and not LIST.match(s):
+            lines[-1] = (lines[-1][0], lines[-1][1] + " " + s)
             continue
         lines.append((n, s))
-    if not sources:
+    if not items:
         raise ValueError("no numbered list of sources under a heading named 出典 or Sources")
+    numbers = [k for _, k, _ in items]
+    if len(set(numbers)) != len(numbers):
+        if set(numbers) == {1}:
+            numbers = list(range(1, len(items) + 1))
+        else:
+            dup = sorted({k for k in numbers if numbers.count(k) > 1})
+            raise ValueError(f"source {dup[0]} is listed twice")
+    sources = {k: (n, entry) for (n, _, entry), k in zip(items, numbers)}
     return lines, sources
 
 
@@ -93,7 +113,7 @@ def check(text, max_chars=1600):
     for n, s in lines:
         refs = cited(s)
         used.update(refs)
-        plain = MARKER.sub("", ASOF.sub("", s))
+        plain = MARKER.sub("", ASOF.sub("", re.sub(r"^\s*(#{1,6}|\d+[.)])\s+", "", s)))
         body_chars += len(re.sub(r"[\s*_`>#\-|]", "", MARKER.sub("", s)))
         if not refs and (re.search(r"\d", plain) or QUOTE.search(plain)):
             issues.append((n, "B1", f"a number or quotation with no source: {s[:50]}"))

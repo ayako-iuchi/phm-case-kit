@@ -17,7 +17,7 @@ As of (D Month YYYY)
 **A case to learn from (say fictional if it is)**
 
 - In the fictional case, (the number: what it measures, against what, as of when) [3]
-- (For a payback period or ROI, give the formula and where each number comes from.) [3]
+- In the fictional case, (a payback period or ROI, with the formula and where each number comes from) [3]
 
 **Before deciding**
 
