@@ -27,8 +27,9 @@ the form starts or ends with a letter or digit; a form ending in a letter
 also matches its plural in -s or -es ("outline templates"). A space or a
 hyphen in a form matches any run of spaces, line breaks or hyphens
 ("business plan template" matches "business-plan template"). A form that contains a
-capital letter is matched case-sensitively, so "Predictive Maintenance"
-does not match "predictive maintenance"; a form with no capital letter
+capital letter is matched case-sensitively after its first letter, so
+"Predictive Maintenance" does not match "predictive maintenance"; a form
+with no capital letter
 matches in any case. Japanese terms are matched as plain substrings.
 
 Findings (each makes the exit status 1):
@@ -37,8 +38,11 @@ Findings (each makes the exit status 1):
     MISSING  (--pair only) the Japanese term is in the Japanese file, but
              neither the rendering nor a variant is in the English file
 
-Text matched by the rendering to use is not reported as a variant, and where
-two variants overlap only the longer is reported. Words are matched, not
+Within a row, text inside a match of the rendering to use is not reported,
+and where two forms overlap only the longer is; forms of different rows are
+not compared. A line break counts as a space, but a blank line, a list item
+or a heading does not. The first letter of a form with a capital letter may
+be in either case (the start of a sentence). Words are matched, not
 meanings: a lowercase form also matches the same words capitalised at the
 start of a sentence or in a name, and the tool cannot tell when one English
 word is used for two Japanese terms. A post may mention a rendering to avoid
@@ -63,14 +67,17 @@ def forms(cell):
     return [f.strip() for f in cell.split(" | ") if f.strip()]
 
 
-SEP = r"[\s\u00a0\-\u2010\u2011]+"
+SEP = r"(?:[ \t\u00a0\-\u2010\u2011]|\r?\n(?![ \t]*(?:\r?\n|[-*+] |#|\d+\. )))+"
 
 
 def pattern(form):
     flags = 0 if any(c.isupper() for c in form) else re.I
     left = r"(?<![A-Za-z0-9])" if form[0].isalnum() else ""
     right = r"(?:s|es)?(?![A-Za-z0-9])" if form[-1].isalpha() else (r"(?![A-Za-z0-9])" if form[-1].isalnum() else "")
-    body = SEP.join(re.escape(w) for w in re.split(r"[\s\-]+", form.strip()))
+    words = [w for w in re.split(r"[\s\-]+", form.strip()) if w]
+    body = SEP.join(re.escape(w) for w in words)
+    if flags == 0 and body[:1].isalpha():
+        body = f"(?i:{body[0]})" + body[1:]
     return re.compile(left + body + right, flags)
 
 
@@ -131,13 +138,14 @@ def check_text(rows, en_text, ja_text=None):
             continue
         # spans of the accepted forms are not reported; among the other forms,
         # longer ones are matched first, and a span is reported only once
-        taken = [m.span() for f in forms(r["en"]) for m in pattern(f).finditer(en_text)]
+        inside = [m.span() for f in forms(r["en"]) for m in pattern(f).finditer(en_text)]
+        taken = []
         cands = [(len(f), f, kind) for kind, cell in (("AVOID", r["avoid"]), ("VARIANT", r["variants"]))
                  for f in forms(cell)]
         for _, form, kind in sorted(cands, key=lambda c: -c[0]):
             for m in pattern(form).finditer(en_text):
                 a, b = m.span()
-                if any(a < y and x < b for x, y in taken):
+                if any(x <= a and b <= y for x, y in inside) or any(a < y and x < b for x, y in taken):
                     continue
                 taken.append((a, b))
                 out.append((line_of(en_text, a), r["id"], kind,

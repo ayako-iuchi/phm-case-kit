@@ -8,7 +8,7 @@ The kit holds the tools used to check quotes, figures and dated facts in hypothe
 
 ## Status
 
-Version 1.7, in preparation (version 1.6 released on 30 October 2026, version 1.5 the same day, version 1.4 on 29 October 2026, versions 1.3, 1.2 and 1.1 the same day, version 1.0 on 28 October 2026). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
+Version 1.7, released on 30 October 2026 (version 1.6 the same day, version 1.5 the same day, version 1.4 on 29 October 2026, versions 1.3, 1.2 and 1.1 the same day, version 1.0 on 28 October 2026). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
 
 | Tool | What it does | Post |
 | --- | --- | --- |
@@ -81,11 +81,11 @@ Both texts are compared without whitespace and after Unicode NFKC. Classes: `EXA
 
 `templates/brief_template.ja.md` and `templates/brief_template.en.md` are blank briefs. `examples/brief_hcs17.ja.md` is the brief made in Blog #43 for the fictional Hypothetical Case Study #17, with Takeaki Ohi's two sentences replaced by placeholders, since the kit holds no third-party text; `examples/brief_draft.ja.md` is a weak draft made to show the checks firing. Their runs are in `evidence/`.
 
-**glosscheck** checks English versions against a glossary (`register/glossary_series.tsv`: one row per Japanese term, with columns `id`, `ja`, `en` (the rendering to use; several accepted forms separated by ` | `), `variants` (renderings seen that differ from it), `avoid` (renderings never to use) and `note`). It reports `AVOID` (a rendering never to use appears), `VARIANT` (a variant appears) and, with `--pair JA=EN`, `MISSING` (the Japanese term is in the Japanese file, but neither its rendering nor a variant is in the English). English forms match as whole words, case-insensitively unless the form has a capital letter; a form ending in a letter also matches its plural in -s or -es, and a space or hyphen in a form matches any run of spaces, line breaks or hyphens. Text matched by the rendering to use is not reported, and of two overlapping variants only the longer is. Glossary problems: G1 a required field is empty, G2 a duplicate id, G3 a form listed twice in one row. It checks wording, not meaning: it cannot tell when one English word is used for two Japanese terms, or whether a rendering fits its sentence. A post that names a rendering in order to say it is not used is still reported; the reader decides. Exit status: 0 if nothing fires, 1 if anything does, 2 on bad input.
+**glosscheck** checks English versions against a glossary (`register/glossary_series.tsv`: one row per Japanese term, with columns `id`, `ja`, `en` (the rendering to use; several accepted forms separated by ` | `), `variants` (renderings seen that differ from it), `avoid` (renderings never to use) and `note`). It reports `AVOID` (a rendering never to use appears), `VARIANT` (a variant appears) and, with `--pair JA=EN`, `MISSING` (the Japanese term is in the Japanese file, but neither its rendering nor a variant is in the English). English forms match as whole words, case-insensitively unless the form has a capital letter; a form ending in a letter also matches its plural in -s or -es, and a space or hyphen in a form matches any run of spaces, line breaks or hyphens. Within a row, text inside a match of the rendering to use is not reported, and of two overlapping forms only the longer is; forms of different rows are not compared. A line break counts as a space, but a blank line, a list item or a heading does not; the first letter of a form with a capital letter may be in either case. Glossary problems: G1 a required field is empty, G2 a duplicate id, G3 a form listed twice in one row. It checks wording, not meaning: it cannot tell when one English word is used for two Japanese terms, or whether a rendering fits its sentence. A post that names a rendering in order to say it is not used is still reported; the reader decides. Exit status: 0 if nothing fires, 1 if anything does, 2 on bad input.
 
     python3 -I tools/glosscheck.py register/glossary_series.tsv --pair ja.md=en.md
 
-The glossary was drafted from the translation checks of Hypothetical Technical Blog #37–#41. Every rendering in it, to use or to avoid as a variant, appears in their published English versions; where the posts disagreed, the rendering to use follows the checks and the series' rules (for a name with no official English version found, a lowercase description). The run on those five posts is in `evidence/`; the posts themselves are not in the kit.
+The glossary was drafted from the translation checks of Hypothetical Technical Blog #37–#41. The renderings to use and the variants all appear in their published English versions; where the posts disagreed, the rendering to use follows the checks and the series' rules (for a name with no official English version found, a lowercase description). The renderings to avoid are the ones the checks advised against; only one of them ("Predictive Management") appears in the posts. The run on those five posts is in `evidence/`; the posts themselves are not in the kit.
 
 ## Tests
 
@@ -107,7 +107,7 @@ The tests use a synthetic source written for them.
 
 - `v1.5` → 5e2d3f4, made by the author on GitHub on 30 October 2026 (11:11 JST). Immutable.
 
-The tag `v1.6` is made by the author on GitHub after the release commit; until it exists, this list does not include it.
+The tags `v1.6` and `v1.7` are made by the author on GitHub after their release commits; until they exist, this list does not include them.
 
 ## Posts that use the kit
 

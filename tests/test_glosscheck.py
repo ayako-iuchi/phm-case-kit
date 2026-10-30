@@ -112,6 +112,27 @@ class GlosscheckTest(unittest.TestCase):
         crlf = self.write("crlf.tsv", "\ufeff" + GLOSSARY.replace("\n", "\r\n"))
         self.assertEqual(len(glosscheck.load(crlf)), 4)
 
+    def test_review_round2(self):
+        g = self.write("r2.tsv", "id\tja\ten\tvariants\tavoid\tnote\n"
+                       "p1\t大井氏\tOhi\t-\tMr. Ohi\tn\n"
+                       "p2\t閣議決定\tthe Cabinet approved\t-\t-\tn\n"
+                       "p3\t保守側\tconservative (flat)\tQ1 flat\t-\tn\n"
+                       "p4\t骨子\toutline template\tplan template\t-\tn\n")
+        rows = glosscheck.load(g)
+        codes = lambda en, ja=None: [c for _, _, c, _ in glosscheck.check_text(rows, en, ja)]
+        # an avoid form containing the accepted form is still reported
+        self.assertEqual(codes("Mr. Ohi said"), ["AVOID"])
+        self.assertEqual(codes("Ohi said"), [])
+        # a capitalised form matches at the start of a sentence
+        self.assertEqual(codes("The Cabinet approved it.", "閣議決定"), [])
+        # punctuation in forms
+        self.assertEqual(codes("the conservative (flat) baseline", "保守側"), [])
+        self.assertEqual(codes("Q1 flat"), ["VARIANT"])
+        # a line break joins words; a blank line or a new list item does not
+        self.assertEqual(codes("plan\ntemplate"), ["VARIANT"])
+        self.assertEqual(codes("plan\n\ntemplate"), [])
+        self.assertEqual(codes("plan\n- template"), [])
+
     def test_bad_input(self):
         en = self.write("en.md", "x\n")
         for gl in ("", "id\tja\n", "id\tja\ten\tvariants\tavoid\tnote\nt1\tx\n"):
