@@ -100,7 +100,7 @@ class QuotediffTest(unittest.TestCase):
             self.assertEqual(quotediff.main([self.reg(row()), "--text", f"S={self.src}", "--text", f"S={self.src}"]), 2)
 
     def test_ellipsis_marks_and_gap(self):
-        for mark in ("…", "‥", "⋯", "...", "．．．", "・・・", "／"):
+        for mark in ("…", "‥", "⋯", "...", "．．．", "・・・", "･･･", "／"):
             _, res = self.classes(row(quote=f"ABC社の計画は{mark}終わります", marked="ellipsis"))
             self.assertEqual(res[0][0], "ELLIPSIS", mark)
         _, res = self.classes(row(quote="架空の工場では…最初の一歩でした", marked="ellipsis"))
@@ -125,6 +125,14 @@ class QuotediffTest(unittest.TestCase):
         with redirect_stdout(out):
             self.assertEqual(quotediff.main([p, "--text", f"S={self.src}", "--quiet"]), 0)
         self.assertNotIn("EXACT\tline", out.getvalue())
+
+    def test_ellipsis_tries_every_occurrence(self):
+        rep = os.path.join(self.tmp, "rep.txt")
+        with open(rep, "w", encoding="utf-8") as f:
+            f.write("始まりの句。" + "い" * 600 + "始まりの句。中ほど。終わりの句。\n")
+        sources = {"S": quotediff.Source(quotediff.read_pages(rep, header_lines=0))}
+        _, results = quotediff.check(quotediff.load(self.reg(row(quote="始まりの句。…終わりの句。", marked="ellipsis"))), sources)
+        self.assertEqual(results[0][2], "ELLIPSIS")
 
 
 if __name__ == "__main__":

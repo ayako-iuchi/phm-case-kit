@@ -17,7 +17,8 @@ Columns (tab-separated, header row required, other columns ignored):
     document the document that presents the quotation
     page     page in that document
     source   the source it is attributed to: a SOURCE given with --text
-    quote    the quotation as the document gives it, without its quote marks
+    quote    the quotation, without its quote marks (it is compared after
+             whitespace removal and NFKC, so it may be recorded that way)
     marked   how the document marks it: none | ellipsis | paraphrase
              (ellipsis: omissions are shown with …, ‥, ⋯, ..., ．．．, ・・・,
              ･･･ or ／; paraphrase: the document says it is a summary or
@@ -35,8 +36,9 @@ Classes:
     EXACT       the quotation is in the source as it stands
     ELLIPSIS    marked ellipsis, and every part between the marks is in the
                 source, in order, each within 400 characters of the one
-                before (a failed ELLIPSIS row is compared with its parts
-                joined, so the omissions it marks show as omitted)
+                before; every place where the first part occurs is tried
+                (a failed ELLIPSIS row is compared with its parts joined,
+                so its listed changes can include the text between parts)
     PARAPHRASE  marked paraphrase and not EXACT (reported, not a finding)
     ALTERED     not in the source, but a passage resembles it (similarity at
                 least --min-ratio, default 0.6); the changes are listed
@@ -164,16 +166,18 @@ def classify(row, src, min_ratio):
     q = norm(row["quote"])
     if row["marked"] == "ellipsis":
         parts = [norm(p) for p in ELLIPSIS.split(row["quote"]) if norm(p)]
-        pos, ok, where = 0, True, None
-        for p in parts:
-            i = src.text.find(p, pos)
-            if i < 0 or (where is not None and i - pos > MAX_GAP):
-                ok = False
-                break
-            where = i if where is None else where
-            pos = i + len(p)
-        if ok and parts:
-            return "ELLIPSIS", f"source p.{src.page_of(where)}"
+        start = src.text.find(parts[0]) if parts else -1
+        while start >= 0:
+            pos, ok = start + len(parts[0]), True
+            for p in parts[1:]:
+                i = src.text.find(p, pos)
+                if i < 0 or i - pos > MAX_GAP:
+                    ok = False
+                    break
+                pos = i + len(p)
+            if ok:
+                return "ELLIPSIS", f"source p.{src.page_of(start)}"
+            start = src.text.find(parts[0], start + 1)
         q = "".join(parts)
     i = src.text.find(q) if q else -1
     if i >= 0:

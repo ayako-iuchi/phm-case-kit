@@ -8,7 +8,7 @@ English: [README.md](README.md)
 
 ## 状態
 
-版 1.5、準備中（版 1.4 は2026年10月29日にリリース、版 1.3、1.2、1.1 は同じ日、版 1.0 は2026年10月28日）。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
+版 1.5。2026年10月30日にリリース（版 1.4 は2026年10月29日、版 1.3、1.2、1.1 は同じ日、版 1.0 は2026年10月28日）。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
 
 | 道具 | すること | 記事 |
 | --- | --- | --- |
@@ -67,11 +67,11 @@ English: [README.md](README.md)
 
 計算値が、表示の最後の桁の半単位以内なら一致とします。文書についての指摘は、`MISMATCH`（derived の行が表示どおりにならない）、`NOREPRO`（表示された数字に candidate があるが、どれも再現しない）、`UNRESOLVED`（式が placeholder を必要とする）です。台帳の問題は、必須の欄と許される値（R1）、式の構文や存在しない id（R2）、自分の行に戻る式（R3）、id の重複（R4）、表示値のない行を指す `of`（R5）です。ゼロ除算と、大きさの上限を超える計算値も R2 で、循環はその輪のすべての行を R3 で示します。計算は確かめますが、意味は確かめません。時間の率と金額の率の区別はできません。終了コードは、何もなければ 0、指摘があれば 1、入力の誤りは 2 です。`register/calc_hcs17_25.tsv` は、事業計画書の骨子テンプレート Hypothetical Case Study #17.25（筆者が生成AIで作った架空の文書）の台帳で、#17 の表（p.7、画像）に印刷された値を1つ含みます。文書が書いていない読み方の行がいくつかあり、それぞれ注記にそう書いてあります。実行結果を `evidence/` に置きます。
 
-**quotediff** は、引用を原文と比べます。台帳の1行が1つの引用で、列は `id`、`document`、`page`、`source`（`--text` で与えた名前）、`quote`（引用符を除く。比べる前に空白を除き NFKC をかけるので、台帳はその形で記録してよい）、`marked`（`none`、省略を `…`・`‥`・`⋯`・`...`・`．．．`・`・・・`・`･･･`・`／` で示した `ellipsis`（部分が順にあり、前の部分から400字以内）、要約だと書いた `paraphrase`）、`note` です。
+**quotediff** は、引用を原文と比べます。台帳の1行が1つの引用で、列は `id`、`document`、`page`、`source`（`--text` で与えた名前）、`quote`（引用符を除く。比べる前に空白を除き NFKC をかけるので、台帳はその形で記録してよい）、`marked`（`none`、省略を `…`・`‥`・`⋯`・`...`・`．．．`・`・・・`・`･･･`・`／` で示した `ellipsis`（部分が順にあり、前の部分から400字以内。最初の部分が出てくる箇所はすべて試す）、要約だと書いた `paraphrase`）、`note` です。
 
     python3 -I tools/quotediff.py register/quotes_hcs17.tsv --text '#17=hcs17.txt' --note-footer
 
-空白を除き、Unicode の NFKC をかけてから比べます。分類は `EXACT`、`ELLIPSIS`（印のあいだの部分がすべて原文に順にある）、`PARAPHRASE`（要約と明記し、原文どおりでない）、`ALTERED`（類似度が `--min-ratio`（既定 0.6）以上の箇所がある。省略・追加・置き換えを文字単位で並べるので、語順の入れ替えは省略と追加として出ます）、`NOT-FOUND` です。`ALTERED` と `NOT-FOUND` は指摘（終了コード 1）、台帳の問題は Q1（必須の欄、許される値）、Q2（`--text` のない source）、Q3（id の重複）で、入力の誤りは 2 です。`register/quotes_hcs17.tsv` は、Hypothetical Case Study #17 の派生文書（すべて筆者が生成AIで作った架空の文書）が #17 の引用として示した102箇所の台帳です。Blog #42 のための棚卸しで、すべてではありません（点検で少なくとも2箇所の漏れが見つかりました。架空の人物の感想は入れていません）。#17.2〜#17.20 の頁はそれらをまとめたファイルの頁で、Blog #42 で使った記事は公開された記事でも確かめました。pdftotext は #17 の3つの段落で行頭の英単語を別の行に移すため、頁の画像では一致する3行が `ALTERED` と出ます。注記にそう書いてあります。大井竹昭氏の文とされた引用は台帳に入れていません。実行結果を `evidence/` に置きます。
+空白を除き、Unicode の NFKC をかけてから比べます。分類は `EXACT`、`ELLIPSIS`（印のあいだの部分がすべて原文に順にある）、`PARAPHRASE`（要約と明記し、原文どおりでない）、`ALTERED`（類似度が `--min-ratio`（既定 0.6）以上の箇所がある。省略・追加・置き換えを文字単位で並べるので、語順の入れ替えは省略と追加として出ます）、`NOT-FOUND` です。`ALTERED` と `NOT-FOUND` は指摘（終了コード 1）、台帳の問題は Q1（必須の欄、許される値）、Q2（`--text` のない source）、Q3（id の重複）で、入力の誤りは 2 です。`register/quotes_hcs17.tsv` は、Hypothetical Case Study #17 の派生文書（すべて筆者が生成AIで作った架空の文書）が #17 の引用として示した101箇所の台帳です。Blog #42 のための棚卸しで、すべてではありません（点検で少なくとも2箇所の漏れが見つかりました。架空の人物の感想は入れていません）。#17.2〜#17.20 の頁はそれらをまとめたファイルの頁で、Blog #42 で使った記事は公開された記事でも確かめました。pdftotext は #17 の3つの段落で行頭の英単語を別の行に移すため、頁の画像では一致する3行が `ALTERED` と出ます。注記にそう書いてあります。大井竹昭氏の文とされた引用は台帳に入れていません。実行結果を `evidence/` に置きます。
 
 ## テスト
 
@@ -100,7 +100,7 @@ English: [README.md](README.md)
 - Hypothetical Technical Blog #39「その82%は何を測っているか」：`numcheck.py`、`register/numbers_hcs17.tsv`
 - Hypothetical Technical Blog #40「その事実はいつの事実か」：`datecheck.py`、`register/dated_hcs17.tsv`
 - Hypothetical Technical Blog #41「その1.5年はどう計算したか」（2026年10月30日）：`calccheck.py`、`register/calc_hcs17_25.tsv`。https://note.com/ayako_iuchi/n/n4212c599801a
-- Hypothetical Technical Blog #42（このリリースの後に公開）：`quotediff.py`、`register/quotes_hcs17.tsv`
+- Hypothetical Technical Blog #42「その引用は原文どおりか」（このリリースの後に公開）：`quotediff.py`、`register/quotes_hcs17.tsv`
 
 ## 決まり
 
