@@ -36,3 +36,7 @@ g35	３つの鍵	the three keys	-	Three Keys | pillars | success factors	大井�
 g36	仕組み	mechanism	-	-	３つの鍵の鍵１の語。system は氏の「システム」に取っておく。Blog #46 で初めて訳した
 g37	フロー	flow	decision-making flow	-	３つの鍵の鍵２の語。意思決定フローは decision-making flow。Blog #46 で初めて訳した
 g38	ガバナンス	governance	-	corporate governance	３つの鍵の鍵３の語。英語圏では取締役会の意味に読まれやすいので、初出で氏の説明「共通のルールとそれを支える体制」（第14回 p.82）を添える。Blog #46 で初めて訳した
+g39	エグゼクティブスポンサー	executive sponsor	sponsor	Executive Sponsor | patron	架空事例の語（HCS #17 p.9、#17.24、#17.26 p.6）。著者の英語テンプレート #17.26 p.6 の表記に合わせて小文字。大井氏の手法の語として書かない。同じ段落で2回目からは sponsor でよい。Blog #47 で初めて訳した
+g40	プロジェクトオーナー	project owner	-	Project Owner | product owner	架空事例の語（HCS #17 p.14、#17.26 p.6）。著者の英語テンプレート #17.26 p.6 の表記。大井氏の「プロセスオーナー」（第14回 p.83）とは別の語。#17 p.9 の「本プロジェクトのオーナー」は the owner of this project と訳し分ける。「持つ」は own で訳さない（owner と衝突する）。Blog #47 で初めて訳した
+g41	RACI	RACI chart	RACI	-	大井氏 第8回 p.46 の「RACIチャート」。氏の括弧の説明は回ごとに違い（第8回 p.46「実行責任者、説明責任者、協業先、情報提供先」、第14回 p.82「実行責任者、承認者、協業者、情報提供先」）、一般の Consulted と合わないので、英語版で R/A/C/I の展開を氏の語として書かない。展開を書くなら筆者の説明として。Blog #47 で初めて訳した
+g42	部門横断型チーム	cross-functional team	cross-functional task force	cross-cutting team	大井氏 第8回 節2の語。氏に英語名はない（第16回 p.94 の Expertise & Collaboration は別の見出し）。著者テンプレートは「横断DX」を cross-cutting、部門横断の委員会を cross-departmental と訳しているが、氏の節2は機能を集めるチームなので英語の定番 cross-functional を使う。cross-functional task force は HCS #17 p.9 の「部門横断タスクフォース」。Blog #47 で初めて訳した
