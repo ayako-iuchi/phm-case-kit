@@ -5,7 +5,7 @@ g03	稟議で使える要点	Points for an internal proposal	-	ringi | consensus
 g04	社内で提案を通す推進者	internal champions	-	promoter	—
 g05	照合	check	-	-	verification / validation は主張の正しさまで確かめたように聞こえるので、照合の意味では使わない
 g06	言い過ぎ	overstated | overstatement	-	overclaim	意図的な誇張に聞こえる語を避ける。主語は筆者の文書
-g07	書いていない別のエージェント	a separate Claude agent that had written neither | a separate agent that had not written | another agent, which had written neither	-	independent agent	同じモデルなので independent と書かない
+g07	書いていない別のエージェント	a separate Claude agent that had written neither | a separate Claude agent that had not written | a separate agent that had not written | another agent, which had written neither	-	independent agent	同じモデルなので independent と書かない
 g08	台帳	register	-	-	キットのフォルダ名 register/ と同じ
 g09	2025年版ものづくり白書	White Paper on Manufacturing Industries 2025	2025 White Paper on Manufacturing Industries	Monodzukuri	経済産業省の公式英語名は年が後ろ
 g10	デジタルトランスフォーメーションに向けた研究会	a study group on digital transformation set up by METI	Study Group on Digital Transformation	-	公式英語名がないので、原名と小文字の訳と my translation
@@ -28,3 +28,7 @@ g26	保守側（現状フラット）	conservative (flat)	-	maintenance baseline
 g27	関連文献	Further reading	Related documents	-	見出しの定型
 g29	CEO 大井竹昭氏	Takeaki Ohi, CEO of KOMPAS	-	Mr. Ohi	CEO は著者が選んだ表記。記事ごとに変えない
 g30	株式会社KOMPAS	Kompas Co. Ltd.	-	Kompas Co., Ltd. | Kompas Inc.	社名の表記を固定
+g31	事後保全	breakdown maintenance	-	-	BM は大井氏の略語（第2回 p.12）。英語で一般的な略語ではないので、略語だけで書かない。Blog #45 で初めて訳した
+g32	予防保全	preventive maintenance	-	-	小文字の一般の語。Blog #45 で初めて訳した
+g33	状態基準保全	condition-based maintenance	-	-	小文字の一般の語（CBM）。Blog #45 で初めて訳した
+g34	先読み	sakiyomi	-	-	大井氏の語。初出で reading ahead と私訳を添える。Blog #45 で初めて訳した
