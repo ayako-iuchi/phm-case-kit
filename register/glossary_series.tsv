@@ -44,3 +44,6 @@ g43	エッジコンピューティング	edge computing	-	-	大井氏 第6回 p.
 g44	Human-in-the-Loop	Human-in-the-Loop	human in the loop	HITL	大井氏 第12回 p.71 の表記のまま（日本語版でも英字）。略語 HITL は原典にないので使わない。Blog #48 で初めて訳した
 g45	MLOps	MLOps	-	-	大井氏 第12回 p.71「MLOps: Machine Learning Operations」、第6回 p.34「MLOps - 機械学習基盤運用」。英語版の初出で Machine Learning Operations を添える。Blog #48 で初めて訳した
 g46	転移学習	transfer learning	-	Transfer Learning	大井氏 第17回 p.100 の語（「類似設備のデータを活用する（転移学習）」）。HCS #17 p.12 の「転移学習（Transfer Learning）」は架空事例の表記。一般の語なので小文字。Blog #48 で初めて訳した
+g47	意思決定支援ツール	decision-support tool	-	Decision Support Tool | DSS	大井氏 第12回 p.71 の語。氏に英語名はないので小文字。初出で my translation を添える。Blog #48 で初めて訳した
+g48	育て続ける	kept nurtured	-	keep growing | keep training	大井氏 第12回 p.71「「作って終わり」ではなく、「育て続ける」」。たとえを残す。動詞の形は keep nurturing でよい。Blog #48 で初めて訳した
+g49	鵜呑み	at face value	-	swallow whole | blindly	大井氏 第12回 p.71「鵜呑みにせず」。not take … at face value と訳す。使う人を愚かに見せる訳を避ける。Blog #48 で初めて訳した
