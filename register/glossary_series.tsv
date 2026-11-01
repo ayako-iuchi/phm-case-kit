@@ -47,3 +47,17 @@ g46	転移学習	transfer learning	-	Transfer Learning	大井氏 第17回 p.100 
 g47	意思決定支援ツール	decision-support tool	-	Decision Support Tool | DSS	大井氏 第12回 p.71 の語。氏に英語名はないので小文字。初出で my translation を添える。Blog #48 で初めて訳した
 g48	育て続ける	kept nurtured	-	keep growing | keep training	大井氏 第12回 p.71「「作って終わり」ではなく、「育て続ける」」。たとえを残す。動詞の形は keep nurturing でよい。Blog #48 で初めて訳した
 g49	鵜呑み	at face value	-	swallow whole | blindly	大井氏 第12回 p.71「鵜呑みにせず」。not take … at face value と訳す。使う人を愚かに見せる訳を避ける。Blog #48 で初めて訳した
+g50	仕組み（ルール、体制、プロセス）	arrangement	-	mechanism	大井氏 第10回 p.59 のデータガバナンスの「仕組み」。g36（第14回の鍵１の「仕組み」＝mechanism）とは別。単数で使う。Blog #49 で初めて訳した
+g51	データ品質管理（DQM）	data quality management (DQM)	-	DQM: Data Quality Management	大井氏 第10回 p.56。英語で同じ語を二度続けない。Blog #49
+g52	データガバナンス	data governance	-	-	大井氏 第10回 p.59。Blog #49
+g53	データスチュワードシップ	data stewardship	-	-	大井氏 第10回 p.59。担当者はデータスチュワード（data steward）。Blog #49
+g54	セキュリティ・バイ・デザイン／プライバシー・バイ・デザイン	security by design / privacy by design	-	-	大井氏 第11回 p.65（第6回 p.35 にも）。Blog #49
+g55	改正個人情報保護法（APPI）	Japan's amended Act on the Protection of Personal Information (APPI)	-	-	大井氏 第11回 p.65 の表記。初出で Japan's を付ける。法令の中身は筆者が確かめていないと書く。Blog #49
+g56	経営リスク	business risk	-	management risk	management risk は経営陣が生むリスクに読める。Blog #49
+g57	生体情報（ウェアラブルデバイスからの）	physiological data	-	biometric data	biometric data は GDPR の定義語で、原文より狭く法的に重い。Blog #49
+g58	直接的コスト／間接的コスト	direct costs / indirect costs	-	-	大井氏 第5回 p.28。Blog #50
+g59	ベースライン	baseline	-	-	大井氏 第3回 p.19 の「導入前の現状（ベースライン）」。骨子 #17.25 の反実仮想のベースライン（counterfactual）とは役割が違うことを書き分ける。Blog #50
+g60	事前対策	measures taken in advance	-	preventive measures	preventive は予防保全（g32）と重なり、氏が予兆管理と区別しているものに読める。大井氏 第5回 p.28。Blog #50
+g61	変数表	variable table	-	table of variables	Blog #41 英語版にそろえる。Blog #50
+g62	意思決定フロー	decision-making flow	-	-	大井氏 第5回 p.29 のステップ2の名。g37（第14回の鍵２の「フロー」＝flow）とは別。Blog #50
+g63	経営企画/DX推進	the corporate planning and DX promotion functions	-	the DX office	原文にない部署名（office）を作らない。骨子 #17.25 p.7。Blog #50
