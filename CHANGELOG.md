@@ -2,6 +2,15 @@
 
 Revisions are dated and kept visible. Nothing is changed silently.
 
+## Kit v1.8 — 2026-11-04
+
+- **Released on 4 November 2026,** before the English versions of Hypothetical Technical Blog #45–#50, whose terms it records, are published. Their Japanese versions were published on 31 October 2026. `main` was fast-forwarded to the branch `kit-v1.8`. The tag `v1.8` is made by the author on GitHub after this commit. `CITATION.cff` gives the version and release date, and both READMEs say the version was released.
+
+- `register/glossary_series.tsv`: added g31–g63 (33 terms; 62 in all, since there is no g28), from the translation checks of Blog #45 (g31–g34), #46 (g35–g38), #47 (g39–g42), #48 (g43–g49) and #49 and #50 (g50–g63). No tool or test was changed; the 110 tests pass.
+- At release, a run on the drafts of the English versions of Blog #46–#50 found two problems in rows that had not been released. g50 (仕組み as *arrangement*) listed *mechanism*, the rendering g36 uses for another 仕組み, as one to avoid, so every correct *mechanism* in Blog #46 and #47 was reported as AVOID (12 in all); g37 (フロー as *flow*) listed *decision-making flow*, the rendering g62 uses for 意思決定フロー, as a variant. Both were removed from those columns and the notes now say why; the run then reports AVOID 0 and VARIANT 4 (*sponsor* three times and *proposal template* once in Blog #47, variants it uses on purpose). The drafts are not in the kit, so the run is not in `evidence/`.
+- README.md and README.ja.md: the tags `v1.6` and `v1.7` (both d4c3107; v1.6 points to the v1.7 release commit, and why); a paragraph on g31–g63 and on rows that share a Japanese word; in the list of posts, the published dates and URLs of Blog #42–#44 (README.ja.md also those of Blog #39 and #40), and Blog #45–#50.
+- The correction log entries log #13 (overstatements in outline #17.26) and log #14 (the variable table of outline #17.25 does not connect the number of stoppages with their duration) are recorded in the theme's correction log. They are not yet in `register/sources_hcs17.tsv` or `register/calc_hcs17_25.tsv`; that is left for a later version.
+
 ## Kit v1.7 — 2026-10-30
 
 - **Released on 30 October 2026,** before Hypothetical Technical Blog #44 (*Is It the Same English Every Time?*), which cites it, is published. `main` was fast-forwarded to the branch `kit-v1.7`. The entries below were written while the release was in preparation. The tag `v1.7` is made by the author on GitHub after this commit. `CITATION.cff` gives the version and release date, and both READMEs say the version was released.

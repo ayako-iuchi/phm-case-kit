@@ -34,7 +34,7 @@ g33	状態基準保全	condition-based maintenance	-	-	小文字の一般の語�
 g34	先読み	sakiyomi	-	-	大井氏の語。初出で reading ahead と私訳を添える。Blog #45 で初めて訳した
 g35	３つの鍵	the three keys	-	Three Keys | pillars | success factors	大井氏の第14回の語。氏に英語名はないので小文字。初出で my translation を添え、本文では Key 1〜Key 3。Blog #46 で初めて訳した
 g36	仕組み	mechanism	-	-	３つの鍵の鍵１の語。system は氏の「システム」に取っておく。Blog #46 で初めて訳した
-g37	フロー	flow	decision-making flow	-	３つの鍵の鍵２の語。意思決定フローは decision-making flow。Blog #46 で初めて訳した
+g37	フロー	flow	-	-	３つの鍵の鍵２の語。意思決定フローは g62（decision-making flow）。Blog #46 で初めて訳した
 g38	ガバナンス	governance	-	corporate governance	３つの鍵の鍵３の語。英語圏では取締役会の意味に読まれやすいので、初出で氏の説明「共通のルールとそれを支える体制」（第14回 p.82）を添える。Blog #46 で初めて訳した
 g39	エグゼクティブスポンサー	executive sponsor	sponsor	Executive Sponsor | patron	架空事例の語（HCS #17 p.9、#17.24、#17.26 p.6）。著者の英語テンプレート #17.26 p.6 の表記に合わせて小文字。大井氏の手法の語として書かない。同じ段落で2回目からは sponsor でよい。Blog #47 で初めて訳した
 g40	プロジェクトオーナー	project owner	-	Project Owner | product owner	架空事例の語（HCS #17 p.14、#17.26 p.6）。著者の英語テンプレート #17.26 p.6 の表記。大井氏の「プロセスオーナー」（第14回 p.83）とは別の語。#17 p.9 の「本プロジェクトのオーナー」は the owner of this project と訳し分ける。「持つ」は own で訳さない（owner と衝突する）。Blog #47 で初めて訳した
@@ -47,7 +47,7 @@ g46	転移学習	transfer learning	-	Transfer Learning	大井氏 第17回 p.100 
 g47	意思決定支援ツール	decision-support tool	-	Decision Support Tool | DSS	大井氏 第12回 p.71 の語。氏に英語名はないので小文字。初出で my translation を添える。Blog #48 で初めて訳した
 g48	育て続ける	kept nurtured	-	keep growing | keep training	大井氏 第12回 p.71「「作って終わり」ではなく、「育て続ける」」。たとえを残す。動詞の形は keep nurturing でよい。Blog #48 で初めて訳した
 g49	鵜呑み	at face value	-	swallow whole | blindly	大井氏 第12回 p.71「鵜呑みにせず」。not take … at face value と訳す。使う人を愚かに見せる訳を避ける。Blog #48 で初めて訳した
-g50	仕組み（ルール、体制、プロセス）	arrangement	-	mechanism	大井氏 第10回 p.59 のデータガバナンスの「仕組み」。g36（第14回の鍵１の「仕組み」＝mechanism）とは別。単数で使う。Blog #49 で初めて訳した
+g50	仕組み（ルール、体制、プロセス）	arrangement	-	-	大井氏 第10回 p.59 のデータガバナンスの「仕組み」。g36（第14回の鍵１の「仕組み」＝mechanism）とは別。mechanism は g36 の使う訳なので、この行の使わない訳には入れない（入れると g36 の正しい訳まで AVOID になる）。単数で使う。Blog #49 で初めて訳した
 g51	データ品質管理（DQM）	data quality management (DQM)	-	DQM: Data Quality Management	大井氏 第10回 p.56。英語で同じ語を二度続けない。Blog #49
 g52	データガバナンス	data governance	-	-	大井氏 第10回 p.59。Blog #49
 g53	データスチュワードシップ	data stewardship	-	-	大井氏 第10回 p.59。担当者はデータスチュワード（data steward）。Blog #49

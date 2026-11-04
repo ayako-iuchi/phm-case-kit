@@ -8,7 +8,7 @@ English: [README.md](README.md)
 
 ## 状態
 
-版 1.7、2026年10月30日にリリース（版 1.6 は同じ日、版 1.5 は同じ日、版 1.4 は2026年10月29日、版 1.3、1.2、1.1 は同じ日、版 1.0 は2026年10月28日）。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
+版 1.8、2026年11月4日にリリース（版 1.7 は2026年10月30日、版 1.6 は同じ日、版 1.5 は同じ日、版 1.4 は2026年10月29日、版 1.3、1.2、1.1 は同じ日、版 1.0 は2026年10月28日）。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
 
 | 道具 | すること | 記事 |
 | --- | --- | --- |
@@ -85,7 +85,7 @@ English: [README.md](README.md)
 
     python3 -I tools/glosscheck.py register/glossary_series.tsv --pair ja.md=en.md
 
-用語集は、Hypothetical Technical Blog #37〜#41 の英訳時の点検から作りました。使う訳も違う訳も、公開された英語版に実際に出てくる訳です。使わない訳は、点検が避けるよう勧めた訳で、記事に出てくるのは1つ（Predictive Management）だけです。記事の間で訳が違ったものは、点検と連載の決まりに沿って使う訳を決めました（公式の英語名が見つからなかった名前は、小文字の説明で訳す）。5本にかけた結果を `evidence/` に置きます。記事そのものはキットに入れていません。
+用語集は、Hypothetical Technical Blog #37〜#41 の英訳時の点検から作りました。使う訳も違う訳も、公開された英語版に実際に出てくる訳です。使わない訳は、点検が避けるよう勧めた訳で、記事に出てくるのは1つ（Predictive Management）だけです。記事の間で訳が違ったものは、点検と連載の決まりに沿って使う訳を決めました（公式の英語名が見つからなかった名前は、小文字の説明で訳す）。5本にかけた結果を `evidence/` に置きます。記事そのものはキットに入れていません。版 1.8 で、Blog #45〜#50 の英訳時の点検から g31〜g63 を足しました（全62語。g28 はありません）。どの記事で初めて訳したかは、各行の note にあります。仕組み（g36 は mechanism、g50 は arrangement）のように二つの行が同じ日本語の語を持つときは、一方が使う訳を他方の使わない訳に入れません。行どうしの形は比べないからです。
 
 ## テスト
 
@@ -115,12 +115,13 @@ English: [README.md](README.md)
 
 - Hypothetical Technical Blog #37「不一致0件は何を確かめたか」（2026年10月28日）：`quotecheck.py`、`termcount.py`。https://note.com/ayako_iuchi/n/n280b77ac18ec
 - Hypothetical Technical Blog #38「その数字はどこから来たか」（2026年10月29日）：`sourcecheck.py`、`register/sources_hcs17.tsv`。https://note.com/ayako_iuchi/n/n7016091e1000
-- Hypothetical Technical Blog #39「その82%は何を測っているか」：`numcheck.py`、`register/numbers_hcs17.tsv`
-- Hypothetical Technical Blog #40「その事実はいつの事実か」：`datecheck.py`、`register/dated_hcs17.tsv`
+- Hypothetical Technical Blog #39「その82%は何を測っているか」（2026年10月29日）：`numcheck.py`、`register/numbers_hcs17.tsv`。https://note.com/ayako_iuchi/n/na45fff29241f
+- Hypothetical Technical Blog #40「その事実はいつの事実か」（2026年10月30日）：`datecheck.py`、`register/dated_hcs17.tsv`。https://note.com/ayako_iuchi/n/n5f1c70c93b8b
 - Hypothetical Technical Blog #41「その1.5年はどう計算したか」（2026年10月30日）：`calccheck.py`、`register/calc_hcs17_25.tsv`。https://note.com/ayako_iuchi/n/n4212c599801a
-- Hypothetical Technical Blog #42「その引用は原文どおりか」：`quotediff.py`、`register/quotes_hcs17.tsv`
-- Hypothetical Technical Blog #43「その1枚に出典はあるか」：`briefcheck.py`、`templates/`、`examples/`
-- Hypothetical Technical Blog #44「その訳語は毎回同じか」（このリリースの後に公開）：`glosscheck.py`、`register/glossary_series.tsv`
+- Hypothetical Technical Blog #42「その引用は原文どおりか」（2026年10月30日）：`quotediff.py`、`register/quotes_hcs17.tsv`。https://note.com/ayako_iuchi/n/n76952570880c
+- Hypothetical Technical Blog #43「その1枚に出典はあるか」（2026年10月30日）：`briefcheck.py`、`templates/`、`examples/`。https://note.com/ayako_iuchi/n/nde939c5c6ca0
+- Hypothetical Technical Blog #44「その訳語は毎回同じか」（2026年10月30日）：`glosscheck.py`、`register/glossary_series.tsv`。https://note.com/ayako_iuchi/n/n3f3d592630ca
+- Hypothetical Technical Blog #45〜#50（日本語版 2026年10月31日。英語版はこのリリースの後に公開）：`register/glossary_series.tsv`（g31〜g63）
 
 ## 決まり
 
