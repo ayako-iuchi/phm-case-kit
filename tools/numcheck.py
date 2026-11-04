@@ -34,8 +34,9 @@ MISSED and EXTRA count a value as its number and suffix with nothing but
 optional brackets and spaces between them ("82%", "[82]%", "［82］ ％");
 full-width digits and signs are read as half-width, a range may be written
 with ~, 〜, ～ or a hyphen or dash ("8~12回" matches "[8-12]回"), and a digit,
-comma, point or range sign just before does not count ("182%" and "60-82%"
-are not "82%"), nor a digit just after (nor, after a value with no suffix, a
+comma or point just before does not count, nor a range sign after a digit or
+"]" ("182%" and "60-82%" are not "82%"; a sign with nothing before it, as in
+"−82%", does count), nor a digit just after (nor, after a value with no suffix, a
 "%" or a decimal or thousands part: "82" does not count "82.5", "82,000" or
 "82 %"). The text is counted with its whitespace, so numbers on two lines
 are not joined.
@@ -137,7 +138,8 @@ def value_pattern(value):
     num_re = RANGE.join(re.escape(x) for x in num.split("~"))
     after = r"(?!\s*%|\d|[.,]\d)" if not suffix else r"(?!\d)"
     sfx = r"\s*".join(re.escape(c) for c in suffix)
-    return re.compile(r"(?<![\d.,~\-])\[?\s*" + num_re + r"\s*\]?\s*" + sfx + after)
+    # a range sign just before counts only after a digit or "]" ("60-82%", "[60]-82%"); else it is a sign ("−82%")
+    return re.compile(r"(?<![\d.,])(?<![\d\]][~\-])\[?\s*" + num_re + r"\s*\]?\s*" + sfx + after)
 
 
 def definition(r):

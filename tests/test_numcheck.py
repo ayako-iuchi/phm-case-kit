@@ -100,6 +100,12 @@ class NumcheckTest(unittest.TestCase):
         self.assertEqual(len(pat.findall("[8-12]回 8〜12回 8~12 回 18~12回".translate(numcheck.FULLWIDTH))), 3)
         self.assertEqual(len(numcheck.value_pattern("82").findall("82 82.5 82% 82,000 [82] 82 % 82.")), 3)
         self.assertEqual(len(numcheck.value_pattern("82%").findall("60-82% 60~82%")), 0)
+
+    def test_sign_before_value(self):
+        # a dash with no digit or "]" before it is a sign, not a range: the title graphic's "−82%"
+        pat = numcheck.value_pattern("82%")
+        text = "計画外停止 −82% 60-82% [60]-82% 60−82% (−82%)".translate(numcheck.FULLWIDTH)
+        self.assertEqual(len(pat.findall(text)), 2)
         self.assertEqual(numcheck.split_value("8−12回"), ("8~12", "回"))
         self.assertEqual(len(numcheck.value_pattern("82%").findall("82% 8件 382% 82 %")), 2)
         code, out = self.run_main(self.reg(row(value="8-12回"), row(id="n2", value="8~12回", document="B", unit="count")))

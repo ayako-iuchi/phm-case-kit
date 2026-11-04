@@ -1,0 +1,47 @@
+# Transcription by Claude (2026-11-04) from the images of Hypothetical Case Study #17, the author's own fictional case: the image tables that carry a value tracked in register/numbers_hcs17.tsv.
+# Values, row labels and column labels as printed; no value was estimated. One table row per line, cells separated by ｜; a line broken inside a cell is joined.
+# Pages are separated by form feeds, so page N of this file is page N of #17 (pages with no such table are empty). Of the title graphic on p.1, only its figure block is transcribed.
+# Lines starting with "p." are labels added by Claude (page, and the heading of #17's text that the image sits under); they are not in the images.
+
+p.1 題字の画像（右欄）
+計画外停止
+−82%
+ROI 1.5年 / OEE +8pt
+p.5 1.4 定量・定性成果サマリー：投資・回収構造
+指標｜値
+初期投資総額｜約3.2億円（センサー・エッジ機器・クラウド/AI基盤・SI費用・教育費含む）
+年間ランニングコスト｜約4,200万円（クラウド利用料、センサー保守、専任運用チーム人件費）
+対象大型プレス機｜国内5工場 計18基
+投資対効果（ROI）達成期間｜約1.5年（累計投資額／累計純便益ベース）
+
+p.5 1.4 定量・定性成果サマリー：運用成果
+指標｜値
+計画外停止時間｜導入前比 約82%削減
+年間メンテナンスコスト｜約19%削減
+故障兆候の事前検知リードタイム｜平均 約3週間前
+プレス機OEE改善幅｜+約8ポイント
+p.20 6.1 財務インパクトの総括：初期投資と回収構造
+項目｜金額
+初期投資総額｜約3.2億円
+年間ランニングコスト｜約4,200万円
+年間総便益（粗）｜約3.3億円
+年間純便益（運用コスト控除後）｜約2.9億円
+投資対効果（ROI）達成期間｜約1.5年（段階展開後の年間効果額換算ベース）
+
+p.20 6.1 財務インパクトの総括：年間総便益の構造分解
+カテゴリ｜年間効果額｜算定根拠
+計画外停止削減による生産機会損失の回避｜約2.05億円｜導入前2.5億円 × 削減率82%
+メンテナンスコスト削減（部品・人件費）｜約2,850万円｜導入前1.5億円相当 × 削減率19%
+緊急対応・特急輸送コスト削減｜約2,800万円｜導入前3,500万円 × 削減率80%
+再立ち上げ時の歩留まり改善｜約2,000万円｜導入前2,500万円 × 削減率80%
+エネルギーロス削減（計画外停止に伴う再起動エネルギー回避）｜約1,500万円｜推計値
+合計｜約3.32億円｜
+
+p.20 6.2 運用KPIの達成状況
+運用KPI｜導入前｜現在（2026年Q1）｜改善幅
+計画外停止時間（対象18基合計、年換算）｜約180時間｜約32時間｜82%削減
+故障兆候の事前検知リードタイム｜検知不可｜平均約3週間前｜新規KPI
+誤検知率（週次アラート中の不適合率）｜—｜約15%｜PoC初期60%→現在15%
+検知精度（週次アラート中の真の異常検知率）｜—｜約85%｜PoC初期40%→現在85%
+OEE（対象プレス機平均）｜約63%｜約71%｜+8ポイント
+計画外作業比率（保全業務全体に占める突発対応の割合）｜約45%｜約18%｜27ポイント削減

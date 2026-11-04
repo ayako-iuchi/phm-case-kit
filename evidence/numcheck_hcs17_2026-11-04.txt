@@ -1,5 +1,5 @@
-# in the folder that holds the texts: python3 -I <kit>/tools/numcheck.py <kit>/register/numbers_hcs17.tsv --text \#17=hcs17.txt --text \#17.2=hcs17_summary.txt --text \#17.3=hcs17_summary.txt --text \#17.4=hcs17_summary.txt --text \#17.5=hcs17_summary.txt --text \#17.6=hcs17_summary.txt --text \#17.7=hcs17_summary.txt --text \#17.8=hcs17_summary.txt --text \#17.9=hcs17_summary.txt --text \#17.10=hcs17_summary.txt --text \#17.11=hcs17_summary.txt --text \#17.12=hcs17_summary.txt --text \#17.13=hcs17_summary.txt --text \#17.14=hcs17_summary.txt --text \#17.15=hcs17_summary.txt --text \#17.16=hcs17_summary.txt --text \#17.17=hcs17_summary.txt --text \#17.18=hcs17_summary.txt --text \#17.19=hcs17_summary.txt --text \#17.20=hcs17_summary.txt --text \#17.24=hcs17_01.txt --text \#17.25=hcs17_02.txt --text \#17.26=hcs17_03.txt --text \#17.28=hcs17_28.txt --text \#17.29=hcs17_29.txt --text \#17.30=hcs17_30.txt
-# run on 2026-11-04. Texts: pdftotext -layout extracts of the author's fictional documents (HCS #17 and the documents derived from it; #17.2-#17.20 are compiled in one file). The texts are not in the kit. The 15 rows hcs17-n76 to hcs17-n90 record values printed in HCS #17's images (p.1, p.5, p.20), which are not in the text layer; the 11 EXTRA lines below (one per page and value) count exactly these 15 rows; there is no QUOTE or MISSED.
+# in the folder that holds the texts: python3 -I <kit>/tools/numcheck.py <kit>/register/numbers_hcs17.tsv --text \#17=hcs17.txt --text \#17.2=hcs17_summary.txt --text \#17.3=hcs17_summary.txt --text \#17.4=hcs17_summary.txt --text \#17.5=hcs17_summary.txt --text \#17.6=hcs17_summary.txt --text \#17.7=hcs17_summary.txt --text \#17.8=hcs17_summary.txt --text \#17.9=hcs17_summary.txt --text \#17.10=hcs17_summary.txt --text \#17.11=hcs17_summary.txt --text \#17.12=hcs17_summary.txt --text \#17.13=hcs17_summary.txt --text \#17.14=hcs17_summary.txt --text \#17.15=hcs17_summary.txt --text \#17.16=hcs17_summary.txt --text \#17.17=hcs17_summary.txt --text \#17.18=hcs17_summary.txt --text \#17.19=hcs17_summary.txt --text \#17.20=hcs17_summary.txt --text \#17.24=hcs17_01.txt --text \#17.25=hcs17_02.txt --text \#17.26=hcs17_03.txt --text \#17.28=hcs17_28.txt --text \#17.29=hcs17_29.txt --text \#17.30=hcs17_30.txt --text '#17（画像の表）=<kit>/register/hcs17_image_tables.ja.txt'
+# run on 2026-11-04. Texts: pdftotext -layout extracts of the author's fictional documents (HCS #17 and the documents derived from it; #17.2-#17.20 are compiled in one file). The texts are not in the kit, except register/hcs17_image_tables.ja.txt, Claude's transcription of the image tables of HCS #17 that carry tracked values (page N of it is page N of #17); the 15 rows hcs17-n76 to hcs17-n90 are checked against it.
 DRIFT	4 definitions in 10 rows	15%
 		measures=Scope 1 排出の削減 | unit=排出量 | base=-	hcs17-n92,hcs17-n93,hcs17-n94
 		measures=アラートの誤検知率 | unit=割合 | base=アラート（区分の記載なし）	hcs17-n95,hcs17-n96,hcs17-n97,hcs17-n98
@@ -32,18 +32,7 @@ DRIFT	2 definitions in 2 rows	8~12回
 		measures=計画外停止の回数 | unit=回数 | base=-	hcs17-n75
 CONFLICT	measures=計画外停止の時間の削減率 | unit=時間 | base=導入前	values 80%, 82%	hcs17-n01,hcs17-n02,hcs17-n77,hcs17-n78
 CONFLICT	measures=計画外停止の時間の削減率 | unit=時間 | base=記載なし	values 82%, 85%	hcs17-n31,hcs17-n33,hcs17-n69
-EXTRA	#17 p.20: 80% occurs 0 times, register has 2
-EXTRA	#17 p.1: 82% occurs 0 times, register has 1
-EXTRA	#17 p.5: 82% occurs 0 times, register has 1
-EXTRA	#17 p.20: 82% occurs 0 times, register has 2
-EXTRA	#17 p.1: 1.5年 occurs 0 times, register has 1
-EXTRA	#17 p.5: 1.5年 occurs 0 times, register has 1
-EXTRA	#17 p.20: 1.5年 occurs 0 times, register has 1
-EXTRA	#17 p.5: 3週間 occurs 0 times, register has 1
-EXTRA	#17 p.20: 3週間 occurs 0 times, register has 1
-EXTRA	#17 p.20: 85% occurs 0 times, register has 2
-EXTRA	#17 p.20: 15% occurs 0 times, register has 2
-rows: 98  values: 7  documents: 17
+rows: 98  values: 7  documents: 18
 drift: 6  conflict: 2
-quote: 0  missed: 0  extra: 11  (texts: 8 files, 26 documents)
-# exit 1
+quote: 0  missed: 0  extra: 0  (texts: 9 files, 27 documents)
+# exit 0
