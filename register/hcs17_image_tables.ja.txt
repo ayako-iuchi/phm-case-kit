@@ -2,6 +2,8 @@
 # Values, row labels and column labels as printed; no value was estimated. One table row per line, cells separated by ｜; a line broken inside a cell is joined.
 # Pages are separated by form feeds, so page N of this file is page N of #17 (pages with no such table are empty). Of the title graphic on p.1, only its figure block is transcribed.
 # Lines starting with "p." are labels added by Claude (page, and the heading of #17's text that the image sits under); they are not in the images.
+# The file covers only the images that print a value tracked as of kit v1.9. When a value is added to the register, read all of #17's images again and extend this file, or MISSED and EXTRA will not cover the images.
+# These comment lines are on page 1 and are counted like the rest of the page, so they must never contain a tracked value.
 
 p.1 題字の画像（右欄）
 計画外停止

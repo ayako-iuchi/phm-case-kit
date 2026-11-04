@@ -100,16 +100,21 @@ class NumcheckTest(unittest.TestCase):
         self.assertEqual(len(pat.findall("[8-12]回 8〜12回 8~12 回 18~12回".translate(numcheck.FULLWIDTH))), 3)
         self.assertEqual(len(numcheck.value_pattern("82").findall("82 82.5 82% 82,000 [82] 82 % 82.")), 3)
         self.assertEqual(len(numcheck.value_pattern("82%").findall("60-82% 60~82%")), 0)
-
-    def test_sign_before_value(self):
-        # a dash with no digit or "]" before it is a sign, not a range: the title graphic's "−82%"
-        pat = numcheck.value_pattern("82%")
-        text = "計画外停止 −82% 60-82% [60]-82% 60−82% (−82%)".translate(numcheck.FULLWIDTH)
-        self.assertEqual(len(pat.findall(text)), 2)
         self.assertEqual(numcheck.split_value("8−12回"), ("8~12", "回"))
         self.assertEqual(len(numcheck.value_pattern("82%").findall("82% 8件 382% 82 %")), 2)
         code, out = self.run_main(self.reg(row(value="8-12回"), row(id="n2", value="8~12回", document="B", unit="count")))
         self.assertIn("drift: 1", out)
+
+    def test_sign_before_value(self):
+        # a dash or tilde is a sign only at the start, after whitespace or after an opening bracket ("−82%", "(−82%)");
+        # after anything else it joins a range ("60-82%", "[60]-82%", "60%〜82%", "[60]-[82]%")
+        pat = numcheck.value_pattern("82%")
+        text = "計画外停止 −82% 60-82% [60]-82% 60−82% (−82%) 60%〜82% [60]-[82]% 60-[82]% 最大〜82%".translate(numcheck.FULLWIDTH)
+        self.assertEqual(len(pat.findall(text)), 2)
+        self.assertEqual(len(pat.findall("−82%".translate(numcheck.FULLWIDTH))), 1)
+        self.assertEqual(len(pat.findall("計画外停止｜−82% 「−82%」 率:−82%".translate(numcheck.FULLWIDTH))), 3)
+        self.assertEqual(len(numcheck.value_pattern("1.5年").findall("1年〜1.5年 1年-1.5年".translate(numcheck.FULLWIDTH))), 0)
+        self.assertEqual(len(numcheck.value_pattern("3週間").findall("2週間〜3週間".translate(numcheck.FULLWIDTH))), 0)
 
     def test_extra_and_quote_value(self):
         text = self.write("a.txt", "82%\f")
