@@ -36,28 +36,30 @@ g35	３つの鍵	the three keys	-	Three Keys | pillars | success factors	大井�
 g36	仕組み	mechanism	-	-	３つの鍵の鍵１の語。system は氏の「システム」に取っておく。Blog #46 で初めて訳した
 g37	フロー	flow	-	-	３つの鍵の鍵２の語。意思決定フローは g62（decision-making flow）。Blog #46 で初めて訳した
 g38	ガバナンス	governance	-	corporate governance	３つの鍵の鍵３の語。英語圏では取締役会の意味に読まれやすいので、初出で氏の説明「共通のルールとそれを支える体制」（第14回 p.82）を添える。Blog #46 で初めて訳した
-g39	エグゼクティブスポンサー	executive sponsor	sponsor	Executive Sponsor | patron	架空事例の語（HCS #17 p.9、#17.24、#17.26 p.6）。著者の英語テンプレート #17.26 p.6 の表記に合わせて小文字。大井氏の手法の語として書かない。同じ段落で2回目からは sponsor でよい。Blog #47 で初めて訳した
-g40	プロジェクトオーナー	project owner	-	Project Owner | product owner	架空事例の語（HCS #17 p.14、#17.26 p.6）。著者の英語テンプレート #17.26 p.6 の表記。大井氏の「プロセスオーナー」（第14回 p.83）とは別の語。#17 p.9 の「本プロジェクトのオーナー」は the owner of this project と訳し分ける。「持つ」は own で訳さない（owner と衝突する）。Blog #47 で初めて訳した
+g39	エグゼクティブスポンサー	executive sponsor	sponsor	patron	架空事例の語（HCS #17 p.9、#17.24、#17.26 p.6）。著者の英語テンプレート #17.26 p.6 の表記に合わせて小文字。大井氏の手法の語として書かない。同じ段落で2回目からは sponsor でよい。Blog #47 で初めて訳した。大文字の Executive Sponsor にしない（小文字の使う訳が大文字にも一致するので、この形は AVOID として報告されない）
+g40	プロジェクトオーナー	project owner	-	product owner	架空事例の語（HCS #17 p.14、#17.26 p.6）。著者の英語テンプレート #17.26 p.6 の表記。大井氏の「プロセスオーナー」（第14回 p.83）とは別の語。#17 p.9 の「本プロジェクトのオーナー」は the owner of this project と訳し分ける。「持つ」は own で訳さない（owner と衝突する）。Blog #47 で初めて訳した。大文字の Project Owner にしない（小文字の使う訳が大文字にも一致するので、この形は AVOID として報告されない）
 g41	RACI	RACI chart	RACI	-	大井氏 第8回 p.46 の「RACIチャート」。氏の括弧の説明は回ごとに違い（第8回 p.46「実行責任者、説明責任者、協業先、情報提供先」、第14回 p.82「実行責任者、承認者、協業者、情報提供先」）、一般の Consulted と合わないので、英語版で R/A/C/I の展開を氏の語として書かない。展開を書くなら筆者の説明として。Blog #47 で初めて訳した
 g42	部門横断型チーム	cross-functional team	cross-functional task force	cross-cutting team	大井氏 第8回 節2の語。氏に英語名はない（第16回 p.94 の Expertise & Collaboration は別の見出し）。著者テンプレートは「横断DX」を cross-cutting、部門横断の委員会を cross-departmental と訳しているが、氏の節2は機能を集めるチームなので英語の定番 cross-functional を使う。cross-functional task force は HCS #17 p.9 の「部門横断タスクフォース」。Blog #47 で初めて訳した
 g43	エッジコンピューティング	edge computing	-	-	大井氏 第6回 p.33、第13回 p.75 の語。氏の括弧の英語は Edge Computing だが、一般の語なので本文では小文字。単独の「エッジ」は the edge（現場に近い処理の場所）で、異形として数えない。エッジとクラウドの連携は第13回 p.76 の「エッジ・クラウド連携（ハイブリッド）アーキテクチャ」で、原文の「連携」を残して edge–cloud linkage (hybrid) architecture と私訳する。Blog #48 で初めて訳した
 g44	Human-in-the-Loop	Human-in-the-Loop	human in the loop	HITL	大井氏 第12回 p.71 の表記のまま（日本語版でも英字）。略語 HITL は原典にないので使わない。Blog #48 で初めて訳した
 g45	MLOps	MLOps	-	-	大井氏 第12回 p.71「MLOps: Machine Learning Operations」、第6回 p.34「MLOps - 機械学習基盤運用」。英語版の初出で Machine Learning Operations を添える。Blog #48 で初めて訳した
-g46	転移学習	transfer learning	-	Transfer Learning	大井氏 第17回 p.100 の語（「類似設備のデータを活用する（転移学習）」）。HCS #17 p.12 の「転移学習（Transfer Learning）」は架空事例の表記。一般の語なので小文字。Blog #48 で初めて訳した
-g47	意思決定支援ツール	decision-support tool	-	Decision Support Tool | DSS	大井氏 第12回 p.71 の語。氏に英語名はないので小文字。初出で my translation を添える。Blog #48 で初めて訳した
-g48	育て続ける	kept nurtured	-	keep growing | keep training	大井氏 第12回 p.71「「作って終わり」ではなく、「育て続ける」」。たとえを残す。動詞の形は keep nurturing でよい。Blog #48 で初めて訳した
+g46	転移学習	transfer learning	-	-	大井氏 第17回 p.100 の語（「類似設備のデータを活用する（転移学習）」）。HCS #17 p.12 の「転移学習（Transfer Learning）」は架空事例の表記。一般の語なので小文字。Blog #48 で初めて訳した。大文字の Transfer Learning にしない（小文字の使う訳が大文字にも一致するので、この形は AVOID として報告されない）
+g47	意思決定支援ツール	decision-support tool	-	DSS	大井氏 第12回 p.71 の語。氏に英語名はないので小文字。初出で my translation を添える。Blog #48 で初めて訳した。大文字の Decision Support Tool にしない（小文字の使う訳が大文字にも一致するので、この形は AVOID として報告されない）
+g48	育て続ける	kept nurtured | keep nurturing	-	keep growing | keep training	大井氏 第12回 p.71「「作って終わり」ではなく、「育て続ける」」。たとえを残す。動詞の形は keep nurturing でよい。Blog #48 で初めて訳した
 g49	鵜呑み	at face value	-	swallow whole | blindly	大井氏 第12回 p.71「鵜呑みにせず」。not take … at face value と訳す。使う人を愚かに見せる訳を避ける。Blog #48 で初めて訳した
 g50	仕組み（ルール、体制、プロセス）	arrangement	-	-	大井氏 第10回 p.59 のデータガバナンスの「仕組み」。g36（第14回の鍵１の「仕組み」＝mechanism）とは別。mechanism は g36 の使う訳なので、この行の使わない訳には入れない（入れると g36 の正しい訳まで AVOID になる）。単数で使う。Blog #49 で初めて訳した
-g51	データ品質管理（DQM）	data quality management (DQM)	-	DQM: Data Quality Management	大井氏 第10回 p.56。英語で同じ語を二度続けない。Blog #49
-g52	データガバナンス	data governance	-	-	大井氏 第10回 p.59。Blog #49
-g53	データスチュワードシップ	data stewardship	-	-	大井氏 第10回 p.59。担当者はデータスチュワード（data steward）。Blog #49
-g54	セキュリティ・バイ・デザイン／プライバシー・バイ・デザイン	security by design / privacy by design	-	-	大井氏 第11回 p.65（第6回 p.35 にも）。Blog #49
-g55	改正個人情報保護法（APPI）	Japan's amended Act on the Protection of Personal Information (APPI)	-	-	大井氏 第11回 p.65 の表記。初出で Japan's を付ける。法令の中身は筆者が確かめていないと書く。Blog #49
-g56	経営リスク	business risk	-	management risk	management risk は経営陣が生むリスクに読める。Blog #49
-g57	生体情報（ウェアラブルデバイスからの）	physiological data	-	biometric data	biometric data は GDPR の定義語で、原文より狭く法的に重い。Blog #49
-g58	直接的コスト／間接的コスト	direct costs / indirect costs	-	-	大井氏 第5回 p.28。Blog #50
-g59	ベースライン	baseline	-	-	大井氏 第3回 p.19 の「導入前の現状（ベースライン）」。骨子 #17.25 の反実仮想のベースライン（counterfactual）とは役割が違うことを書き分ける。Blog #50
-g60	事前対策	measures taken in advance	-	preventive measures	preventive は予防保全（g32）と重なり、氏が予兆管理と区別しているものに読める。大井氏 第5回 p.28。Blog #50
-g61	変数表	variable table	-	table of variables	Blog #41 英語版にそろえる。Blog #50
-g62	意思決定フロー	decision-making flow	-	-	大井氏 第5回 p.29 のステップ2の名。g37（第14回の鍵２の「フロー」＝flow）とは別。Blog #50
-g63	経営企画/DX推進	the corporate planning and DX promotion functions	-	the DX office	原文にない部署名（office）を作らない。骨子 #17.25 p.7。Blog #50
+g51	データ品質管理	data quality management (DQM)	-	DQM: Data Quality Management	大井氏 第10回 p.56 の「データ品質管理（DQM: Data Quality Management）」。英語で同じ語を二度続けない。Blog #49 で初めて訳した
+g52	データガバナンス	data governance	-	-	大井氏 第10回 p.59。Blog #49 で初めて訳した
+g53	データスチュワードシップ	data stewardship	-	-	大井氏 第10回 p.59。担当者はデータスチュワード（data steward）。Blog #49 で初めて訳した
+g54	セキュリティ・バイ・デザイン	security by design	-	-	大井氏 第11回 p.65（第6回 p.35 にも）。Blog #49 で初めて訳した
+g55	改正個人情報保護法（APPI）	Japan's amended Act on the Protection of Personal Information (APPI)	-	-	大井氏 第11回 p.65 の表記。初出で Japan's を付ける。法令の中身は筆者が確かめていないと書く。Blog #49 で初めて訳した
+g56	経営リスク	business risk	-	management risk	management risk は経営陣が生むリスクに読める。Blog #49 で初めて訳した
+g57	生体情報	physiological data	-	biometric data	ウェアラブルデバイスからの生体情報。biometric data は GDPR の定義語で、原文より狭く法的に重い。Blog #49 で初めて訳した
+g58	直接的コスト	direct costs	-	-	大井氏 第5回 p.28。Blog #50 で初めて訳した
+g59	ベースライン	baseline	-	-	大井氏 第3回 p.19 の「導入前の現状（ベースライン）」。骨子 #17.25 の反実仮想のベースライン（counterfactual）とは役割が違うことを書き分ける。Blog #50 で初めて訳した
+g60	事前対策	measures taken in advance	-	preventive measures	preventive は予防保全（g32）と重なり、氏が予兆管理と区別しているものに読める。大井氏 第5回 p.28。Blog #50 で初めて訳した
+g61	変数表	variable table	-	table of variables	Blog #41 英語版で初めて使った訳にそろえる（このキットの用語集には Blog #50 で加えた）
+g62	意思決定フロー	decision-making flow	-	-	大井氏 第14回の鍵２の説明（Blog #46）と第5回 p.29 のステップ2の名。g37（鍵２の「フロー」＝flow）とは別。Blog #46 で初めて訳した（このキットの用語集には Blog #50 で加えた）
+g63	経営企画/DX推進	the corporate planning and DX promotion functions	-	the DX office	原文にない部署名（office）を作らない。骨子 #17.25 p.7。Blog #50 で初めて訳した
+g64	プライバシー・バイ・デザイン	privacy by design	-	-	大井氏 第11回 p.65（第6回 p.35 にも）。Blog #49 で初めて訳した
+g65	間接的コスト	indirect costs	-	-	大井氏 第5回 p.28。Blog #50 で初めて訳した

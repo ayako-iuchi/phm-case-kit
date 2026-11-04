@@ -85,7 +85,7 @@ English: [README.md](README.md)
 
     python3 -I tools/glosscheck.py register/glossary_series.tsv --pair ja.md=en.md
 
-用語集は、Hypothetical Technical Blog #37〜#41 の英訳時の点検から作りました。使う訳も違う訳も、公開された英語版に実際に出てくる訳です。使わない訳は、点検が避けるよう勧めた訳で、記事に出てくるのは1つ（Predictive Management）だけです。記事の間で訳が違ったものは、点検と連載の決まりに沿って使う訳を決めました（公式の英語名が見つからなかった名前は、小文字の説明で訳す）。5本にかけた結果を `evidence/` に置きます。記事そのものはキットに入れていません。版 1.8 で、Blog #45〜#50 の英訳時の点検から g31〜g63 を足しました（全62語。g28 はありません）。どの記事で初めて訳したかは、各行の note にあります。仕組み（g36 は mechanism、g50 は arrangement）のように二つの行が同じ日本語の語を持つときは、一方が使う訳を他方の使わない訳に入れません。行どうしの形は比べないからです。
+用語集は、Hypothetical Technical Blog #37〜#41 の英訳時の点検から作りました。使う訳も違う訳も、公開された英語版に実際に出てくる訳です。使わない訳は、点検が避けるよう勧めた訳で、記事に出てくるのは1つ（Predictive Management）だけです。記事の間で訳が違ったものは、点検と連載の決まりに沿って使う訳を決めました（公式の英語名が見つからなかった名前は、小文字の説明で訳す）。5本にかけた結果を `evidence/` に置きます。記事そのものはキットに入れていません。版 1.8 で、Blog #45〜#50 の英訳時の点検から g31〜g65 を足しました（全64語。g28 はありません）。どの記事で初めて訳したかは、各行の note にあります。仕組み（g36 は mechanism、g50 は arrangement）のように二つの行が同じ日本語の語を持つときは、一方が使う訳を他方の使わない訳に入れません。行どうしの形は比べないからです。日本語はそのままの文字列で照らすので、`--pair` では長い語の中の短い語（g50 の意味の仕組み）が、別の行の MISSING として報告されることがあります。
 
 ## テスト
 
@@ -121,7 +121,7 @@ English: [README.md](README.md)
 - Hypothetical Technical Blog #42「その引用は原文どおりか」（2026年10月30日）：`quotediff.py`、`register/quotes_hcs17.tsv`。https://note.com/ayako_iuchi/n/n76952570880c
 - Hypothetical Technical Blog #43「その1枚に出典はあるか」（2026年10月30日）：`briefcheck.py`、`templates/`、`examples/`。https://note.com/ayako_iuchi/n/nde939c5c6ca0
 - Hypothetical Technical Blog #44「その訳語は毎回同じか」（2026年10月30日）：`glosscheck.py`、`register/glossary_series.tsv`。https://note.com/ayako_iuchi/n/n3f3d592630ca
-- Hypothetical Technical Blog #45〜#50（日本語版 2026年10月31日。英語版はこのリリースの後に公開）：`register/glossary_series.tsv`（g31〜g63）
+- Hypothetical Technical Blog #45〜#50（日本語版 2026年10月31日。英語版はこのリリースの後に公開）：`register/glossary_series.tsv`（g31〜g65）
 
 ## 決まり
 

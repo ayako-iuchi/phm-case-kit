@@ -85,7 +85,7 @@ Both texts are compared without whitespace and after Unicode NFKC. Classes: `EXA
 
     python3 -I tools/glosscheck.py register/glossary_series.tsv --pair ja.md=en.md
 
-The glossary was drafted from the translation checks of Hypothetical Technical Blog #37–#41. The renderings to use and the variants all appear in their published English versions; where the posts disagreed, the rendering to use follows the checks and the series' rules (for a name with no official English version found, a lowercase description). The renderings to avoid are the ones the checks advised against; only one of them ("Predictive Management") appears in the posts. The run on those five posts is in `evidence/`; the posts themselves are not in the kit. Version 1.8 adds g31–g63 (62 terms in all; there is no g28) from the translation checks of Blog #45–#50; each note says which post first used the term. Where two rows share a Japanese word, such as 仕組み (g36 *mechanism*, g50 *arrangement*), a rendering one row uses is not listed as one the other avoids, since forms of different rows are not compared.
+The glossary was drafted from the translation checks of Hypothetical Technical Blog #37–#41. The renderings to use and the variants all appear in their published English versions; where the posts disagreed, the rendering to use follows the checks and the series' rules (for a name with no official English version found, a lowercase description). The renderings to avoid are the ones the checks advised against; only one of them ("Predictive Management") appears in the posts. The run on those five posts is in `evidence/`; the posts themselves are not in the kit. Version 1.8 adds g31–g65 (64 terms in all; there is no g28) from the translation checks of Blog #45–#50; each note says which post first used the term. Where two rows share a Japanese word, such as 仕組み (g36 *mechanism*, g50 *arrangement*), a rendering one row uses is not listed as one the other avoids, since forms of different rows are not compared. The Japanese of a row is matched as plain text, so with `--pair` a shorter term inside a longer one (仕組み in g50's sense) can be reported MISSING for the wrong row.
 
 ## Tests
 
@@ -121,7 +121,7 @@ The tests use a synthetic source written for them.
 - Hypothetical Technical Blog #42, *Is That Quotation Word for Word?* (30 October 2026): `quotediff.py`, `register/quotes_hcs17.tsv`. https://note.com/ayako_iuchi/n/nf4aef63d166c
 - Hypothetical Technical Blog #43, *Does That One Page Show Its Sources?* (30 October 2026): `briefcheck.py`, `templates/`, `examples/`. https://note.com/ayako_iuchi/n/nc875c44eede5
 - Hypothetical Technical Blog #44, *Is It the Same English Every Time?* (31 October 2026): `glosscheck.py`, `register/glossary_series.tsv`. https://note.com/ayako_iuchi/n/n93219411f278
-- Hypothetical Technical Blog #45–#50 (Japanese versions 31 October 2026; English versions published after this release): `register/glossary_series.tsv` (g31–g63)
+- Hypothetical Technical Blog #45–#50 (Japanese versions 31 October 2026; English versions published after this release): `register/glossary_series.tsv` (g31–g65)
 
 ## Ground rules
 
