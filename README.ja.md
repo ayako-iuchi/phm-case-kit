@@ -115,6 +115,8 @@ English: [README.md](README.md)
 
 - `v1.8` → 3c3190e。2026年11月4日（13:09 JST）に筆者が GitHub で作成。改変禁止（immutable）。作成時点の最新のリリース（Latest）。
 
+- `v1.9` → 6f4ef2f。2026年11月4日（15:21 JST）に筆者が GitHub で作成。改変禁止（immutable）。作成時点の最新のリリース（Latest）。
+
 ## キットを使う記事
 
 - Hypothetical Technical Blog #37「不一致0件は何を確かめたか」（2026年10月28日）：`quotecheck.py`、`termcount.py`。https://note.com/ayako_iuchi/n/n280b77ac18ec

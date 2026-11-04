@@ -115,6 +115,8 @@ The tests use a synthetic source written for them.
 
 - `v1.8` → 3c3190e, made by the author on GitHub on 4 November 2026 (13:09 JST). Immutable. It was the latest release when it was made.
 
+- `v1.9` → 6f4ef2f, made by the author on GitHub on 4 November 2026 (15:21 JST). Immutable. It was the latest release when it was made.
+
 ## Posts that use the kit
 
 - Hypothetical Technical Blog #37, *What This Zero Checked* (28 October 2026; English, 29 October): `quotecheck.py`, `termcount.py`. https://note.com/ayako_iuchi/n/ne55386ce1ffc
