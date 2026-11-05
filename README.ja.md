@@ -127,12 +127,12 @@ English: [README.md](README.md)
 - Hypothetical Technical Blog #42「その引用は原文どおりか」（2026年10月30日）：`quotediff.py`、`register/quotes_hcs17.tsv`。https://note.com/ayako_iuchi/n/n76952570880c
 - Hypothetical Technical Blog #43「その1枚に出典はあるか」（2026年10月30日）：`briefcheck.py`、`templates/`、`examples/`。https://note.com/ayako_iuchi/n/nde939c5c6ca0
 - Hypothetical Technical Blog #44「その訳語は毎回同じか」（2026年10月30日）：`glosscheck.py`、`register/glossary_series.tsv`。https://note.com/ayako_iuchi/n/n3f3d592630ca
-- Hypothetical Technical Blog #45「予兆管理と予知保全は同じか」（2026年10月31日。英語版 11月4日）：`register/glossary_series.tsv`（g31〜g34）。https://note.com/ayako_iuchi/n/n96bad57d1b00
-- Hypothetical Technical Blog #46「３つの鍵はどうつながるか」（2026年10月31日。英語版 11月4日）：`register/glossary_series.tsv`（g35〜g38）。https://note.com/ayako_iuchi/n/nbba19e7743df
-- Hypothetical Technical Blog #47「予兆管理を動かすのは誰か」（2026年10月31日。英語版 11月4日）：`register/glossary_series.tsv`（g39〜g42）。https://note.com/ayako_iuchi/n/n84cbbde09e93
-- Hypothetical Technical Blog #48「AIは何をして、何をしないか」（2026年10月31日。英語版 11月4日）：`register/glossary_series.tsv`（g43〜g49）。https://note.com/ayako_iuchi/n/nb2501547e111
-- Hypothetical Technical Blog #49「そのデータはどう整え、どう守るか」（2026年10月31日。英語版 11月4日）：`register/glossary_series.tsv`（g50〜g65、#50 と共通）。https://note.com/ayako_iuchi/n/n3f4a13e1dbfa
-- Hypothetical Technical Blog #50「止まったときの本当のコストは何か」（2026年10月31日。英語版 11月4日）：`register/glossary_series.tsv`（g50〜g65、#49 と共通）。https://note.com/ayako_iuchi/n/n2a054306b604
+- Hypothetical Technical Blog #45「予兆管理と予知保全は同じか」（2026年10月31日。英語版 2026年11月4日）：`register/glossary_series.tsv`（g31〜g34）。https://note.com/ayako_iuchi/n/n96bad57d1b00
+- Hypothetical Technical Blog #46「３つの鍵はどうつながるか」（2026年10月31日。英語版 2026年11月4日）：`register/glossary_series.tsv`（g35〜g38）。https://note.com/ayako_iuchi/n/nbba19e7743df
+- Hypothetical Technical Blog #47「予兆管理を動かすのは誰か」（2026年10月31日。英語版 2026年11月4日）：`register/glossary_series.tsv`（g39〜g42）。https://note.com/ayako_iuchi/n/n84cbbde09e93
+- Hypothetical Technical Blog #48「AIは何をして、何をしないか」（2026年10月31日。英語版 2026年11月4日）：`register/glossary_series.tsv`（g43〜g49）。https://note.com/ayako_iuchi/n/nb2501547e111
+- Hypothetical Technical Blog #49「そのデータはどう整え、どう守るか」（2026年10月31日。英語版 2026年11月4日）：`register/glossary_series.tsv`（g50〜g65、#50 と共通）。https://note.com/ayako_iuchi/n/n3f4a13e1dbfa
+- Hypothetical Technical Blog #50「止まったときの本当のコストは何か」（2026年10月31日。英語版 2026年11月4日）：`register/glossary_series.tsv`（g50〜g65、#49 と共通）。https://note.com/ayako_iuchi/n/n2a054306b604
 - Hypothetical Technical Blog #51「この架空事例はどこから来たか」（2026年11月4日。英語版はこのリリースの後に公開）：`register/glossary_series.tsv`（g66〜g82、#52〜#54 と共通）。https://note.com/ayako_iuchi/n/n43fc8c291ad8
 - Hypothetical Technical Blog #52「その海外拠点はどの国か」（2026年11月4日。英語版は同上）：`register/glossary_series.tsv`。https://note.com/ayako_iuchi/n/n7ac3dd1990a6
 - Hypothetical Technical Blog #53「そのアラートは信じられているか」（2026年11月4日。英語版は同上）：`register/numbers_hcs17.tsv`、`register/hcs17_image_tables.ja.txt`（v1.9）、`register/glossary_series.tsv`。https://note.com/ayako_iuchi/n/n429b3fb76c3b
