@@ -63,3 +63,20 @@ g62	意思決定フロー	decision-making flow	-	-	大井氏 第14回の鍵２�
 g63	経営企画/DX推進	the corporate planning and DX promotion functions	-	the DX office	原文にない部署名（office）を作らない。骨子 #17.25 p.7。Blog #50 で初めて訳した
 g64	プライバシー・バイ・デザイン	privacy by design	-	-	大井氏 第11回 p.65（第6回 p.35 にも）。Blog #49 で初めて訳した
 g65	間接的コスト	indirect costs	-	-	大井氏 第5回 p.28。Blog #50 で初めて訳した
+g66	先鋒案件	lead project	-	vanguard	全社横断DXの最初の案件（骨子 #17.24 p.2、6.2）。pilot は PoC と先鋒単体（g22）に取っておく。pilot project は大井氏 第3回 p.19 の「パイロットプロジェクト」の訳なので avoid に入れない。Blog #51 で初めて訳した
+g67	画像の表	image table	-	table image | table shown as an image	HCS #17 の表のうち、PDF で画像になっていてテキスト層にないもの。各記事の初出で一度だけ説明する。Blog #51 で初めて訳した
+g68	拠点	site	-	base	工場や事業所。海外8拠点＝eight overseas sites。Blog #51 で初めて訳した
+g69	国内5工場	the five plants in Japan	-	five domestic plants	HCS #17 p.22 の一文の訳は Blog #51・#52 でそろえた。Blog #51 で初めて訳した
+g70	誤検知	false alarm	-	false detection	g20（誤検知率＝false-alarm rate）にそろえる。Blog #53 で初めて訳した
+g71	アラーム疲れ	alarm fatigue	-	-	大井氏 第9回 p.52 の語。HCS #17 の「アラート疲れ」（g72）と書き分ける。Blog #53 で初めて訳した
+g72	アラート疲れ	alert fatigue	-	-	HCS #17 p.14 の語。大井氏の「アラーム疲れ」（g71）と書き分ける。Blog #53 で初めて訳した
+g73	即時対応アラート	immediate-response alert	-	-	HCS #17 p.14、#17.26 の区分の名。Blog #53 で初めて訳した
+g74	検知精度	detection accuracy	-	-	HCS #17 p.20 の表と #17.25 の語。precision は適合率（g19）の訳なので avoid に入れず、本文で書き分ける。Blog #53 で初めて訳した
+g75	検知リードタイム	detection lead time	-	-	HCS #17 p.5・p.20 の表の語。Blog #53 で初めて訳した
+g76	データ主権	data sovereignty	-	-	大井氏 第6回 p.34、第13回 p.75、HCS #17。Blog #52 で初めて訳した
+g77	チェコ	Czech Republic	Czechia	-	HCS #17 の画像の表の国名。著者の決定（2026-11-05）。Blog #52 で初めて訳した
+g78	同行	accompanying	-	going along with	データサイエンティストが現場のベテランに同行すること（HCS #17）。going along with は同意に読める。Blog #54 で初めて訳した
+g79	本人の了解	the person's agreement	agreed	consent	法的な同意（consent）に読ませない。Blog #54 で初めて訳した
+g80	名前を冠した呼称	designation bearing a person's name	-	-	特徴量パターンにベテランの名前を冠した呼び名（HCS #17）。Blog #54 で初めて訳した
+g81	暗黙知	tacit knowledge	-	-	Blog #52 で初めて訳した
+g82	訂正ログ	correction log	-	error log	連載の訂正の記録（log #N）。Blog #51 で用語集に加えた
