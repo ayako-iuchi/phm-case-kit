@@ -8,7 +8,7 @@ The kit holds the tools used to check quotes, figures and dated facts in hypothe
 
 ## Status
 
-Version 1.9, released on 4 November 2026 (version 1.8 the same day, version 1.7 on 30 October 2026, version 1.6 the same day, version 1.5 the same day, version 1.4 on 29 October 2026, versions 1.3, 1.2 and 1.1 the same day, version 1.0 on 28 October 2026). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
+Version 1.10, released on 5 November 2026 (version 1.9 on 4 November 2026, version 1.8 the same day, version 1.7 on 30 October 2026, version 1.6 the same day, version 1.5 the same day, version 1.4 on 29 October 2026, versions 1.3, 1.2 and 1.1 the same day, version 1.0 on 28 October 2026). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
 
 | Tool | What it does | Post |
 | --- | --- | --- |
@@ -87,7 +87,7 @@ Both texts are compared without whitespace and after Unicode NFKC. Classes: `EXA
 
     python3 -I tools/glosscheck.py register/glossary_series.tsv --pair ja.md=en.md
 
-The glossary was drafted from the translation checks of Hypothetical Technical Blog #37–#41. The renderings to use and the variants all appear in their published English versions; where the posts disagreed, the rendering to use follows the checks and the series' rules (for a name with no official English version found, a lowercase description). The renderings to avoid are the ones the checks advised against; only one of them ("Predictive Management") appears in the posts. The run on those five posts is in `evidence/`; the posts themselves are not in the kit. Version 1.8 adds g31–g65 (64 terms in all; there is no g28) from the translation checks of Blog #45–#50; each note says which post first used the term. Where two rows share a Japanese word, such as 仕組み (g36 *mechanism*, g50 *arrangement*), a rendering one row uses is not listed as one the other avoids, since forms of different rows are not compared. The Japanese of a row is matched as plain text, so with `--pair` a shorter term inside a longer one (仕組み in g50's sense) can be reported MISSING for the wrong row.
+The glossary was drafted from the translation checks of Hypothetical Technical Blog #37–#41. The renderings to use and the variants all appear in their published English versions; where the posts disagreed, the rendering to use follows the checks and the series' rules (for a name with no official English version found, a lowercase description). The renderings to avoid are the ones the checks advised against; only one of them ("Predictive Management") appears in the posts. The run on those five posts is in `evidence/`; the posts themselves are not in the kit. Version 1.8 adds g31–g65 (64 terms in all; there is no g28) from the translation checks of Blog #45–#50; each note says which post first used the term. Version 1.10 adds g66–g82 (81 terms in all) from the translation checks of Blog #51–#54. Where two rows share a Japanese word, such as 仕組み (g36 *mechanism*, g50 *arrangement*), a rendering one row uses is not listed as one the other avoids, since forms of different rows are not compared. The Japanese of a row is matched as plain text, so with `--pair` a shorter term inside a longer one (仕組み in g50's sense) can be reported MISSING for the wrong row.
 
 ## Tests
 
@@ -120,14 +120,20 @@ The tests use a synthetic source written for them.
 ## Posts that use the kit
 
 - Hypothetical Technical Blog #37, *What This Zero Checked* (28 October 2026; English, 29 October): `quotecheck.py`, `termcount.py`. https://note.com/ayako_iuchi/n/ne55386ce1ffc
-- Hypothetical Technical Blog #38, *Where Did That Number Come From?* (29 October 2026): `sourcecheck.py`, `register/sources_hcs17.tsv`. https://note.com/ayako_iuchi/n/nd17f26a59311
-- Hypothetical Technical Blog #39, *What Does That 82% Measure?* (30 October 2026): `numcheck.py`, `register/numbers_hcs17.tsv`. https://note.com/ayako_iuchi/n/n4cb5a26625db
+- Hypothetical Technical Blog #38, *Where Did That Number Come From?* (29 October 2026): `sourcecheck.py`, `register/sources_hcs17.tsv`. https://note.com/ayako_iuchi/n/n4cb5a26625db (corrected in v1.10; see CHANGELOG)
+- Hypothetical Technical Blog #39, *What Does That 82% Measure?* (30 October 2026): `numcheck.py`, `register/numbers_hcs17.tsv`. https://note.com/ayako_iuchi/n/nd17f26a59311 (corrected in v1.10)
 - Hypothetical Technical Blog #40, *True as of When?* (30 October 2026): `datecheck.py`, `register/dated_hcs17.tsv`. https://note.com/ayako_iuchi/n/n16c739264aab
 - Hypothetical Technical Blog #41, *How Was That 1.5 Years Calculated?* (30 October 2026): `calccheck.py`, `register/calc_hcs17_25.tsv`. https://note.com/ayako_iuchi/n/n4489e7f4efd9
 - Hypothetical Technical Blog #42, *Is That Quotation Word for Word?* (30 October 2026): `quotediff.py`, `register/quotes_hcs17.tsv`. https://note.com/ayako_iuchi/n/nf4aef63d166c
 - Hypothetical Technical Blog #43, *Does That One Page Show Its Sources?* (30 October 2026): `briefcheck.py`, `templates/`, `examples/`. https://note.com/ayako_iuchi/n/nc875c44eede5
 - Hypothetical Technical Blog #44, *Is It the Same English Every Time?* (31 October 2026): `glosscheck.py`, `register/glossary_series.tsv`. https://note.com/ayako_iuchi/n/n93219411f278
-- Hypothetical Technical Blog #45–#50 (Japanese versions 31 October 2026; English versions published after this release): `register/glossary_series.tsv` (g31–g65)
+- Hypothetical Technical Blog #45, *Are Yochō Kanri and predictive maintenance the same?* (Japanese 31 October 2026; English 4 November 2026): `register/glossary_series.tsv` (g31–g34). https://note.com/ayako_iuchi/n/ne0c92e4ab9b4
+- Hypothetical Technical Blog #46, *How do the three keys fit together?* (Japanese 31 October 2026; English 4 November 2026): `register/glossary_series.tsv` (g35–g38). https://note.com/ayako_iuchi/n/nedf6bd348939
+- Hypothetical Technical Blog #47, *Who makes Yochō Kanri work?* (Japanese 31 October 2026; English 4 November 2026): `register/glossary_series.tsv` (g39–g42). https://note.com/ayako_iuchi/n/n1887a7499de2
+- Hypothetical Technical Blog #48, *What does AI do, and what doesn't it do?* (Japanese 31 October 2026; English 4 November 2026): `register/glossary_series.tsv` (g43–g49). https://note.com/ayako_iuchi/n/n6b6980fd6459
+- Hypothetical Technical Blog #49, *How is that data prepared, and how is it protected?* (Japanese 31 October 2026; English 4 November 2026): `register/glossary_series.tsv` (g50–g65, with #50). https://note.com/ayako_iuchi/n/n2fad2cea6a47
+- Hypothetical Technical Blog #50, *What does a stoppage really cost?* (Japanese 31 October 2026; English 4 November 2026): `register/glossary_series.tsv` (g50–g65, with #49). https://note.com/ayako_iuchi/n/n1d58ba862464
+- Hypothetical Technical Blog #51–#54 (Japanese versions 4 November 2026; English versions published after this release): `register/glossary_series.tsv` (g66–g82). Blog #53 also uses `register/numbers_hcs17.tsv` and `register/hcs17_image_tables.ja.txt` (v1.9).
 
 ## Ground rules
 
