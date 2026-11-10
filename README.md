@@ -117,6 +117,8 @@ The tests use a synthetic source written for them.
 
 - `v1.9` → 6f4ef2f, made by the author on GitHub on 4 November 2026 (15:21 JST). Immutable. It was the latest release when it was made.
 
+- `v1.10` → 0df75ac, made by the author on GitHub on 5 November 2026 (10:47 JST). Immutable. It was the latest release when it was made. The release commit and the fast-forward of `main` came before the English versions of Blog #51–#54 were published (5 November 2026, 09:58–10:07 JST), but the tag was made after them, as with `v1.4`.
+
 ## Posts that use the kit
 
 - Hypothetical Technical Blog #37, *What This Zero Checked* (28 October 2026; English, 29 October): `quotecheck.py`, `termcount.py`. https://note.com/ayako_iuchi/n/ne55386ce1ffc
@@ -133,7 +135,11 @@ The tests use a synthetic source written for them.
 - Hypothetical Technical Blog #48, *What does AI do, and what doesn't it do?* (Japanese 31 October 2026; English 4 November 2026): `register/glossary_series.tsv` (g43–g49). https://note.com/ayako_iuchi/n/n6b6980fd6459
 - Hypothetical Technical Blog #49, *How is that data prepared, and how is it protected?* (Japanese 31 October 2026; English 4 November 2026): `register/glossary_series.tsv` (g50–g65, with #50). https://note.com/ayako_iuchi/n/n2fad2cea6a47
 - Hypothetical Technical Blog #50, *What does a stoppage really cost?* (Japanese 31 October 2026; English 4 November 2026): `register/glossary_series.tsv` (g50–g65, with #49). https://note.com/ayako_iuchi/n/n1d58ba862464
-- Hypothetical Technical Blog #51–#54 (Japanese versions 4 November 2026; English versions published after this release): `register/glossary_series.tsv` (g66–g82). Blog #53 also uses `register/numbers_hcs17.tsv` and `register/hcs17_image_tables.ja.txt` (v1.9).
+- Hypothetical Technical Blog #51, *Where did this hypothetical case come from?* (Japanese 4 November 2026; English 5 November 2026): `register/glossary_series.tsv` (g66–g82, with #52–#54). https://note.com/ayako_iuchi/n/n6e47d1c3e347
+- Hypothetical Technical Blog #52, *Which countries are those overseas sites in?* (Japanese 4 November 2026; English 5 November 2026): `register/glossary_series.tsv`. https://note.com/ayako_iuchi/n/n3f9ce26de58f
+- Hypothetical Technical Blog #53, *Do people trust that alert?* (Japanese 4 November 2026; English 5 November 2026): `register/numbers_hcs17.tsv`, `register/hcs17_image_tables.ja.txt` (v1.9), `register/glossary_series.tsv`. https://note.com/ayako_iuchi/n/n10d7d6b9b139
+- Hypothetical Technical Blog #54, *How did that resistance turn into cooperation?* (Japanese 4 November 2026; English 5 November 2026): `register/glossary_series.tsv`. https://note.com/ayako_iuchi/n/n91bf1b79305e
+- Hypothetical Technical Blog #55, *Where are those conditions for stopping written?* (Japanese 7 November 2026; English published after this release): `register/glossary_series.tsv` (g83–).
 
 ## Ground rules
 
