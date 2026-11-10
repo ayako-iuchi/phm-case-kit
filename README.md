@@ -117,7 +117,7 @@ The tests use a synthetic source written for them.
 
 - `v1.9` → 6f4ef2f, made by the author on GitHub on 4 November 2026 (15:21 JST). Immutable. It was the latest release when it was made.
 
-- `v1.10` → 0df75ac, made by the author on GitHub on 5 November 2026 (10:47 JST). Immutable. It was the latest release when it was made. The release commit and the fast-forward of `main` came before the English versions of Blog #51–#54 were published (5 November 2026, 09:58–10:07 JST), but the tag was made after them, as with `v1.4`.
+- `v1.10` → 0df75ac, made by the author on GitHub on 5 November 2026 (10:47 JST). Immutable. It was the latest release when it was made. The release commit (09:47 JST) came before the English versions of Blog #51–#54 were published (5 November 2026, 09:58–10:07 JST), but the tag was made after them, as with `v1.4`.
 
 ## Posts that use the kit
 
