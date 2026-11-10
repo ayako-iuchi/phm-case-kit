@@ -83,18 +83,18 @@ g82	訂正ログ	correction log	-	error log	連載の訂正の記録（log #N）
 g83	中止	stop	-	kill | abort	#17.24・#17.25・#17.28 と筆者の地の文の語。kill は go/kill の通念と暴力的な比喩を持ち込む。Blog #55 で初めて訳した
 g84	中止の条件	conditions for stopping	-	kill criteria	筆者の地の文の語（題、要点）。Blog #55 で初めて訳した
 g85	撤退	withdraw	-	retreat | abandon	#17.25 p.6・p.7、#17 p.23。「撤退オプション」＝an option to withdraw。abandonment option は財務の定義語なので使わない。Blog #55 で初めて訳した
-g86	ステージゲート	stage gate	-	Stage-Gate	#17.24 の語。小文字。登録商標の Stage-Gate（R. G. Cooper の方法）と結びつけない。大井氏の連載（pp.1–119）の語ではない。Blog #55 で初めて訳した
-g87	段階的	step by step	-	staged	大井氏 第17回 p.100（「段階的な投資拡大」＝expanding investment step by step、「段階的な予算配分計画」＝a phased budget allocation plan）、第16回 p.93 の英語（Phased Approach）。staged は骨子のステージゲートと同じ語根に読めるので避ける。なお保存した PDF の範囲外（p.139、同じマガジンの別記事）に「段階的投資（ステージゲート法）」がある（Blog #55 英語版の最終点検、2026-11-10）。この連載が引く範囲（pp.1–119）にはない。Blog #55 で初めて訳した
+g86	ステージゲート	stage gate	-	Stage-Gate	#17.24 の語。小文字。登録商標の Stage-Gate（R. G. Cooper の方法）と結びつけない。大井氏の連載（pp.1–119）の語ではない。Blog #51 英語版で初めて訳した（stage gates × swim lanes。このキットの用語集には Blog #55 で加えた）
+g87	段階的	step by step	-	-	大井氏 第17回 p.100（「段階的な投資拡大」＝expanding investment step by step、「段階的な予算配分計画」＝a phased budget allocation plan）、第16回 p.93 の英語（Phased Approach）。大井氏の「段階的」を staged と訳さない（骨子のステージゲートと同じ語根に読める）。ただし #17 p.20 の「段階展開後」を Blog #41 英語版が staged roll-out と訳したのは正しいので、staged は avoid に入れない。第16回 p.93 の「段階的展開」は Blog #52 英語版で rolling out in stages と訳した（この行の訳を含まないので --pair では MISSING になる）。なお保存した PDF の範囲外（p.139、同じマガジンの別記事）に「段階的投資（ステージゲート法）」がある（Blog #55 英語版の最終点検、2026-11-10）。この連載が引く範囲（pp.1–119）にはない。Blog #48 英語版で初めて訳した（このキットの用語集には Blog #55 で加えた）
 g88	失敗許容範囲	the tolerated range of failure	-	fault tolerance | risk appetite	#17.24 7.2、#17 p.10。許容帯（g89）と書き分ける（著者の決定、2026-11-10）。2度目からは the tolerated range とも書く。Blog #55 で初めて訳した
 g89	許容帯	tolerance band	-	-	#17.24 7.2、#17.28 p.5。「失敗許容帯の上限」＝the upper limit of the tolerance band for failure。Blog #55 で初めて訳した
-g90	中止トリガー	trigger for stopping	-	kill switch	#17.28 p.5。Blog #55 で初めて訳した
-g91	装置	device	-	kill switch	#17.24 p.1、#17.28 p.5・p.6。mechanism は g36 の訳なので avoid に入れない（入れると g36 の正しい訳まで AVOID になる）。人が守る。Blog #55 で初めて訳した
+g90	中止トリガー	trigger for stopping	-	kill switch	#17.28 p.5・p.6。Blog #55 で初めて訳した
+g91	装置	device	-	-	#17.24 p.1、#17.28 p.5・p.6。mechanism は g36 の訳なので avoid に入れない（入れると g36 の正しい訳まで AVOID になる）。kill switch は g90 の avoid にある。人が守る。Blog #55 で初めて訳した
 g92	承認ハードル	hurdle to approval	-	lower the bar	lower the bar は「基準を下げる」に読める。Blog #55 で初めて訳した
 g93	延命	the project's life	-	life support | zombie	#17.28 p.5「延命する装置」＝a device that prolongs the project's life（著者の決定、2026-11-10）。Blog #55 で初めて訳した
-g94	空欄	blank	-	-	#17.28 p.6「空欄です」＝is left blank、筆者の地の文。gap、hole は使わない（gap は別の意味で正しく使うので avoid に入れない）。Blog #55 で初めて訳した
-g95	予算を回収	taken back	-	claw back | recoup	#17.24 7.2「KPI未達は翌期予算回収」＝if KPIs are not met, the next period's budget is taken back。翌期＝the next period（著者の決定、2026-11-10）。taking back the budget とも書く。g21（回収期間＝payback period）と書き分ける。payback は g21 の訳なので avoid に入れない。Blog #55 で初めて訳した
-g96	経営会議	management committee	-	executive committee	#17.24 p.1、#17 p.14。取締役会（board of directors）の手前の会議体。会社制度の説明を足さない（著者の決定、2026-11-10）。Blog #55 で初めて訳した
+g94	空欄	blank	-	-	#17.28 p.6「空欄です」＝is left blank、筆者の地の文。gap、hole は使わない（gap は別の意味で正しく使うので avoid に入れない）。Blog #38 英語版で初めて訳した（このキットの用語集には Blog #55 で加えた）
+g95	予算を回収	taken back	-	claw back | recoup	#17.24 7.2「KPI未達は翌期予算回収」（原文は「を」なし。この行は Blog #55 の地の文「翌期の予算を回収」に合わせた）＝if KPIs are not met, the next period's budget is taken back。翌期＝the next period（著者の決定、2026-11-10）。taking back the budget とも書く。g21（回収期間＝payback period）と書き分ける。payback は g21 の訳なので avoid に入れない。Blog #55 で初めて訳した
+g96	経営会議	management committee	-	executive committee	#17.24 p.1、#17 p.14。経営会議＝management committee は著者の決定（2026-11-10）。取締役会（board of directors）の手前の会議体。会社制度の説明は足さない。Blog #55 で初めて訳した
 g97	腹落ち	being convinced	-	gut feeling	#17.25 p.1「提案書＝腹落ちと決断」。Blog #55 で初めて訳した
 g98	数字の防御力	the defensibility of the numbers	-	bulletproof	#17.25 p.1。Blog #50 英語版の「防御力最大の構成」＝the most defensible structure にそろえる。Blog #55 で初めて訳した
-g99	受入基準	acceptance criteria	-	-	#17.26 I-6、#17.24 付録A、#17.25 8。Blog #55 で初めて訳した（このキットの用語集では）
+g99	受入基準	acceptance criteria	-	-	#17.26 I-6、#17.24 付録A、#17.25 8。Blog #49 英語版で初めて訳した（このキットの用語集には Blog #55 で加えた）
 g100	稟議	internal proposal	the internal approval of a proposal	ringi | consensus-building	g03（見出し）の地の文版。語として挙げるときは「稟議」を残し、(the internal approval of a proposal) と機能だけを私訳する（Blog #44 英語版の言い方、著者の決定 2026-11-10）。Blog #55 で初めて行にした

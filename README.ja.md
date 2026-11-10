@@ -117,7 +117,7 @@ English: [README.md](README.md)
 
 - `v1.9` → 6f4ef2f。2026年11月4日（15:21 JST）に筆者が GitHub で作成。改変禁止（immutable）。作成時点の最新のリリース（Latest）。
 
-- `v1.10` → 0df75ac。2026年11月5日（10:47 JST）に筆者が GitHub で作成。改変禁止（immutable）。作成時点の最新のリリース（Latest）。リリースのコミットと `main` の早送りは Blog #51〜#54 の英語版の公開（2026年11月5日 09:58〜10:07 JST）より前でしたが、タグの作成はその後になりました（`v1.4` と同じ）。
+- `v1.10` → 0df75ac。2026年11月5日（10:47 JST）に筆者が GitHub で作成。改変禁止（immutable）。作成時点の最新のリリース（Latest）。リリースのコミット（09:47 JST）は Blog #51〜#54 の英語版の公開（2026年11月5日 09:58〜10:07 JST）より前でしたが、タグの作成はその後になりました（`v1.4` と同じ）。
 
 ## キットを使う記事
 
@@ -135,10 +135,10 @@ English: [README.md](README.md)
 - Hypothetical Technical Blog #48「AIは何をして、何をしないか」（2026年10月31日。英語版 2026年11月4日）：`register/glossary_series.tsv`（g43〜g49）。https://note.com/ayako_iuchi/n/nb2501547e111
 - Hypothetical Technical Blog #49「そのデータはどう整え、どう守るか」（2026年10月31日。英語版 2026年11月4日）：`register/glossary_series.tsv`（g50〜g65、#50 と共通）。https://note.com/ayako_iuchi/n/n3f4a13e1dbfa
 - Hypothetical Technical Blog #50「止まったときの本当のコストは何か」（2026年10月31日。英語版 2026年11月4日）：`register/glossary_series.tsv`（g50〜g65、#49 と共通）。https://note.com/ayako_iuchi/n/n2a054306b604
-- Hypothetical Technical Blog #51「この架空事例はどこから来たか」（2026年11月4日。英語版はこのリリースの後に公開）：`register/glossary_series.tsv`（g66〜g82、#52〜#54 と共通）。https://note.com/ayako_iuchi/n/n43fc8c291ad8
-- Hypothetical Technical Blog #52「その海外拠点はどの国か」（2026年11月4日。英語版は同上）：`register/glossary_series.tsv`。https://note.com/ayako_iuchi/n/n7ac3dd1990a6
-- Hypothetical Technical Blog #53「そのアラートは信じられているか」（2026年11月4日。英語版は同上）：`register/numbers_hcs17.tsv`、`register/hcs17_image_tables.ja.txt`（v1.9）、`register/glossary_series.tsv`。https://note.com/ayako_iuchi/n/n429b3fb76c3b
-- Hypothetical Technical Blog #54「その抵抗はどう協力に変わったか」（2026年11月4日。英語版は同上）：`register/glossary_series.tsv`。https://note.com/ayako_iuchi/n/n6c87d0f63554
+- Hypothetical Technical Blog #51「この架空事例はどこから来たか」（2026年11月4日。英語版 2026年11月5日）：`register/glossary_series.tsv`（g66〜g82、#52〜#54 と共通）。https://note.com/ayako_iuchi/n/n43fc8c291ad8
+- Hypothetical Technical Blog #52「その海外拠点はどの国か」（2026年11月4日。英語版 2026年11月5日）：`register/glossary_series.tsv`。https://note.com/ayako_iuchi/n/n7ac3dd1990a6
+- Hypothetical Technical Blog #53「そのアラートは信じられているか」（2026年11月4日。英語版 2026年11月5日）：`register/numbers_hcs17.tsv`、`register/hcs17_image_tables.ja.txt`（v1.9）、`register/glossary_series.tsv`。https://note.com/ayako_iuchi/n/n429b3fb76c3b
+- Hypothetical Technical Blog #54「その抵抗はどう協力に変わったか」（2026年11月4日。英語版 2026年11月5日）：`register/glossary_series.tsv`。https://note.com/ayako_iuchi/n/n6c87d0f63554
 - Hypothetical Technical Blog #55「その中止条件は、どこに書いてあるか」（2026年11月7日。英語版はこのリリースの後に公開）：`register/glossary_series.tsv`（g83〜g100）。https://note.com/ayako_iuchi/n/n6cd892dde080
 
 ## 決まり
