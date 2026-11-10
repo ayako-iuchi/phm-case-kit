@@ -8,7 +8,7 @@ English: [README.md](README.md)
 
 ## 状態
 
-版 1.10、2026年11月5日にリリース（版 1.9 は2026年11月4日、版 1.8 は同じ日、版 1.7 は2026年10月30日、版 1.6 は同じ日、版 1.5 は同じ日、版 1.4 は2026年10月29日、版 1.3、1.2、1.1 は同じ日、版 1.0 は2026年10月28日）。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
+版 1.11、2026年11月10日にリリース（版 1.10 は2026年11月5日、版 1.9 は2026年11月4日、版 1.8 は同じ日、版 1.7 は2026年10月30日、版 1.6 は同じ日、版 1.5 は同じ日、版 1.4 は2026年10月29日、版 1.3、1.2、1.1 は同じ日、版 1.0 は2026年10月28日）。道具は、それを使う記事と一緒に追加します。標準ライブラリだけで動きます（Python 3.9 以降）。
 
 | 道具 | すること | 記事 |
 | --- | --- | --- |
@@ -87,7 +87,7 @@ English: [README.md](README.md)
 
     python3 -I tools/glosscheck.py register/glossary_series.tsv --pair ja.md=en.md
 
-用語集は、Hypothetical Technical Blog #37〜#41 の英訳時の点検から作りました。使う訳も違う訳も、公開された英語版に実際に出てくる訳です。使わない訳は、点検が避けるよう勧めた訳で、記事に出てくるのは1つ（Predictive Management）だけです。記事の間で訳が違ったものは、点検と連載の決まりに沿って使う訳を決めました（公式の英語名が見つからなかった名前は、小文字の説明で訳す）。5本にかけた結果を `evidence/` に置きます。記事そのものはキットに入れていません。版 1.8 で、Blog #45〜#50 の英訳時の点検から g31〜g65 を足しました（全64語。g28 はありません）。どの記事で初めて訳したかは、各行の note にあります。版 1.10 で、Blog #51〜#54 の英訳時の点検から g66〜g82 を足しました（全81語）。仕組み（g36 は mechanism、g50 は arrangement）のように二つの行が同じ日本語の語を持つときは、一方が使う訳を他方の使わない訳に入れません。行どうしの形は比べないからです。日本語はそのままの文字列で照らすので、`--pair` では長い語の中の短い語（g50 の意味の仕組み）が、別の行の MISSING として報告されることがあります。
+用語集は、Hypothetical Technical Blog #37〜#41 の英訳時の点検から作りました。使う訳も違う訳も、公開された英語版に実際に出てくる訳です。使わない訳は、点検が避けるよう勧めた訳で、記事に出てくるのは1つ（Predictive Management）だけです。記事の間で訳が違ったものは、点検と連載の決まりに沿って使う訳を決めました（公式の英語名が見つからなかった名前は、小文字の説明で訳す）。5本にかけた結果を `evidence/` に置きます。記事そのものはキットに入れていません。版 1.8 で、Blog #45〜#50 の英訳時の点検から g31〜g65 を足しました（全64語。g28 はありません）。どの記事で初めて訳したかは、各行の note にあります。版 1.10 で、Blog #51〜#54 の英訳時の点検から g66〜g82 を足しました（全81語）。版 1.11 で、Blog #55 の英訳時の点検から g83〜g100 を足しました（全99語）。仕組み（g36 は mechanism、g50 は arrangement）のように二つの行が同じ日本語の語を持つときは、一方が使う訳を他方の使わない訳に入れません。行どうしの形は比べないからです。日本語はそのままの文字列で照らすので、`--pair` では長い語の中の短い語（g50 の意味の仕組み）が、別の行の MISSING として報告されることがあります。
 
 ## テスト
 
@@ -139,7 +139,7 @@ English: [README.md](README.md)
 - Hypothetical Technical Blog #52「その海外拠点はどの国か」（2026年11月4日。英語版は同上）：`register/glossary_series.tsv`。https://note.com/ayako_iuchi/n/n7ac3dd1990a6
 - Hypothetical Technical Blog #53「そのアラートは信じられているか」（2026年11月4日。英語版は同上）：`register/numbers_hcs17.tsv`、`register/hcs17_image_tables.ja.txt`（v1.9）、`register/glossary_series.tsv`。https://note.com/ayako_iuchi/n/n429b3fb76c3b
 - Hypothetical Technical Blog #54「その抵抗はどう協力に変わったか」（2026年11月4日。英語版は同上）：`register/glossary_series.tsv`。https://note.com/ayako_iuchi/n/n6c87d0f63554
-- Hypothetical Technical Blog #55「その中止条件は、どこに書いてあるか」（2026年11月7日。英語版はこのリリースの後に公開）：`register/glossary_series.tsv`（g83〜）。https://note.com/ayako_iuchi/n/n6cd892dde080
+- Hypothetical Technical Blog #55「その中止条件は、どこに書いてあるか」（2026年11月7日。英語版はこのリリースの後に公開）：`register/glossary_series.tsv`（g83〜g100）。https://note.com/ayako_iuchi/n/n6cd892dde080
 
 ## 決まり
 

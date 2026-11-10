@@ -8,7 +8,7 @@ The kit holds the tools used to check quotes, figures and dated facts in hypothe
 
 ## Status
 
-Version 1.10, released on 5 November 2026 (version 1.9 on 4 November 2026, version 1.8 the same day, version 1.7 on 30 October 2026, version 1.6 the same day, version 1.5 the same day, version 1.4 on 29 October 2026, versions 1.3, 1.2 and 1.1 the same day, version 1.0 on 28 October 2026). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
+Version 1.11, released on 10 November 2026 (version 1.10 on 5 November 2026, version 1.9 on 4 November 2026, version 1.8 the same day, version 1.7 on 30 October 2026, version 1.6 the same day, version 1.5 the same day, version 1.4 on 29 October 2026, versions 1.3, 1.2 and 1.1 the same day, version 1.0 on 28 October 2026). Tools are added together with the posts that use them. Standard library only; Python 3.9 or later.
 
 | Tool | What it does | Post |
 | --- | --- | --- |
@@ -87,7 +87,7 @@ Both texts are compared without whitespace and after Unicode NFKC. Classes: `EXA
 
     python3 -I tools/glosscheck.py register/glossary_series.tsv --pair ja.md=en.md
 
-The glossary was drafted from the translation checks of Hypothetical Technical Blog #37–#41. The renderings to use and the variants all appear in their published English versions; where the posts disagreed, the rendering to use follows the checks and the series' rules (for a name with no official English version found, a lowercase description). The renderings to avoid are the ones the checks advised against; only one of them ("Predictive Management") appears in the posts. The run on those five posts is in `evidence/`; the posts themselves are not in the kit. Version 1.8 adds g31–g65 (64 terms in all; there is no g28) from the translation checks of Blog #45–#50; each note says which post first used the term. Version 1.10 adds g66–g82 (81 terms in all) from the translation checks of Blog #51–#54. Where two rows share a Japanese word, such as 仕組み (g36 *mechanism*, g50 *arrangement*), a rendering one row uses is not listed as one the other avoids, since forms of different rows are not compared. The Japanese of a row is matched as plain text, so with `--pair` a shorter term inside a longer one (仕組み in g50's sense) can be reported MISSING for the wrong row.
+The glossary was drafted from the translation checks of Hypothetical Technical Blog #37–#41. The renderings to use and the variants all appear in their published English versions; where the posts disagreed, the rendering to use follows the checks and the series' rules (for a name with no official English version found, a lowercase description). The renderings to avoid are the ones the checks advised against; only one of them ("Predictive Management") appears in the posts. The run on those five posts is in `evidence/`; the posts themselves are not in the kit. Version 1.8 adds g31–g65 (64 terms in all; there is no g28) from the translation checks of Blog #45–#50; each note says which post first used the term. Version 1.10 adds g66–g82 (81 terms in all) from the translation checks of Blog #51–#54, and version 1.11 adds g83–g100 (99 terms in all) from that of Blog #55. Where two rows share a Japanese word, such as 仕組み (g36 *mechanism*, g50 *arrangement*), a rendering one row uses is not listed as one the other avoids, since forms of different rows are not compared. The Japanese of a row is matched as plain text, so with `--pair` a shorter term inside a longer one (仕組み in g50's sense) can be reported MISSING for the wrong row.
 
 ## Tests
 
@@ -139,7 +139,7 @@ The tests use a synthetic source written for them.
 - Hypothetical Technical Blog #52, *Which countries are those overseas sites in?* (Japanese 4 November 2026; English 5 November 2026): `register/glossary_series.tsv`. https://note.com/ayako_iuchi/n/n3f9ce26de58f
 - Hypothetical Technical Blog #53, *Do people trust that alert?* (Japanese 4 November 2026; English 5 November 2026): `register/numbers_hcs17.tsv`, `register/hcs17_image_tables.ja.txt` (v1.9), `register/glossary_series.tsv`. https://note.com/ayako_iuchi/n/n10d7d6b9b139
 - Hypothetical Technical Blog #54, *How did that resistance turn into cooperation?* (Japanese 4 November 2026; English 5 November 2026): `register/glossary_series.tsv`. https://note.com/ayako_iuchi/n/n91bf1b79305e
-- Hypothetical Technical Blog #55, *Where are those conditions for stopping written?* (Japanese 7 November 2026; English published after this release): `register/glossary_series.tsv` (g83–).
+- Hypothetical Technical Blog #55, *Where are those conditions for stopping written?* (Japanese 7 November 2026; English published after this release): `register/glossary_series.tsv` (g83–g100).
 
 ## Ground rules
 
